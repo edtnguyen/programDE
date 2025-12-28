@@ -1,0 +1,228 @@
+"""
+High-level pipeline to run SCEPTRE-like CRT across genes and programs.
+"""
+
+from dataclasses import dataclass
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
+import scipy.sparse as sp
+from joblib import Parallel, delayed
+
+from .adata_utils import (
+    build_gene_to_cols,
+    clr_from_usage,
+    get_covar_matrix,
+    get_from_adata_any,
+    get_program_names,
+    limit_threading,
+    to_csc_matrix,
+    union_obs_idx_from_cols,
+)
+from .crt import crt_index_sampler_fast_numba, crt_pvals_for_gene
+from .propensity import fit_propensity_logistic
+
+
+@dataclass
+class CRTInputs:
+    C: np.ndarray
+    Y: np.ndarray
+    A: np.ndarray
+    CTY: np.ndarray
+    G: sp.csc_matrix
+    guide_names: List[str]
+    guide2gene: Dict[str, str]
+    gene_to_cols: Dict[str, List[int]]
+    program_names: List[str]
+    covar_cols: Optional[List[str]] = None
+
+
+@dataclass
+class CRTGeneResult:
+    gene: str
+    pvals: np.ndarray
+    betas: np.ndarray
+    n_treated: int
+
+
+def prepare_crt_inputs(
+    adata: Any,
+    usage_key: str = "cnmf_usage",
+    covar_key: str = "covar",
+    guide_assignment_key: str = "guide_assignment",
+    guide_names_key: str = "guide_names",
+    guide2gene_key: str = "guide2gene",
+    eps_quantile: float = 1e-4,
+    add_intercept: bool = True,
+    standardize: bool = True,
+    clamp_threads: bool = True,
+) -> CRTInputs:
+    """
+    Load matrices from AnnData, build CLR usage, and precompute regression pieces.
+    """
+    if clamp_threads:
+        limit_threading()
+
+    C, covar_cols = get_covar_matrix(
+        adata,
+        covar_key=covar_key,
+        add_intercept=add_intercept,
+        standardize=standardize,
+    )
+
+    U = get_from_adata_any(adata, usage_key)
+    if isinstance(U, pd.DataFrame):
+        U = U.to_numpy()
+    Y = clr_from_usage(U, eps_quantile=eps_quantile)
+
+    G_raw = get_from_adata_any(adata, guide_assignment_key)
+    G, guide_names = to_csc_matrix(G_raw)
+    if guide_names is None:
+        if hasattr(adata, "uns") and guide_names_key in getattr(adata, "uns", {}):
+            guide_names = list(getattr(adata, "uns")[guide_names_key])
+        else:
+            raise ValueError(
+                "Guide column names are required; provide them via a DataFrame or adata.uns."
+            )
+
+    guide2gene_raw = get_from_adata_any(adata, guide2gene_key)
+    guide2gene = dict(guide2gene_raw)
+    gene_to_cols = build_gene_to_cols(guide_names, guide2gene)
+    if not gene_to_cols:
+        raise ValueError("No guides mapped to genes; check guide2gene and guide names.")
+
+    if C.shape[0] != Y.shape[0] or C.shape[0] != G.shape[0]:
+        raise ValueError(
+            f"Cell counts mismatch: C {C.shape[0]}, Y {Y.shape[0]}, G {G.shape[0]}"
+        )
+
+    CtC = C.T @ C
+    A = np.linalg.inv(CtC)
+    CTY = C.T @ Y
+
+    program_names = get_program_names(adata, Y.shape[1])
+
+    return CRTInputs(
+        C=C.astype(np.float64, copy=False),
+        Y=Y.astype(np.float64, copy=False),
+        A=A.astype(np.float64, copy=False),
+        CTY=CTY.astype(np.float64, copy=False),
+        G=G,
+        guide_names=list(guide_names),
+        guide2gene=guide2gene,
+        gene_to_cols=gene_to_cols,
+        program_names=program_names,
+        covar_cols=covar_cols,
+    )
+
+
+def _extract_probabilities(output) -> np.ndarray:
+    """
+    Normalize propensity model outputs into probability vector.
+    """
+    if isinstance(output, tuple) or isinstance(output, list):
+        return np.asarray(output[0], dtype=np.float64)
+    return np.asarray(output, dtype=np.float64)
+
+
+def run_one_gene_union_crt(
+    gene: str,
+    inputs: CRTInputs,
+    B: int = 1023,
+    base_seed: int = 123,
+    propensity_model: Callable = fit_propensity_logistic,
+) -> CRTGeneResult:
+    """
+    Run union CRT for a single gene and return p-values and betas across programs.
+    """
+    if gene not in inputs.gene_to_cols:
+        raise KeyError(f"Gene `{gene}` not present in gene_to_cols mapping.")
+    obs_idx = union_obs_idx_from_cols(inputs.G, inputs.gene_to_cols[gene])
+
+    if obs_idx.size == 0 or obs_idx.size == inputs.C.shape[0]:
+        K = inputs.Y.shape[1]
+        return CRTGeneResult(
+            gene=gene,
+            pvals=np.ones(K, dtype=np.float64),
+            betas=np.zeros(K, dtype=np.float64),
+            n_treated=int(obs_idx.size),
+        )
+
+    y01 = np.zeros(inputs.C.shape[0], dtype=np.int8)
+    y01[obs_idx] = 1
+
+    p = _extract_probabilities(propensity_model(inputs.C, y01))
+    seed = (hash(gene) ^ base_seed) & 0xFFFFFFFF
+
+    indptr, idx = crt_index_sampler_fast_numba(p, B, seed)
+
+    pvals, beta_obs = crt_pvals_for_gene(
+        indptr,
+        idx,
+        inputs.C,
+        inputs.Y,
+        inputs.A,
+        inputs.CTY,
+        obs_idx.astype(np.int32),
+        B,
+    )
+    return CRTGeneResult(
+        gene=gene,
+        pvals=pvals,
+        betas=beta_obs,
+        n_treated=int(obs_idx.size),
+    )
+
+
+def run_all_genes_union_crt(
+    inputs: CRTInputs,
+    genes: Optional[Iterable[str]] = None,
+    B: int = 1023,
+    n_jobs: int = 8,
+    base_seed: int = 123,
+    propensity_model: Callable = fit_propensity_logistic,
+    backend: str = "loky",
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, List[CRTGeneResult]]:
+    """
+    Run union CRT across all genes and return DataFrames for p-values and betas.
+    """
+    gene_list = sorted(inputs.gene_to_cols.keys()) if genes is None else list(genes)
+
+    results: List[CRTGeneResult] = Parallel(n_jobs=n_jobs, backend=backend)(
+        delayed(run_one_gene_union_crt)(
+            gene,
+            inputs,
+            B=B,
+            base_seed=base_seed,
+            propensity_model=propensity_model,
+        )
+        for gene in gene_list
+    )
+
+    pval_mat = np.vstack([r.pvals for r in results])
+    beta_mat = np.vstack([r.betas for r in results])
+    treated = np.array([r.n_treated for r in results], dtype=int)
+
+    pvals_df = pd.DataFrame(pval_mat, index=gene_list, columns=inputs.program_names)
+    betas_df = pd.DataFrame(beta_mat, index=gene_list, columns=inputs.program_names)
+    treated_df = pd.Series(treated, index=gene_list, name="n_union_positive_cells")
+
+    return pvals_df, betas_df, treated_df, results
+
+
+def store_results_in_adata(
+    adata: Any,
+    pvals_df: pd.DataFrame,
+    betas_df: pd.DataFrame,
+    treated_df: pd.Series,
+    prefix: str = "crt_union_gene_program",
+) -> None:
+    """
+    Save CRT outputs into adata.uns with a consistent prefix.
+    """
+    if not hasattr(adata, "uns"):
+        raise AttributeError("AnnData-like object missing `.uns` to store results.")
+    adata.uns[f"{prefix}_pvals"] = pvals_df
+    adata.uns[f"{prefix}_betas"] = betas_df
+    adata.uns[f"{prefix}_n_positive"] = treated_df
