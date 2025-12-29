@@ -6,10 +6,32 @@ import numba as nb
 import numpy as np
 
 
+@nb.njit(inline="always")
+def _sample_unique_ints(B: int, m: int, out: np.ndarray, start: int) -> None:
+    """
+    B: number of resample
+    Use JIT compiler from numba library to compile this function into machine code before
+    running to make it run faster.
+    Fill `out[start:start+m]` with unique integers in [0, B): Randomly draw m unique resample IDs in the
+    range [0,B) without replacement.
+    """
+    for t in range(m):
+        while True:
+            r = np.random.randint(0, B)
+            dup = False
+            for s in range(t):
+                if out[start + s] == r:
+                    dup = True
+                    break
+            if not dup:
+                out[start + t] = r
+                break
+
+
 @nb.njit
 def crt_index_sampler_fast_numba(p: np.ndarray, B: int, seed: int):
     """
-    For each cell j: M_j ~ Binomial(B, p_j), then choose M_j resample IDs without replacement.
+    For each cell j first draw M_j ~ Binomial(B, p_j), then choose M_j resample IDs without replacement.
     Returns resample-wise index lists in CSC-like (indptr, indices) format.
     """
     np.random.seed(seed)
@@ -33,10 +55,9 @@ def crt_index_sampler_fast_numba(p: np.ndarray, B: int, seed: int):
         if mj == 0:
             continue
         start = offsets[j]
-        # np.random.choice is efficient and supported by numba.
-        samples = np.random.choice(B, mj, replace=False)
-        choices[start : start + mj] = samples
-        for b in samples:
+        _sample_unique_ints(B, mj, choices, start)
+        for t in range(mj):
+            b = choices[start + t]
             counts[b] += 1
 
     indptr = np.empty(B + 1, dtype=np.int64)
