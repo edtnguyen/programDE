@@ -1,6 +1,6 @@
 # programDE
 
-A data science pipeline for testing differential expression (DE) of gene targets on gene programs. This project implements a SCEPTRE-like union Conditional Randomization Test (CRT) to assess the statistical significance of perturbations.
+A pipeline for testing differential expression (DE) of gene targets on gene programs. This pipeline implements a SCEPTRE-like Conditional Randomization Test (CRT) to assess the statistical significance of perturbations.
 
 The core analysis pipeline lives in the `src.sceptre` module.
 
