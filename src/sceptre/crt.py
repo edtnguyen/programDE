@@ -22,26 +22,38 @@ def crt_index_sampler_fast_numba(p: np.ndarray, B: int, seed: int):
     N = p.shape[0]
 
     M = np.empty(N, dtype=np.int32)
-    offsets = np.empty(N + 1, dtype=np.int64)
-    offsets[0] = 0
+
+    """
+    offset[j] = starting index in the array that stores resemple IDs of cell j
+
+"""
+    cell_offsets = np.empty(N + 1, dtype=np.int64)
+    cell_offsets[0] = 0
     total = 0
     for j in range(N):
         mj = np.random.binomial(B, p[j])
         M[j] = mj
         total += mj
-        offsets[j + 1] = total
+        cell_offsets[j + 1] = total
 
-    choices = np.empty(total, dtype=np.int32)
+"""
+    choices array contains the resample IDs for all cells
+    choices[ offsets[j] : offsets[j+1] ] = resample IDs for cell j
+"""
+
+    resample_ids = np.empty(total, dtype=np.int32)
+
+    # count = number of cells in each resample ID 
     counts = np.zeros(B, dtype=np.int32)
 
     for j in range(N):
         mj = M[j]
         if mj == 0:
             continue
-        start = offsets[j]
-        _sample_unique_ints(B, mj, choices, start)
+        start = cell_offsets[j]
+        _sample_unique_ints(B, mj, resample_ids, start)
         for t in range(mj):
-            b = choices[start + t]
+            b = resample_ids[start + t]
             counts[b] += 1
 
     indptr = np.empty(B + 1, dtype=np.int64)
@@ -60,9 +72,9 @@ def crt_index_sampler_fast_numba(p: np.ndarray, B: int, seed: int):
         mj = M[j]
         if mj == 0:
             continue
-        start = offsets[j]
+        start = cell_offsets[j]
         for t in range(mj):
-            b = choices[start + t]
+            b = resample_ids[start + t]
             pos = write[b]
             indices[pos] = j
             write[b] = pos + 1
