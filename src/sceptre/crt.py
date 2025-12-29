@@ -6,18 +6,6 @@ import numba as nb
 import numpy as np
 
 
-@nb.njit(inline="always")
-def _sample_unique_ints(B: int, m: int, out: np.ndarray, start: int) -> None:
-    """
-    Fill `out[start:start+m]` with unique integers in [0, B).
-    """
-    if m == 0:
-        return
-    # np.random.choice is more efficient than repeated sampling, especially when m is
-    # close to B. It is supported by numba.
-    out[start : start + m] = np.random.choice(B, m, replace=False)
-
-
 @nb.njit
 def crt_index_sampler_fast_numba(p: np.ndarray, B: int, seed: int):
     """
@@ -45,9 +33,10 @@ def crt_index_sampler_fast_numba(p: np.ndarray, B: int, seed: int):
         if mj == 0:
             continue
         start = offsets[j]
-        _sample_unique_ints(B, mj, choices, start)
-        for t in range(mj):
-            b = choices[start + t]
+        # np.random.choice is efficient and supported by numba.
+        samples = np.random.choice(B, mj, replace=False)
+        choices[start : start + mj] = samples
+        for b in samples:
             counts[b] += 1
 
     indptr = np.empty(B + 1, dtype=np.int64)
