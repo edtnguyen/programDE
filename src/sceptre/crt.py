@@ -11,17 +11,11 @@ def _sample_unique_ints(B: int, m: int, out: np.ndarray, start: int) -> None:
     """
     Fill `out[start:start+m]` with unique integers in [0, B).
     """
-    for t in range(m):
-        while True:
-            r = np.random.randint(0, B)
-            dup = False
-            for s in range(t):
-                if out[start + s] == r:
-                    dup = True
-                    break
-            if not dup:
-                out[start + t] = r
-                break
+    if m == 0:
+        return
+    # np.random.choice is more efficient than repeated sampling, especially when m is
+    # close to B. It is supported by numba.
+    out[start : start + m] = np.random.choice(B, m, replace=False)
 
 
 @nb.njit
