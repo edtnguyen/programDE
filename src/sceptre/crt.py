@@ -1,5 +1,5 @@
-import numpy as np
 import numba as nb
+import numpy as np
 
 
 @nb.njit(inline="always")
@@ -23,40 +23,58 @@ def crt_index_sampler_fast_numba(p: np.ndarray, B: int, seed: int):
     """
     np.random.seed(seed)
     N = p.shape[0]
+    M = np.empty(N, dtype=np.int32)
 
     cell_resample_idprt = np.empty(N + 1, dtype=np.int64)
     cell_resample_idprt[0] = 0
+    total = 0
     for j in range(N):
-        cell_resample_idprt[j + 1] = (
-            cell_resample_idprt[j] + np.random.binomial(B, p[j])
-        )
+        mj = np.random.binomial(B, p[j])
+        M[j] = mj
+        total += mj
+        cell_resample_idprt[j + 1] = total
 
-    total = cell_resample_idprt[N]
     cell_resample_ids = np.empty(total, dtype=np.int32)
     counts = np.zeros(B, dtype=np.int32)
+
     for j in range(N):
-        start, end = cell_resample_idprt[j], cell_resample_idprt[j + 1]
-        m = end - start
-        if m == 0:
+        mj = M[j]
+        if mj == 0:
             continue
-        _sample_unique_ints(B, m, cell_resample_ids, start)
-        for i in range(start, end):
-            b = cell_resample_ids[i]
+        start = cell_resample_idprt[j]
+        _sample_unique_ints(B, mj, cell_resample_ids, start)
+        for t in range(mj):
+            b = cell_resample_ids[start + t]
             counts[b] += 1
 
     indptr = np.empty(B + 1, dtype=np.int64)
     indptr[0] = 0
-    indptr[1:] = np.cumsum(counts)
+    ncells = 0
+    for b in range(B):
+        ncells += counts[b]
+        indptr[b + 1] = ncells
 
     indices = np.empty(total, dtype=np.int32)
-    write_pos = indptr[:-1].copy()
+    write = np.empty(B, dtype=np.int64)
+    for b in range(B):
+        write[b] = indptr[b]
+
+    """
+    write[b]: next write position in indices array for resample b
+    indices array will store, for each resample b, the list of cell indices j that are included in resample b
+    every time we find that cell j is included in resample b, we write j into indices[ write[b] ], and increment write[b] by 1
+    indicating the next available position in indices for resample b
+    """
 
     for j in range(N):
-        start, end = cell_resample_idprt[j], cell_resample_idprt[j + 1]
-        for i in range(start, end):
-            b = cell_resample_ids[i]
-            pos = write_pos[b]
+        mj = M[j]
+        if mj == 0:
+            continue
+        start = cell_resample_idprt[j]
+        for t in range(mj):
+            b = cell_resample_ids[start + t]
+            pos = write[b]
             indices[pos] = j
-            write_pos[b] = pos + 1
+            write[b] = pos + 1
 
     return indptr, indices
