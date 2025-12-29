@@ -18,9 +18,17 @@ from .adata_utils import (
     get_program_names,
     limit_threading,
     to_csc_matrix,
-    union_obs_idx_from_cols,
 )
-from .crt import crt_index_sampler_fast_numba, crt_pvals_for_gene
+from .pipeline_helpers import (
+    _empirical_crt,
+    _fit_propensity,
+    _gene_obs_idx,
+    _gene_seed,
+    _sample_crt_indices,
+    _skew_calibrated_crt,
+    _stack_gene_results,
+    _stack_skew_outputs,
+)
 from .propensity import fit_propensity_logistic
 
 
@@ -44,6 +52,8 @@ class CRTGeneResult:
     pvals: np.ndarray
     betas: np.ndarray
     n_treated: int
+    pvals_sn: Optional[np.ndarray] = None
+    skew_params: Optional[np.ndarray] = None
 
 
 def prepare_crt_inputs(
@@ -135,13 +145,21 @@ def prepare_crt_inputs(
     )
 
 
-def _extract_probabilities(output) -> np.ndarray:
-    """
-    Normalize propensity model outputs into probability vector.
-    """
-    if isinstance(output, tuple) or isinstance(output, list):
-        return np.asarray(output[0], dtype=np.float64)
-    return np.asarray(output, dtype=np.float64)
+def _trivial_gene_result(
+    gene: str,
+    inputs: CRTInputs,
+    n_treated: int,
+    calibrate_skew_normal: bool,
+) -> CRTGeneResult:
+    K = inputs.Y.shape[1]
+    return CRTGeneResult(
+        gene=gene,
+        pvals=np.ones(K, dtype=np.float64),
+        betas=np.zeros(K, dtype=np.float64),
+        n_treated=int(n_treated),
+        pvals_sn=np.ones(K, dtype=np.float64) if calibrate_skew_normal else None,
+        skew_params=np.full((K, 3), np.nan) if calibrate_skew_normal else None,
+    )
 
 
 def run_one_gene_union_crt(
@@ -150,6 +168,8 @@ def run_one_gene_union_crt(
     B: int = 1023,
     base_seed: int = 123,
     propensity_model: Callable = fit_propensity_logistic,
+    calibrate_skew_normal: bool = False,
+    skew_normal_side_code: int = 0,
 ) -> CRTGeneResult:
     """
     Run union CRT for a single gene and return p-values and betas across programs.
@@ -158,51 +178,44 @@ def run_one_gene_union_crt(
     B: number of resamples for CRT
     base_seed: base random seed for reproducibility
     propensity_model: function to fit propensity scores given C and y01
+    calibrate_skew_normal: if True, compute skew-normal calibrated p-values
+    skew_normal_side_code: 0 two-sided, 1 right-tailed, -1 left-tailed
     y01: binary union indicator for the gene
     Returns:
-        CRTGeneResult dataclass with all results for the gene
+        CRTGeneResult dataclass with all results for the gene. If calibrate_skew_normal
+        is True, pvals contain the skew-normal calibrated values.
     """
-    if gene not in inputs.gene_to_cols:
-        raise KeyError(f"Gene `{gene}` not present in gene_to_cols mapping.")
-    obs_idx = union_obs_idx_from_cols(inputs.G, inputs.gene_to_cols[gene])
+    obs_idx = _gene_obs_idx(inputs, gene)
 
     """
     Handle edge cases with no treated cells or all treated cells.
     In these cases, a meaningful comparison is impossible. 
     The function returns a trivial result (p-values of 1.0, effect sizes of 0) without performing the test.
     """
-    if obs_idx.size == 0 or obs_idx.size == inputs.C.shape[0]:
-        K = inputs.Y.shape[1]
-        return CRTGeneResult(
-            gene=gene,
-            pvals=np.ones(K, dtype=np.float64),
-            betas=np.zeros(K, dtype=np.float64),
-            n_treated=int(obs_idx.size),
+    if obs_idx.size == 0 or obs_idx.size == inputs.C.shape[0] or B <= 0:
+        return _trivial_gene_result(gene, inputs, obs_idx.size, calibrate_skew_normal)
+
+    p = _fit_propensity(inputs, obs_idx, propensity_model)
+    seed = _gene_seed(gene, base_seed)
+
+    indptr, idx = _sample_crt_indices(p, B, seed)
+
+    if calibrate_skew_normal:
+        pvals_sn, beta_obs, skew_params = _skew_calibrated_crt(
+            inputs, indptr, idx, obs_idx, B, skew_normal_side_code
         )
-
-    y01 = np.zeros(inputs.C.shape[0], dtype=np.int8)
-    y01[obs_idx] = 1
-
-    p = _extract_probabilities(propensity_model(inputs.C, y01))
-    seed = (hash(gene) ^ base_seed) & 0xFFFFFFFF
-
-    indptr, idx = crt_index_sampler_fast_numba(p, B, seed)
-
-    pvals, beta_obs = crt_pvals_for_gene(
-        indptr,
-        idx,
-        inputs.C,
-        inputs.Y,
-        inputs.A,
-        inputs.CTY,
-        obs_idx.astype(np.int32),
-        B,
-    )
+        pvals = pvals_sn
+    else:
+        pvals, beta_obs = _empirical_crt(inputs, indptr, idx, obs_idx, B)
+        pvals_sn = None
+        skew_params = None
     return CRTGeneResult(
         gene=gene,
         pvals=pvals,
         betas=beta_obs,
         n_treated=int(obs_idx.size),
+        pvals_sn=pvals_sn,
+        skew_params=skew_params,
     )
 
 
@@ -214,6 +227,9 @@ def run_all_genes_union_crt(
     base_seed: int = 123,
     propensity_model: Callable = fit_propensity_logistic,
     backend: str = "loky",
+    calibrate_skew_normal: bool = False,
+    skew_normal_side_code: int = 0,
+    return_skew_normal: bool = False,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, List[CRTGeneResult]]:
     """
     Run union CRT across all genes and return DataFrames for p-values and betas.
@@ -224,11 +240,18 @@ def run_all_genes_union_crt(
     base_seed: base random seed for reproducibility
     propensity_model: function to fit propensity scores given C and y01
     backend: joblib parallelization backend
+    calibrate_skew_normal: if True, compute skew-normal calibrated p-values per gene
+    skew_normal_side_code: 0 two-sided, 1 right-tailed, -1 left-tailed
+    return_skew_normal: if True, return skew-normal pvals and parameters
     Returns:
-        pvals_df: DataFrame of CRT p-values (genes x programs)
+        pvals_df: DataFrame of CRT p-values (genes x programs). If calibrate_skew_normal
+            is True, these are skew-normal calibrated values.
         betas_df: DataFrame of CRT effect sizes (genes x programs)
         treated_df: Series of number of treated cells per gene
         results: list of CRTGeneResult dataclasses for all genes
+        if return_skew_normal is True, also returns:
+            pvals_skew_df: DataFrame of skew-normal p-values (genes x programs)
+            skew_params: array of fitted parameters (genes x programs x 3)
     """
     gene_list = sorted(inputs.gene_to_cols.keys()) if genes is None else list(genes)
 
@@ -239,17 +262,22 @@ def run_all_genes_union_crt(
             B=B,
             base_seed=base_seed,
             propensity_model=propensity_model,
+            calibrate_skew_normal=calibrate_skew_normal,
+            skew_normal_side_code=skew_normal_side_code,
         )
         for gene in gene_list
     )
 
-    pval_mat = np.vstack([r.pvals for r in results])
-    beta_mat = np.vstack([r.betas for r in results])
-    treated = np.array([r.n_treated for r in results], dtype=int)
-
-    pvals_df = pd.DataFrame(pval_mat, index=gene_list, columns=inputs.program_names)
-    betas_df = pd.DataFrame(beta_mat, index=gene_list, columns=inputs.program_names)
-    treated_df = pd.Series(treated, index=gene_list, name="n_union_positive_cells")
+    pvals_df, betas_df, treated_df = _stack_gene_results(
+        results, gene_list, inputs.program_names
+    )
+    if return_skew_normal:
+        if not calibrate_skew_normal:
+            raise ValueError("return_skew_normal=True requires calibrate_skew_normal=True.")
+        pvals_skew_df, skew_params = _stack_skew_outputs(
+            results, gene_list, inputs.program_names
+        )
+        return pvals_df, betas_df, treated_df, results, pvals_skew_df, skew_params
 
     return pvals_df, betas_df, treated_df, results
 
@@ -260,6 +288,8 @@ def store_results_in_adata(
     betas_df: pd.DataFrame,
     treated_df: pd.Series,
     prefix: str = "crt_union_gene_program",
+    pvals_skew_df: Optional[pd.DataFrame] = None,
+    skew_params: Optional[np.ndarray] = None,
 ) -> None:
     """
     Save CRT outputs into adata.uns with a consistent prefix.
@@ -268,6 +298,8 @@ def store_results_in_adata(
     betas_df: DataFrame of CRT effect sizes (genes x programs)
     treated_df: Series of number of treated cells per gene
     prefix: prefix for keys in adata.uns to store results
+    pvals_skew_df: optional DataFrame of skew-normal p-values (genes x programs)
+    skew_params: optional array of skew-normal parameters (genes x programs x 3)
     """
 
     if not hasattr(adata, "uns"):
@@ -275,3 +307,7 @@ def store_results_in_adata(
     adata.uns[f"{prefix}_pvals"] = pvals_df
     adata.uns[f"{prefix}_betas"] = betas_df
     adata.uns[f"{prefix}_n_positive"] = treated_df
+    if pvals_skew_df is not None:
+        adata.uns[f"{prefix}_pvals_skew"] = pvals_skew_df
+    if skew_params is not None:
+        adata.uns[f"{prefix}_skew_params"] = skew_params

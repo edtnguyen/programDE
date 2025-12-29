@@ -19,7 +19,7 @@ from .adata_utils import (
     to_csc_matrix,
     union_obs_idx_from_cols,
 )
-from .crt import crt_index_sampler_fast_numba, crt_pvals_for_gene
+from .crt import crt_betas_for_gene, crt_index_sampler_fast_numba, crt_pvals_for_gene
 from .pipeline import (
     CRTGeneResult,
     CRTInputs,
@@ -29,7 +29,14 @@ from .pipeline import (
     store_results_in_adata,
 )
 from .propensity import fit_propensity_logistic
-from .skew_normal import fit_skew_normal_funct, fit_skew_normal_funct_numba
+from .skew_normal import (
+    check_for_outliers,
+    check_sn_tail,
+    compute_empirical_p_value,
+    fit_and_evaluate_skew_normal,
+    fit_skew_normal_funct,
+    fit_skew_normal_funct_numba,
+)
 
 __all__ = [
     "THREAD_ENV_VARS",
@@ -42,6 +49,7 @@ __all__ = [
     "union_obs_idx_from_cols",
     "crt_index_sampler_fast_numba",
     "crt_pvals_for_gene",
+    "crt_betas_for_gene",
     "CRTGeneResult",
     "CRTInputs",
     "prepare_crt_inputs",
@@ -51,4 +59,8 @@ __all__ = [
     "fit_propensity_logistic",
     "fit_skew_normal_funct",
     "fit_skew_normal_funct_numba",
+    "compute_empirical_p_value",
+    "check_sn_tail",
+    "check_for_outliers",
+    "fit_and_evaluate_skew_normal",
 ]

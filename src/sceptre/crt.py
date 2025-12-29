@@ -221,3 +221,58 @@ def crt_pvals_for_gene(
         pvals[k] = (1.0 + ge[k]) / (B + 1.0)
 
     return pvals, beta_obs
+
+
+@nb.njit
+def crt_betas_for_gene(
+    indptr: np.ndarray,
+    indices: np.ndarray,
+    C: np.ndarray,
+    Y: np.ndarray,
+    A: np.ndarray,
+    CTY: np.ndarray,
+    obs_idx: np.ndarray,
+    B: int,
+):
+    """
+    Return observed betas and the full null beta matrix (B x K).
+    """
+    N, p = C.shape
+    K = Y.shape[1]
+
+    n1_obs = obs_idx.shape[0]
+    v_obs = np.zeros(p, dtype=np.float64)
+    sY_obs = np.zeros(K, dtype=np.float64)
+    for t in range(n1_obs):
+        i = obs_idx[t]
+        for j in range(p):
+            v_obs[j] += C[i, j]
+        for k in range(K):
+            sY_obs[k] += Y[i, k]
+
+    beta_obs = _beta_from_summaries(n1_obs, v_obs, sY_obs, A, CTY)
+    beta_null = np.empty((B, K), dtype=np.float64)
+
+    v = np.empty(p, dtype=np.float64)
+    sY = np.empty(K, dtype=np.float64)
+
+    for b in range(B):
+        for j in range(p):
+            v[j] = 0.0
+        for k in range(K):
+            sY[k] = 0.0
+
+        start = indptr[b]
+        end = indptr[b + 1]
+        n1 = end - start
+
+        for pos in range(start, end):
+            i = indices[pos]
+            for j in range(p):
+                v[j] += C[i, j]
+            for k in range(K):
+                sY[k] += Y[i, k]
+
+        beta_null[b, :] = _beta_from_summaries(n1, v, sY, A, CTY)
+
+    return beta_obs, beta_null
