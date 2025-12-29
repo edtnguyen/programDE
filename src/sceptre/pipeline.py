@@ -140,6 +140,11 @@ def run_one_gene_union_crt(
         raise KeyError(f"Gene `{gene}` not present in gene_to_cols mapping.")
     obs_idx = union_obs_idx_from_cols(inputs.G, inputs.gene_to_cols[gene])
 
+    """
+    Handle edge cases with no treated cells or all treated cells.
+    In these cases, a meaningful comparison is impossible. 
+    The function returns a trivial result (p-values of 1.0, effect sizes of 0) without performing the test.
+    """
     if obs_idx.size == 0 or obs_idx.size == inputs.C.shape[0]:
         K = inputs.Y.shape[1]
         return CRTGeneResult(

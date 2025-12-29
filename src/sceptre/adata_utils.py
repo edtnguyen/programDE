@@ -115,7 +115,7 @@ def build_gene_to_cols(
         if j is None:
             continue
         gene_to_cols.setdefault(gene, []).append(j)
-    return {g: sorted(cols) for g, cols in gene_to_cols.items()}
+    return {gene: sorted(cols) for gene, cols in gene_to_cols.items()}
 
 
 def union_obs_idx_from_cols(G_csc: sp.csc_matrix, cols: Iterable[int]) -> np.ndarray:
