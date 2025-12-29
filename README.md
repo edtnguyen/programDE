@@ -1,12 +1,53 @@
-programDE
-==============================
+# programDE
 
-Testing DE of gene targets on programs
+A data science pipeline for testing differential expression (DE) of gene targets on gene programs. This project implements a SCEPTRE-like union Conditional Randomization Test (CRT) to assess the statistical significance of perturbations.
 
-SCEPTRE-like union CRT
-----------------------
+The core analysis pipeline lives in the `src.sceptre` module.
 
-The SCEPTRE-style union CRT pipeline lives in `src.sceptre`. Typical usage:
+## Getting Started
+
+### Prerequisites
+
+- Python 3
+- `conda` or `virtualenv`
+
+### Installation
+
+1.  **Create a virtual environment:**
+
+    It is recommended to create a dedicated environment. You can use the built-in Makefile command:
+    ```bash
+    make create_environment
+    ```
+    This will create a `conda` or `virtualenv` environment named `programDE`. Activate it before proceeding.
+
+2.  **Install dependencies:**
+
+    Install the required Python packages using pip:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Install the project source code:**
+
+    To make the `src` directory importable as a package, install it in editable mode:
+    ```bash
+    pip install -e .
+    ```
+
+## Usage
+
+### Data Processing
+
+To process the raw data and generate the final datasets for analysis, run the following command:
+```bash
+make data
+```
+This command executes the script `src/data/make_dataset.py`.
+
+### Library Usage
+
+The core functionality is the SCEPTRE-style union CRT. Here is a typical usage example:
 
 ```python
 from src.sceptre import (
@@ -15,9 +56,13 @@ from src.sceptre import (
     store_results_in_adata,
     limit_threading,
 )
+import anndata
 
-# Optional: clamp BLAS threads for reproducibility
+# It is recommended to limit BLAS threads for reproducibility
 limit_threading()
+
+# Assuming 'adata' is an AnnData object containing your single-cell data
+# adata = anndata.read_h5ad(...) 
 
 inputs = prepare_crt_inputs(
     adata,
@@ -29,61 +74,49 @@ inputs = prepare_crt_inputs(
 
 pvals_df, betas_df, treated_df, results = run_all_genes_union_crt(
     inputs,
-    B=1023,
-    n_jobs=16,
+    B=1023,    # Number of permutations
+    n_jobs=16, # Number of parallel jobs
 )
+
+# Store results back into the AnnData object
 store_results_in_adata(adata, pvals_df, betas_df, treated_df)
 ```
 
-Project Organization
-------------
+### Makefile Commands
 
-    ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
+This project uses a `Makefile` to streamline common tasks.
 
+- `make requirements`: Install Python dependencies.
+- `make data`: Run the data processing pipeline.
+- `make lint`: Lint the source code using `flake8`.
+- `make clean`: Remove compiled Python files.
 
---------
+## Project Structure
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+```
+├── Makefile           # Makefile with useful commands
+├── README.md          # Project README
+├── requirements.txt   # Python package requirements
+├── setup.py           # Makes the project pip-installable
+├── src                # Project source code
+│   ├── data           # Scripts to download or generate data
+│   ├── features       # Scripts to generate features
+│   ├── models         # Scripts for model training and prediction
+│   ├── sceptre        # Core CRT analysis pipeline
+│   │   ├── __init__.py
+│   │   ├── adata_utils.py
+│   │   ├── crt.py
+│   │   ├── pipeline.py
+│   │   └── propensity.py
+│   └── visualization  # Scripts for plotting and visualization
+├── data
+│   ├── external       # Data from third-party sources
+│   ├── interim        # Intermediate transformed data
+│   ├── processed      # Final, canonical datasets
+│   └── raw            # Original, immutable data
+├── docs               # Project documentation
+├── models             # Trained models
+├── notebooks          # Jupyter notebooks for exploration
+└── reports            # Generated analysis reports and figures
+```
+---
