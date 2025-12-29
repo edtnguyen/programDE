@@ -29,6 +29,7 @@ from .pipeline import (
     store_results_in_adata,
 )
 from .propensity import fit_propensity_logistic
+from .skew_normal import fit_skew_normal_funct, fit_skew_normal_funct_numba
 
 __all__ = [
     "THREAD_ENV_VARS",
@@ -48,4 +49,6 @@ __all__ = [
     "run_one_gene_union_crt",
     "store_results_in_adata",
     "fit_propensity_logistic",
+    "fit_skew_normal_funct",
+    "fit_skew_normal_funct_numba",
 ]
