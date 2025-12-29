@@ -67,6 +67,12 @@ def get_covar_matrix(
 ) -> Tuple[np.ndarray, Optional[List[str]]]:
     """
     Fetch covariates, optionally z-score columns and prepend intercept.
+    covar_key: key in adata to fetch covariate matrix
+    add_intercept: whether to prepend intercept column
+    standardize: whether to z-score covariate columns
+    Returns:
+        C: covariate matrix (N x p) as numpy array
+        covar_cols: list of covariate column names if available, else None
     """
     C = get_from_adata_any(adata, covar_key)
     if isinstance(C, pd.DataFrame):
@@ -92,6 +98,10 @@ def get_covar_matrix(
 def clr_from_usage(U: Any, eps_quantile: float = 1e-4) -> np.ndarray:
     """
     Compute centered log-ratio from usage matrix with flooring and renormalization.
+    U: usage matrix (N x K)
+    eps_quantile: quantile for flooring small values in U
+    Returns:
+        logU: centered log-ratio matrix (N x K)
     """
     U = np.asarray(U, dtype=np.float64)
     eps = np.quantile(U, eps_quantile)
@@ -107,6 +117,10 @@ def build_gene_to_cols(
 ) -> Dict[str, List[int]]:
     """
     Map each gene to the list of guide column indexes targeting it.
+    guide_names: list of guide names corresponding to columns in G
+    guide2gene: mapping from guide name to target gene name
+    Returns:
+        gene_to_cols: mapping from gene name to list of guide column indexes
     """
     guide_to_col = {g: i for i, g in enumerate(guide_names)}
     gene_to_cols: Dict[str, List[int]] = {}
@@ -121,6 +135,10 @@ def build_gene_to_cols(
 def union_obs_idx_from_cols(G_csc: sp.csc_matrix, cols: Iterable[int]) -> np.ndarray:
     """
     Collect treated cell indices for a set of guide columns (union indicator).
+    G_csc: guide assignment matrix in CSC format
+    cols: list of guide column indexes
+    Returns:
+        rows: sorted array of unique cell indices with at least one guide in cols
     """
     indptr = G_csc.indptr
     indices = G_csc.indices

@@ -60,6 +60,18 @@ def prepare_crt_inputs(
 ) -> CRTInputs:
     """
     Load matrices from AnnData, build CLR usage, and precompute regression pieces.
+    adata: AnnData-like object with required data
+    usage_key: key in adata to extract usage matrix
+    covar_key: key in adata to extract covariate matrix
+    guide_assignment_key: key in adata to extract guide assignment matrix
+    guide_names_key: key in adata.uns to extract guide column names if not in DataFrame
+    guide2gene_key: key in adata to extract guide-to-gene mapping
+    eps_quantile: quantile for flooring small values in usage before CLR
+    add_intercept: whether to add intercept column to covariate matrix
+    standardize: whether to z-score covariate columns
+    clamp_threads: whether to limit threading for numerical libraries
+    Returns:
+        CRTInputs dataclass with all required inputs for CRT
     """
     if clamp_threads:
         limit_threading()
@@ -97,6 +109,12 @@ def prepare_crt_inputs(
             f"Cell counts mismatch: C {C.shape[0]}, Y {Y.shape[0]}, G {G.shape[0]}"
         )
 
+    """
+        Precompute regression pieces: A = (C^T C)^{-1}, CTY = C^T Y.
+        CtC: p x p matrix, C^T C
+        A: inverse of CtC
+        CTY: p x K matrix, C^T Y
+    """
     CtC = C.T @ C
     A = np.linalg.inv(CtC)
     CTY = C.T @ Y
@@ -135,6 +153,14 @@ def run_one_gene_union_crt(
 ) -> CRTGeneResult:
     """
     Run union CRT for a single gene and return p-values and betas across programs.
+    gene: target gene name
+    inputs: CRTInputs dataclass with all required inputs
+    B: number of resamples for CRT
+    base_seed: base random seed for reproducibility
+    propensity_model: function to fit propensity scores given C and y01
+    y01: binary union indicator for the gene
+    Returns:
+        CRTGeneResult dataclass with all results for the gene
     """
     if gene not in inputs.gene_to_cols:
         raise KeyError(f"Gene `{gene}` not present in gene_to_cols mapping.")
@@ -191,6 +217,18 @@ def run_all_genes_union_crt(
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, List[CRTGeneResult]]:
     """
     Run union CRT across all genes and return DataFrames for p-values and betas.
+    inputs: CRTInputs dataclass with all required inputs
+    genes: optional list of genes to test; if None, test all genes in inputs.gene_to_cols
+    B: number of resamples for CRT
+    n_jobs: number of parallel jobs to use
+    base_seed: base random seed for reproducibility
+    propensity_model: function to fit propensity scores given C and y01
+    backend: joblib parallelization backend
+    Returns:
+        pvals_df: DataFrame of CRT p-values (genes x programs)
+        betas_df: DataFrame of CRT effect sizes (genes x programs)
+        treated_df: Series of number of treated cells per gene
+        results: list of CRTGeneResult dataclasses for all genes
     """
     gene_list = sorted(inputs.gene_to_cols.keys()) if genes is None else list(genes)
 
@@ -225,7 +263,13 @@ def store_results_in_adata(
 ) -> None:
     """
     Save CRT outputs into adata.uns with a consistent prefix.
+    adata: AnnData-like object to store results in
+    pvals_df: DataFrame of CRT p-values (genes x programs)
+    betas_df: DataFrame of CRT effect sizes (genes x programs)
+    treated_df: Series of number of treated cells per gene
+    prefix: prefix for keys in adata.uns to store results
     """
+
     if not hasattr(adata, "uns"):
         raise AttributeError("AnnData-like object missing `.uns` to store results.")
     adata.uns[f"{prefix}_pvals"] = pvals_df

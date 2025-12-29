@@ -5,7 +5,10 @@ import numpy as np
 @nb.njit(inline="always")
 def _sample_unique_ints(B: int, m: int, out: np.ndarray, start: int) -> None:
     """
-    Fill `out[start:start+m]` with unique integers in [0, B): randomly draw m unique resampleIDs from B
+    Fill `out[start:start+m]` with unique integers in [0, B)
+    We randomly draw m unique resampleIDs from B
+    out: preallocated array to store the sampled integers
+    start: starting index in out to fill
     """
     if m > 0:
         out[start : start + m] = np.random.choice(B, m, replace=False)
@@ -20,6 +23,13 @@ def crt_index_sampler_fast_numba(p: np.ndarray, B: int, seed: int):
     cell_resample_ids array contains the resample IDs for all cells
     cell_resample_ids[ cell_resample_idprt[j] : cell_resample_idprt[j+1] ] : resample IDs for cell j
     counts: number of cells in each resample ID
+    p: array of length N with probabilities for each cell
+    B: number of resamples
+    seed: random seed for reproducibility
+    Returns:
+        indptr: array of length B+1, indptr[b] = starting index in indices for resample b
+        indices: array of length total number of selected cells across all resamples,
+                 contains cell indices for each resample
     """
     np.random.seed(seed)
     N = p.shape[0]
@@ -90,6 +100,23 @@ def _beta_from_summaries(
 ) -> np.ndarray:
     """
     Closed-form OLS coefficient for x in Y ~ x + C using summary stats.
+    n1: number of cells with x=1
+    v: vector of length p, sum of covariates C over cells with x=1
+    sY: vector of length K, sum of outcomes Y over cells with x=1
+    A: p x p matrix, C^T C
+    CTY: p x K matrix, C^T Y
+    Returns:
+        beta: vector of length K, OLS coefficients for x in Y ~ x + C using summary stats.
+
+    The key aspect of this function is that it doesn't perform regression directly on (Y, x, and C).
+    Instead, it computes the result using pre-calculated summary statistics,
+    which is a much more memory and computationally efficient approach for large datasets.
+
+    n1: the sum of square of the target variable x (which is binary, so this is just the count of samples where x=1)
+    v: the cross-product of the covariates C and the target variable x (C^T x)
+    sY: the cross-product of the outcomes Y and the target variable x (Y^T x)
+    A: the inverse of the cross-product of the covariates (C^T C)^{-1}
+    CTY: the cross-product of the covariates C and the outcomes Y (C^T Y)
     """
     p = v.shape[0]
     K = sY.shape[0]
@@ -129,6 +156,18 @@ def crt_pvals_for_gene(
 ):
     """
     Compute CRT p-values and observed betas using summary-based OLS updates.
+    indptr: array of length B+1, indptr[b] = starting index in indices for resample b
+    indices: array of length total number of selected cells across all resamples,
+             contains cell indices for each resample
+    C: covariate matrix (N x p)
+    Y: outcome matrix (N x K)
+    A: p x p matrix, (C^T C)^{-1}
+    CTY: p x K matrix, C^T Y
+    obs_idx: array of cell indices with treatment
+    B: number of resamples
+    Returns:
+        pvals: array of length K, CRT p-values for each program
+        beta_obs: array of length K, observed effect sizes for each program
     """
     N, p = C.shape
     K = Y.shape[1]
@@ -143,6 +182,11 @@ def crt_pvals_for_gene(
         for k in range(K):
             sY_obs[k] += Y[i, k]
 
+    """ 
+        Compute observed betas using summary-based OLS updates. 
+        K: number of programs
+        ge[k]: count of resamples where |beta_resample[k]| >= |beta_obs[k]|
+    """
     beta_obs = _beta_from_summaries(n1_obs, v_obs, sY_obs, A, CTY)
     abs_obs = np.abs(beta_obs)
     ge = np.zeros(K, dtype=np.int32)

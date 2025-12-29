@@ -19,6 +19,16 @@ def fit_propensity_logistic(
 ) -> Tuple[np.ndarray, LogisticRegression]:
     """
     Fit logistic regression P(union=1 | C). Returns probabilities and model.
+    C: covariate matrix (N x p)
+    y01: binary union indicator (length N)
+    penalty: regularization type for logistic regression
+    C_value: inverse regularization strength for logistic regression
+    max_iter: maximum number of iterations for logistic regression
+    n_jobs: number of parallel jobs for logistic regression
+    kwargs: additional arguments for sklearn LogisticRegression
+    Returns:
+        p: propensity scores P(union=1 | C) (length N)
+        clf: fitted LogisticRegression model
     """
     y = np.asarray(y01, dtype=np.int8)
     clf = LogisticRegression(
