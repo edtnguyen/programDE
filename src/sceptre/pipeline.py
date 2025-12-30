@@ -68,6 +68,7 @@ def prepare_crt_inputs(
     eps_quantile: float = 1e-4,
     add_intercept: bool = True,
     standardize: bool = True,
+    numeric_as_category_threshold: Optional[int] = 20,
     clamp_threads: bool = True,
 ) -> CRTInputs:
     """
@@ -81,6 +82,7 @@ def prepare_crt_inputs(
     eps_quantile: quantile for flooring small values in usage before CLR
     add_intercept: whether to add intercept column to covariate matrix
     standardize: whether to z-score covariate columns
+    numeric_as_category_threshold: treat numeric columns with <= this many unique values as categorical
     clamp_threads: whether to limit threading for numerical libraries
     Returns:
         CRTInputs dataclass with all required inputs for CRT
@@ -93,6 +95,7 @@ def prepare_crt_inputs(
         covar_key=covar_key,
         add_intercept=add_intercept,
         standardize=standardize,
+        numeric_as_category_threshold=numeric_as_category_threshold,
     )
 
     U = get_from_adata_any(adata, usage_key)

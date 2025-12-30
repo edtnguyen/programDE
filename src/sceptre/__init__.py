@@ -12,6 +12,7 @@ This package exposes helpers to:
 from .adata_utils import (
     THREAD_ENV_VARS,
     clr_from_usage,
+    encode_categorical_covariates,
     get_covar_matrix,
     get_from_adata_any,
     get_program_names,
@@ -40,6 +41,7 @@ from .skew_normal import (
 __all__ = [
     "THREAD_ENV_VARS",
     "clr_from_usage",
+    "encode_categorical_covariates",
     "get_covar_matrix",
     "get_from_adata_any",
     "get_program_names",

@@ -53,7 +53,14 @@ This command executes the script `src/data/make_dataset.py`.
 common AnnData containers (`.obsm`, `.layers`, `.obsp`, `.uns`, `.obs`) by key.
 
 - **Covariates**: `adata.obsm["covar"]` (shape `N x p`, numeric). A `DataFrame`
-  or `ndarray` is fine. Count-based covariates should be already log-transformed. Columns are z-scored and an intercept is added by the pipeline. 
+  or `ndarray` is fine. Count-based covariates should be already log-transformed.
+  Columns are z-scored and an intercept is added by the pipeline. If `covar` is
+  a `DataFrame` with categorical/object/bool columns, they are one-hot encoded
+  automatically (dropping one level by default to avoid collinearity). Numeric
+  columns with a small number of unique values (<=20 by default) are also treated
+  as categorical and one-hot encoded. If `covar` is a non-numeric array
+  (object/string), it is auto-encoded as well. You can override the numeric
+  threshold via `prepare_crt_inputs(..., numeric_as_category_threshold=...)`.
 - **cNMF usage**: `adata.obsm["cnmf_usage"]` (shape `N x K`, numeric).
   Each row should sum to 1 (the CLR step will floor and renormalize).
 - **Guide assignment**: `adata.obsm["guide_assignment"]` (shape `N x G`).
@@ -65,6 +72,21 @@ common AnnData containers (`.obsm`, `.layers`, `.obsp`, `.uns`, `.obs`) by key.
 - **Program names** (optional): `adata.uns["program_names"]` list of length `K`.
 
 All matrices must have the same number of rows (`N = number of cells`).
+
+If you want to customize encoding (e.g., keep all category levels or disable
+numeric-to-categorical heuristics), pre-encode
+your covariates before storing them in `adata`:
+
+```python
+from src.sceptre import encode_categorical_covariates
+
+covar_df = encode_categorical_covariates(
+    covar_df,
+    drop_first=False,
+    numeric_as_category_threshold=None,
+)
+adata.obsm["covar"] = covar_df
+```
 
 The core functionality is the SCEPTRE-style union CRT. The recommended starting point is skew-normal calibrated p-values:
 
@@ -143,7 +165,7 @@ store_results_in_adata(
     adata,
     out["pvals_df"],
     out["betas_df"],
-    out["treated_df"]
+    out["treated_df"],
 )
 ```
 

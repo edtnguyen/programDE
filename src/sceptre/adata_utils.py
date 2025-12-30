@@ -59,28 +59,92 @@ def to_csc_matrix(G: Any) -> Tuple[sp.csc_matrix, Optional[List[str]]]:
     return sp.csc_matrix(arr), None
 
 
+def encode_categorical_covariates(
+    df: pd.DataFrame,
+    drop_first: bool = True,
+    dummy_na: bool = False,
+    numeric_as_category_threshold: Optional[int] = None,
+) -> pd.DataFrame:
+    """
+    One-hot encode categorical/object/bool columns in a covariate DataFrame.
+    """
+    cat_cols = []
+    for col in df.columns:
+        series = df[col]
+        if (
+            pd.api.types.is_categorical_dtype(series)
+            or pd.api.types.is_object_dtype(series)
+            or pd.api.types.is_bool_dtype(series)
+        ):
+            cat_cols.append(col)
+        elif numeric_as_category_threshold is not None and pd.api.types.is_numeric_dtype(
+            series
+        ):
+            unique_count = series.nunique(dropna=not dummy_na)
+            if unique_count <= numeric_as_category_threshold:
+                cat_cols.append(col)
+
+    if not cat_cols:
+        return df.copy()
+
+    return pd.get_dummies(
+        df,
+        columns=cat_cols,
+        drop_first=drop_first,
+        dummy_na=dummy_na,
+        dtype=np.float64,
+    )
+
+
 def get_covar_matrix(
     adata: Any,
     covar_key: str = "covar",
     add_intercept: bool = True,
     standardize: bool = True,
+    one_hot_encode: bool = True,
+    drop_first: bool = True,
+    numeric_as_category_threshold: Optional[int] = 20,
 ) -> Tuple[np.ndarray, Optional[List[str]]]:
     """
     Fetch covariates, optionally z-score columns and prepend intercept.
     covar_key: key in adata to fetch covariate matrix
     add_intercept: whether to prepend intercept column
     standardize: whether to z-score covariate columns
+    one_hot_encode: whether to one-hot encode categorical columns in DataFrame input
+    drop_first: drop one level per categorical column to avoid collinearity
     Returns:
         C: covariate matrix (N x p) as numpy array
         covar_cols: list of covariate column names if available, else None
     """
     C = get_from_adata_any(adata, covar_key)
     if isinstance(C, pd.DataFrame):
+        if one_hot_encode:
+            C = encode_categorical_covariates(
+                C,
+                drop_first=drop_first,
+                numeric_as_category_threshold=numeric_as_category_threshold,
+            )
         covar_cols = list(C.columns)
         C = C.to_numpy()
     else:
         covar_cols = None
         C = np.asarray(C)
+        if C.ndim == 1:
+            C = C.reshape(-1, 1)
+        if C.dtype.kind in ("O", "U", "S"):
+            if not one_hot_encode:
+                raise ValueError(
+                    "Covariate matrix contains non-numeric values. "
+                    "Enable one_hot_encode or provide a DataFrame."
+                )
+            df = pd.DataFrame(C, columns=[f"covar_{i}" for i in range(C.shape[1])])
+            df = encode_categorical_covariates(
+                df,
+                drop_first=drop_first,
+                numeric_as_category_threshold=numeric_as_category_threshold,
+            )
+            covar_cols = list(df.columns)
+            C = df.to_numpy()
     C = C.astype(np.float64, copy=False)
 
     if standardize:
