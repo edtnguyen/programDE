@@ -86,13 +86,41 @@ store_results_in_adata(adata, pvals_df, betas_df, treated_df)
 
 The skew-normal fitting entry point is `fit_skew_normal` (numba-backed).
 
-Example:
+Recommended (pipeline-level calibration):
 
 ```python
+from src.sceptre import run_all_genes_union_crt
+
+pvals_df, betas_df, treated_df, results, pvals_skew_df, skew_params = run_all_genes_union_crt(
+    inputs,
+    B=1023,
+    n_jobs=16,
+    calibrate_skew_normal=True,
+    return_skew_normal=True,
+)
+```
+
+Manual fitting for a single program:
+
+```python
+import numpy as np
 from src.sceptre import fit_skew_normal
+
+# beta_null is the CRT null distribution for a single gene-program (length B)
+# Example: beta_null = beta_null_mat[:, program_index]
+mu = beta_null.mean()
+sd = beta_null.std()
+z_nulls = (beta_null - mu) / sd
 
 params = fit_skew_normal(z_nulls)  # [xi, omega, alpha, mean, sd]
 ```
+
+Where do `z_nulls` come from?
+
+`z_nulls` are standardized CRT null statistics. You first generate the null
+beta coefficients from CRT resamples, then standardize them by their mean and
+standard deviation. The pipeline does this internally when
+`calibrate_skew_normal=True`.
 
 ### Makefile Commands
 
@@ -119,7 +147,10 @@ This project uses a `Makefile` to streamline common tasks.
 │   │   ├── adata_utils.py
 │   │   ├── crt.py
 │   │   ├── pipeline.py
-│   │   └── propensity.py
+│   │   ├── pipeline_helpers.py
+│   │   ├── propensity.py
+│   │   ├── shared_low_level_functions.cpp
+│   │   └── skew_normal.py
 │   └── visualization  # Scripts for plotting and visualization
 ├── data
 │   ├── external       # Data from third-party sources
