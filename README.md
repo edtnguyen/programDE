@@ -1,6 +1,6 @@
 # programDE
 
-A pipeline for testing differential expression (DE) of gene targets on gene programs. This pipeline implements a SCEPTRE-like Conditional Randomization Test (CRT) to assess the statistical significance of perturbations.
+A pipeline for testing differential effect (DE) of gene targets on gene programs. This pipeline implements a SCEPTRE-like Conditional Randomization Test (CRT) to assess the statistical significance of perturbations.
 
 The core analysis pipeline lives in the `src.sceptre` module.
 
@@ -66,8 +66,7 @@ common AnnData containers (`.obsm`, `.layers`, `.obsp`, `.uns`, `.obs`) by key.
 
 All matrices must have the same number of rows (`N = number of cells`).
 
-The core functionality is the SCEPTRE-style union CRT. The recommended starting point
-is skew-normal calibrated p-values:
+The core functionality is the SCEPTRE-style union CRT. The recommended starting point is skew-normal calibrated p-values:
 
 ```python
 from src.sceptre import (
