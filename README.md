@@ -52,15 +52,7 @@ This command executes the script `src/data/make_dataset.py`.
 `prepare_crt_inputs` expects the following to be present in `adata`. It searches
 common AnnData containers (`.obsm`, `.layers`, `.obsp`, `.uns`, `.obs`) by key.
 
-- **Covariates**: `adata.obsm["covar"]` (shape `N x p`, numeric). A `DataFrame`
-  or `ndarray` is fine. Count-based covariates should be already log-transformed.
-  Columns are z-scored and an intercept is added by the pipeline. If `covar` is
-  a `DataFrame` with categorical/object/bool columns, they are one-hot encoded
-  automatically (dropping one level by default to avoid collinearity). Numeric
-  columns with a small number of unique values (<=20 by default) are also treated
-  as categorical and one-hot encoded. If `covar` is a non-numeric array
-  (object/string), it is auto-encoded as well. You can override the numeric
-  threshold via `prepare_crt_inputs(..., numeric_as_category_threshold=...)` or set `numeric_as_category_threshold=None` to disable this heuristics.
+- **Covariates**: `adata.obsm["covar"]` (shape `N x p`, numeric, catergorical, or object). A `DataFrame`or `ndarray` is fine. Count-based covariates should be already log-transformed. Columns are z-scored and an intercept is added by the pipeline. If `covar` is a `DataFrame` with categorical/object/bool columns, they are one-hot encoded automatically (dropping one level by default to avoid collinearity). Numeric columns with a small number of unique values (<=20 by default) are also treated as categorical and one-hot encoded. If `covar` is a non-numeric array (object/string), it is auto-encoded as well. You can override the numeric threshold via `prepare_crt_inputs(..., numeric_as_category_threshold=...)` or set `numeric_as_category_threshold=None` to disable this heuristics.
 - **cNMF usage**: `adata.obsm["cnmf_usage"]` (shape `N x K`, numeric).
   Each row should sum to 1 (the CLR step will floor and renormalize).
 - **Guide assignment**: `adata.obsm["guide_assignment"]` (shape `N x G`).
@@ -155,13 +147,13 @@ store_results_in_adata(
 )
 ```
 
-#### QQ plot for non-targeting controls
+#### QQ plot for negative controls
 
-Use this to sanity-check calibration of p-values for non-targeting genes.
+Use this to sanity-check calibration of p-values for negative-control genes.
 If you have both raw and skew-calibrated p-values, pass both to compare them.
 
 ```python
-from src.visualization import qq_plot_non_targeting_pvals
+from src.visualization import qq_plot_ntc_pvals
 
 # Single run that returns both raw and skew-calibrated p-values
 out = run_all_genes_union_crt(
@@ -173,10 +165,10 @@ out = run_all_genes_union_crt(
     return_skew_normal=True,
 )
 
-ax = qq_plot_non_targeting_pvals(
+ax = qq_plot_ntc_pvals(
     out["pvals_raw_df"],
     guide2gene=adata.uns["guide2gene"],
-    non_targeting_genes=["non-targeting", "safe-targeting"],
+    ntc_genes=["non-targeting", "safe-targeting"],
     pvals_skew_df=out["pvals_df"],
     title="QQ plot: non-targeting (raw vs skew) vs null",
     show_ref_line=True,

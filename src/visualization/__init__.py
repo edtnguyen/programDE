@@ -1,3 +1,3 @@
-from .qq_plot import qq_plot_non_targeting_pvals
+from .qq_plot import qq_plot_ntc_pvals
 
-__all__ = ["qq_plot_non_targeting_pvals"]
+__all__ = ["qq_plot_ntc_pvals"]

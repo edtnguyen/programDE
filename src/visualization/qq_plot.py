@@ -8,19 +8,19 @@ import numpy as np
 import pandas as pd
 
 
-def qq_plot_non_targeting_pvals(
+def qq_plot_ntc_pvals(
     pvals_df: pd.DataFrame,
     guide2gene: Mapping[str, str],
-    non_targeting_genes: Iterable[str],
+    ntc_genes: Iterable[str],
     *,
     pvals_skew_df: Optional[pd.DataFrame] = None,
     ax=None,
     seed: Optional[int] = 0,
     title: Optional[str] = None,
-    label_non_targeting: str = "non-targeting (raw)",
+    label_ntc_raw: str = "non-targeting (raw)",
     label_skew: str = "non-targeting (skew)",
     label_null: str = "null",
-    color_non_targeting: str = "#1f77b4",
+    color_ntc_raw: str = "#1f77b4",
     color_skew: str = "#ff7f0e",
     color_null: str = "#7f7f7f",
     show_ref_line: bool = True,
@@ -29,29 +29,28 @@ def qq_plot_non_targeting_pvals(
     conf_color: str = "#d9d9d9",
 ):
     """
-    QQ plot comparing non-targeting p-values to a null Uniform(0,1) reference.
+    QQ plot comparing NTC (negative-control) p-values to a null Uniform(0,1) reference.
     If pvals_skew_df is provided, plots both raw and skew-calibrated curves.
     """
-    non_targeting = list(dict.fromkeys(non_targeting_genes))
-    if len(non_targeting) == 0:
-        raise ValueError("non_targeting_genes must contain at least one gene name.")
+    ntc = list(dict.fromkeys(ntc_genes))
+    if len(ntc) == 0:
+        raise ValueError("ntc_genes must contain at least one gene name.")
 
     gene_names = set(guide2gene.values())
-    missing = [g for g in non_targeting if g not in gene_names]
+    missing = [g for g in ntc if g not in gene_names]
     if missing:
         raise ValueError(
-            "non_targeting_genes not found in guide2gene values: "
-            + ", ".join(sorted(missing))
+            "ntc_genes not found in guide2gene values: " + ", ".join(sorted(missing))
         )
 
     def _extract_pvals(df: pd.DataFrame, label: str) -> np.ndarray:
-        missing_idx = [g for g in non_targeting if g not in df.index]
+        missing_idx = [g for g in ntc if g not in df.index]
         if missing_idx:
             raise ValueError(
-                f"non_targeting_genes not found in {label} index: "
+                f"ntc_genes not found in {label} index: "
                 + ", ".join(sorted(missing_idx))
             )
-        pvals = df.loc[non_targeting].to_numpy().ravel()
+        pvals = df.loc[ntc].to_numpy().ravel()
         pvals = pvals[np.isfinite(pvals)]
         if pvals.size == 0:
             raise ValueError(f"No finite p-values available for {label}.")
@@ -104,7 +103,7 @@ def qq_plot_non_targeting_pvals(
             xmax = max(xmax, float(np.max(x_skew)))
         ax.plot([xmin, xmax], [xmin, xmax], color="#333333", linewidth=1.0, label="y=x")
 
-    ax.plot(x_raw, y_raw, label=label_non_targeting, color=color_non_targeting)
+    ax.plot(x_raw, y_raw, label=label_ntc_raw, color=color_ntc_raw)
     if x_skew is not None:
         ax.plot(x_skew, y_skew, label=label_skew, color=color_skew)
     ax.plot(x_null, y_null, label=label_null, color=color_null, linestyle="--")
