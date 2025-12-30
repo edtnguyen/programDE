@@ -166,7 +166,7 @@ out = run_all_genes_union_crt(
 )
 
 ax = qq_plot_ntc_pvals(
-    out["pvals_raw_df"],
+    pvals_df=out["pvals_raw_df"],
     guide2gene=adata.uns["guide2gene"],
     ntc_genes=["non-targeting", "safe-targeting"],
     pvals_skew_df=out["pvals_df"],
