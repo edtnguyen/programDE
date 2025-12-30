@@ -35,7 +35,6 @@ from .skew_normal import (
     compute_empirical_p_value,
     fit_and_evaluate_skew_normal,
     fit_skew_normal,
-    fit_skew_normal_funct_numba,
 )
 
 __all__ = [

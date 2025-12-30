@@ -84,9 +84,7 @@ store_results_in_adata(adata, pvals_df, betas_df, treated_df)
 
 #### Skew-normal calibration note
 
-The preferred skew-normal fitting entry point is `fit_skew_normal` (numba-backed).
-The older `fit_skew_normal_funct_numba` name is deprecated and remains only for
-backwards compatibility.
+The skew-normal fitting entry point is `fit_skew_normal` (numba-backed).
 
 Example:
 

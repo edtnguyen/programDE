@@ -2,8 +2,6 @@
 Skew-normal moment-matching utilities used for null calibration.
 """
 
-import warnings
-
 import numba as nb
 import numpy as np
 from scipy.stats import skewnorm
@@ -60,18 +58,6 @@ def fit_skew_normal(y: np.ndarray) -> np.ndarray:
     Public wrapper for the numba implementation.
     """
     return _fit_skew_normal_numba_impl(np.asarray(y, dtype=np.float64))
-
-
-def fit_skew_normal_funct_numba(y: np.ndarray) -> np.ndarray:
-    """
-    Deprecated: use fit_skew_normal instead.
-    """
-    warnings.warn(
-        "fit_skew_normal_funct_numba is deprecated; use fit_skew_normal instead.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return fit_skew_normal(y)
 
 
 def compute_empirical_p_value(
