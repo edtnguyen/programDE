@@ -143,7 +143,7 @@ store_results_in_adata(
     adata,
     out["pvals_df"],
     out["betas_df"],
-    out["treated_df"],
+    out["treated_df"]
 )
 ```
 
