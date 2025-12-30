@@ -62,7 +62,7 @@ def main() -> None:
     import numpy as np
 
     from src.sceptre import prepare_crt_inputs, run_all_genes_union_crt, limit_threading
-    from src.visualization import qq_plot_non_targeting_pvals
+    from src.visualization import qq_plot_ntc_pvals
 
     limit_threading()
     rng = np.random.default_rng(0)
@@ -78,10 +78,10 @@ def main() -> None:
         return_skew_normal=True,
     )
 
-    ax = qq_plot_non_targeting_pvals(
-        out["pvals_raw_df"],
+    ax = qq_plot_ntc_pvals(
+        pvals_raw_df=out["pvals_raw_df"],
         guide2gene=adata.uns["guide2gene"],
-        non_targeting_genes=["non-targeting", "safe-targeting"],
+        ntc_genes=["non-targeting", "safe-targeting"],
         pvals_skew_df=out["pvals_df"],
         show_ref_line=True,
         show_conf_band=True,

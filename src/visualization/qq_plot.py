@@ -9,7 +9,7 @@ import pandas as pd
 
 
 def qq_plot_ntc_pvals(
-    pvals_df: pd.DataFrame,
+    pvals_raw_df: Optional[pd.DataFrame],
     guide2gene: Mapping[str, str],
     ntc_genes: Iterable[str],
     *,
@@ -32,6 +32,8 @@ def qq_plot_ntc_pvals(
     QQ plot comparing NTC (negative-control) p-values to a null Uniform(0,1) reference.
     If pvals_skew_df is provided, plots both raw and skew-calibrated curves.
     """
+    if pvals_raw_df is None:
+        raise ValueError("pvals_raw_df is required.")
     ntc = list(dict.fromkeys(ntc_genes))
     if len(ntc) == 0:
         raise ValueError("ntc_genes must contain at least one gene name.")
@@ -63,7 +65,7 @@ def qq_plot_ntc_pvals(
         y = -np.log10(np.sort(pvals))
         return x, y, m
 
-    pvals_raw = _extract_pvals(pvals_df, "pvals_df")
+    pvals_raw = _extract_pvals(pvals_raw_df, "pvals_raw_df")
     x_raw, y_raw, m_raw = _qq_data(pvals_raw)
 
     if pvals_skew_df is not None:
