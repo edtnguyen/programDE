@@ -147,10 +147,27 @@ store_results_in_adata(
 )
 ```
 
+#### Output meanings (p-values)
+
+`run_all_genes_union_crt` always returns `pvals_df` as the main p-value output.
+What it contains depends on `calibrate_skew_normal`:
+
+- `calibrate_skew_normal=False`: `pvals_df` = raw CRT p-values.
+- `calibrate_skew_normal=True`: `pvals_df` = skew-normal calibrated p-values.
+
+Optional outputs (only when requested):
+
+- `pvals_raw_df` (if `return_raw_pvals=True`): raw CRT p-values.
+- `pvals_skew_df` (if `return_skew_normal=True`): skew-normal p-values.
+  When `calibrate_skew_normal=True`, this matches `pvals_df`.
+
+
 #### QQ plot for negative controls
 
 Use this to sanity-check calibration of p-values for negative-control genes.
 If you have both raw and skew-calibrated p-values, pass both to compare them.
+If you only pass `pvals_raw_df`, the plot shows the raw curve plus the null
+reference (no skew curve).
 
 ```python
 from src.visualization import qq_plot_ntc_pvals
@@ -181,19 +198,23 @@ import matplotlib.pyplot as plt
 plt.show()
 ```
 
-#### Output meanings (p-values)
+Raw-only example (no skew calibration):
 
-`run_all_genes_union_crt` always returns `pvals_df` as the main p-value output.
-What it contains depends on `calibrate_skew_normal`:
+```python
+out = run_all_genes_union_crt(
+    inputs,
+    B=1023,
+    n_jobs=16,
+    calibrate_skew_normal=False,
+)
 
-- `calibrate_skew_normal=False`: `pvals_df` = raw CRT p-values.
-- `calibrate_skew_normal=True`: `pvals_df` = skew-normal calibrated p-values.
-
-Optional outputs (only when requested):
-
-- `pvals_raw_df` (if `return_raw_pvals=True`): raw CRT p-values.
-- `pvals_skew_df` (if `return_skew_normal=True`): skew-normal p-values.
-  When `calibrate_skew_normal=True`, this matches `pvals_df`.
+ax = qq_plot_ntc_pvals(
+    pvals_raw_df=out["pvals_df"],  # raw CRT p-values
+    guide2gene=adata.uns["guide2gene"],
+    ntc_genes=["non-targeting", "safe-targeting"],
+    title="QQ plot: NTC genes (raw) vs null",
+)
+```
 
 #### Skew-normal calibration note
 
