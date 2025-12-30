@@ -170,7 +170,7 @@ ax = qq_plot_ntc_pvals(
     guide2gene=adata.uns["guide2gene"],
     ntc_genes=["non-targeting", "safe-targeting"],
     pvals_skew_df=out["pvals_df"],
-    title="QQ plot: non-targeting (raw vs skew) vs null",
+    title="QQ plot: NTC genes (raw vs skew) vs null",
     show_ref_line=True,
     show_conf_band=True,
 )
