@@ -34,7 +34,7 @@ from .skew_normal import (
     check_sn_tail,
     compute_empirical_p_value,
     fit_and_evaluate_skew_normal,
-    fit_skew_normal_funct,
+    fit_skew_normal,
     fit_skew_normal_funct_numba,
 )
 
@@ -57,8 +57,7 @@ __all__ = [
     "run_one_gene_union_crt",
     "store_results_in_adata",
     "fit_propensity_logistic",
-    "fit_skew_normal_funct",
-    "fit_skew_normal_funct_numba",
+    "fit_skew_normal",
     "compute_empirical_p_value",
     "check_sn_tail",
     "check_for_outliers",
