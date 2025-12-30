@@ -89,8 +89,8 @@ inputs = prepare_crt_inputs(
 
 out = run_all_genes_union_crt(
     inputs,
-    B=1023,
-    n_jobs=16,
+    B=1023,      # Number of permutations
+    n_jobs=16,   # Number of parallel jobs
     calibrate_skew_normal=True,
     return_skew_normal=True,
 )
