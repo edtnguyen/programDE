@@ -103,6 +103,13 @@ def _compute_skew_normal_pvals(
     return pvals_sn, params
 
 
+def _raw_pvals_from_betas(beta_obs: np.ndarray, beta_null: np.ndarray) -> np.ndarray:
+    abs_obs = np.abs(beta_obs)
+    ge = np.sum(np.abs(beta_null) >= abs_obs, axis=0)
+    B = beta_null.shape[0]
+    return (1.0 + ge) / (B + 1.0)
+
+
 def _skew_calibrated_crt(
     inputs: Any,
     indptr: np.ndarray,
@@ -110,7 +117,7 @@ def _skew_calibrated_crt(
     obs_idx: np.ndarray,
     B: int,
     side_code: int,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     beta_obs, beta_null = crt_betas_for_gene(
         indptr,
         idx,
@@ -122,7 +129,8 @@ def _skew_calibrated_crt(
         B,
     )
     pvals_sn, skew_params = _compute_skew_normal_pvals(beta_obs, beta_null, side_code)
-    return pvals_sn, beta_obs, skew_params
+    pvals_raw = _raw_pvals_from_betas(beta_obs, beta_null)
+    return pvals_sn, beta_obs, skew_params, pvals_raw
 
 
 def _stack_gene_results(
@@ -151,3 +159,12 @@ def _stack_skew_outputs(
         pvals_sn_mat, index=gene_list, columns=program_names
     )
     return pvals_skew_df, skew_params
+
+
+def _stack_raw_outputs(
+    results: List[Any],
+    gene_list: List[str],
+    program_names: List[str],
+) -> pd.DataFrame:
+    pvals_raw_mat = np.vstack([r.pvals_raw for r in results])
+    return pd.DataFrame(pvals_raw_mat, index=gene_list, columns=program_names)

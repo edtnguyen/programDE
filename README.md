@@ -66,7 +66,46 @@ common AnnData containers (`.obsm`, `.layers`, `.obsp`, `.uns`, `.obs`) by key.
 
 All matrices must have the same number of rows (`N = number of cells`).
 
-The core functionality is the SCEPTRE-style union CRT. Here is a typical usage example:
+The core functionality is the SCEPTRE-style union CRT. The recommended starting point
+is skew-normal calibrated p-values:
+
+```python
+from src.sceptre import (
+    prepare_crt_inputs,
+    run_all_genes_union_crt,
+    store_results_in_adata,
+    limit_threading,
+)
+
+# It is recommended to limit BLAS threads for reproducibility
+limit_threading()
+
+inputs = prepare_crt_inputs(
+    adata,
+    usage_key="cnmf_usage",
+    covar_key="covar",
+    guide_assignment_key="guide_assignment",
+    guide2gene_key="guide2gene",
+)
+
+out = run_all_genes_union_crt(
+    inputs,
+    B=1023,
+    n_jobs=16,
+    calibrate_skew_normal=True,
+    return_skew_normal=True,
+)
+
+# Store results back into the AnnData object
+store_results_in_adata(
+    adata,
+    out["pvals_df"],
+    out["betas_df"],
+    out["treated_df"],
+)
+```
+
+Here is a minimal usage example without skew-normal calibration:
 
 ```python
 from src.sceptre import (
@@ -91,29 +130,48 @@ inputs = prepare_crt_inputs(
     guide2gene_key="guide2gene",
 )
 
-pvals_df, betas_df, treated_df, results = run_all_genes_union_crt(
+out = run_all_genes_union_crt(
     inputs,
     B=1023,    # Number of permutations
     n_jobs=16, # Number of parallel jobs
 )
 
+# By default, run_all_genes_union_crt returns a dict. For legacy tuple output:
+# out = run_all_genes_union_crt(..., return_format="tuple")
+
 # Store results back into the AnnData object
-store_results_in_adata(adata, pvals_df, betas_df, treated_df)
+store_results_in_adata(
+    adata,
+    out["pvals_df"],
+    out["betas_df"],
+    out["treated_df"],
+)
 ```
 
 #### QQ plot for non-targeting controls
 
 Use this to sanity-check calibration of p-values for non-targeting genes.
+If you have both raw and skew-calibrated p-values, pass both to compare them.
 
 ```python
 from src.visualization import qq_plot_non_targeting_pvals
 
-# pvals_df comes from run_all_genes_union_crt
+# Single run that returns both raw and skew-calibrated p-values
+out = run_all_genes_union_crt(
+    inputs,
+    B=1023,
+    n_jobs=16,
+    calibrate_skew_normal=True,
+    return_raw_pvals=True,
+    return_skew_normal=True,
+)
+
 ax = qq_plot_non_targeting_pvals(
-    pvals_df,
+    out["pvals_raw_df"],
     guide2gene=adata.uns["guide2gene"],
     non_targeting_genes=["non-targeting", "safe-targeting"],
-    title="QQ plot: non-targeting vs null",
+    pvals_skew_df=out["pvals_df"],
+    title="QQ plot: non-targeting (raw vs skew) vs null",
     show_ref_line=True,
     show_conf_band=True,
 )
@@ -127,20 +185,6 @@ plt.show()
 #### Skew-normal calibration note
 
 The skew-normal fitting entry point is `fit_skew_normal` (numba-backed).
-
-Recommended (pipeline-level calibration):
-
-```python
-from src.sceptre import run_all_genes_union_crt
-
-pvals_df, betas_df, treated_df, results, pvals_skew_df, skew_params = run_all_genes_union_crt(
-    inputs,
-    B=1023,
-    n_jobs=16,
-    calibrate_skew_normal=True,
-    return_skew_normal=True,
-)
-```
 
 Manual fitting for a single program:
 
@@ -176,6 +220,14 @@ This project uses a `Makefile` to streamline common tasks.
 - `make lint`: Lint the source code using `flake8`.
 - `make clean`: Remove compiled Python files.
 
+### Testing
+
+Run the mock in-memory smoke test:
+
+```bash
+python3 scripts/test_mock_crt.py
+```
+
 ## Project Structure
 
 ```
@@ -183,6 +235,8 @@ This project uses a `Makefile` to streamline common tasks.
 ├── README.md          # Project README
 ├── requirements.txt   # Python package requirements
 ├── setup.py           # Makes the project pip-installable
+├── scripts            # Utility scripts
+│   └── test_mock_crt.py
 ├── src                # Project source code
 │   ├── data           # Scripts to download or generate data
 │   ├── features       # Scripts to generate features
@@ -198,8 +252,7 @@ This project uses a `Makefile` to streamline common tasks.
 │   │   └── skew_normal.py
 │   └── visualization  # Scripts for plotting and visualization
 │   │   ├── __init__.py
-│   │   ├── qq_plot.py
-│   │   └── visualize.py
+│   │   └── qq_plot.py
 ├── data
 │   ├── external       # Data from third-party sources
 │   ├── interim        # Intermediate transformed data

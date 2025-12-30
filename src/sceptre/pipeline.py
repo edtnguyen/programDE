@@ -3,7 +3,7 @@ High-level pipeline to run SCEPTRE-like CRT across genes and programs.
 """
 
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -27,6 +27,7 @@ from .pipeline_helpers import (
     _sample_crt_indices,
     _skew_calibrated_crt,
     _stack_gene_results,
+    _stack_raw_outputs,
     _stack_skew_outputs,
 )
 from .propensity import fit_propensity_logistic
@@ -54,6 +55,7 @@ class CRTGeneResult:
     n_treated: int
     pvals_sn: Optional[np.ndarray] = None
     skew_params: Optional[np.ndarray] = None
+    pvals_raw: Optional[np.ndarray] = None
 
 
 def prepare_crt_inputs(
@@ -159,6 +161,7 @@ def _trivial_gene_result(
         n_treated=int(n_treated),
         pvals_sn=np.ones(K, dtype=np.float64) if calibrate_skew_normal else None,
         skew_params=np.full((K, 3), np.nan) if calibrate_skew_normal else None,
+        pvals_raw=np.ones(K, dtype=np.float64) if calibrate_skew_normal else None,
     )
 
 
@@ -201,7 +204,7 @@ def run_one_gene_union_crt(
     indptr, idx = _sample_crt_indices(p, B, seed)
 
     if calibrate_skew_normal:
-        pvals_sn, beta_obs, skew_params = _skew_calibrated_crt(
+        pvals_sn, beta_obs, skew_params, pvals_raw = _skew_calibrated_crt(
             inputs, indptr, idx, obs_idx, B, skew_normal_side_code
         )
         pvals = pvals_sn
@@ -209,6 +212,7 @@ def run_one_gene_union_crt(
         pvals, beta_obs = _empirical_crt(inputs, indptr, idx, obs_idx, B)
         pvals_sn = None
         skew_params = None
+        pvals_raw = None
     return CRTGeneResult(
         gene=gene,
         pvals=pvals,
@@ -216,6 +220,7 @@ def run_one_gene_union_crt(
         n_treated=int(obs_idx.size),
         pvals_sn=pvals_sn,
         skew_params=skew_params,
+        pvals_raw=pvals_raw,
     )
 
 
@@ -230,7 +235,9 @@ def run_all_genes_union_crt(
     calibrate_skew_normal: bool = False,
     skew_normal_side_code: int = 0,
     return_skew_normal: bool = False,
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, List[CRTGeneResult]]:
+    return_raw_pvals: bool = False,
+    return_format: str = "dict",
+) -> Union[Tuple, Dict[str, Any]]:
     """
     Run union CRT across all genes and return DataFrames for p-values and betas.
     inputs: CRTInputs dataclass with all required inputs
@@ -243,15 +250,18 @@ def run_all_genes_union_crt(
     calibrate_skew_normal: if True, compute skew-normal calibrated p-values per gene
     skew_normal_side_code: 0 two-sided, 1 right-tailed, -1 left-tailed
     return_skew_normal: if True, return skew-normal pvals and parameters
+    return_raw_pvals: if True, return raw CRT p-values when skew calibration is enabled
+    return_format: "dict" (default) or "tuple" for backward-compatible ordering
     Returns:
-        pvals_df: DataFrame of CRT p-values (genes x programs). If calibrate_skew_normal
-            is True, these are skew-normal calibrated values.
-        betas_df: DataFrame of CRT effect sizes (genes x programs)
-        treated_df: Series of number of treated cells per gene
-        results: list of CRTGeneResult dataclasses for all genes
-        if return_skew_normal is True, also returns:
-            pvals_skew_df: DataFrame of skew-normal p-values (genes x programs)
-            skew_params: array of fitted parameters (genes x programs x 3)
+        dict with keys:
+            pvals_df: DataFrame of CRT p-values (genes x programs). If calibrate_skew_normal
+                is True, these are skew-normal calibrated values.
+            betas_df: DataFrame of CRT effect sizes (genes x programs)
+            treated_df: Series of number of treated cells per gene
+            results: list of CRTGeneResult dataclasses for all genes
+            pvals_raw_df (optional): raw CRT p-values (genes x programs)
+            pvals_skew_df (optional): skew-normal p-values (genes x programs)
+            skew_params (optional): fitted parameters (genes x programs x 3)
     """
     gene_list = sorted(inputs.gene_to_cols.keys()) if genes is None else list(genes)
 
@@ -271,13 +281,45 @@ def run_all_genes_union_crt(
     pvals_df, betas_df, treated_df = _stack_gene_results(
         results, gene_list, inputs.program_names
     )
+    if return_raw_pvals and not calibrate_skew_normal:
+        raise ValueError("return_raw_pvals=True requires calibrate_skew_normal=True.")
+
+    if return_format not in ("dict", "tuple"):
+        raise ValueError('return_format must be "dict" or "tuple".')
+
+    pvals_raw_df = None
+    if return_raw_pvals:
+        pvals_raw_df = _stack_raw_outputs(results, gene_list, inputs.program_names)
+
+    pvals_skew_df = None
+    skew_params = None
     if return_skew_normal:
         if not calibrate_skew_normal:
             raise ValueError("return_skew_normal=True requires calibrate_skew_normal=True.")
         pvals_skew_df, skew_params = _stack_skew_outputs(
             results, gene_list, inputs.program_names
         )
-        return pvals_df, betas_df, treated_df, results, pvals_skew_df, skew_params
+
+    if return_format == "tuple":
+        out = [pvals_df, betas_df, treated_df, results]
+        if return_raw_pvals:
+            out.append(pvals_raw_df)
+        if return_skew_normal:
+            out.extend([pvals_skew_df, skew_params])
+        return tuple(out)
+
+    out_dict: Dict[str, Any] = {
+        "pvals_df": pvals_df,
+        "betas_df": betas_df,
+        "treated_df": treated_df,
+        "results": results,
+    }
+    if return_raw_pvals:
+        out_dict["pvals_raw_df"] = pvals_raw_df
+    if return_skew_normal:
+        out_dict["pvals_skew_df"] = pvals_skew_df
+        out_dict["skew_params"] = skew_params
+    return out_dict
 
     return pvals_df, betas_df, treated_df, results
 

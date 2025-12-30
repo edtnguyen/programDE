@@ -13,12 +13,15 @@ def qq_plot_non_targeting_pvals(
     guide2gene: Mapping[str, str],
     non_targeting_genes: Iterable[str],
     *,
+    pvals_skew_df: Optional[pd.DataFrame] = None,
     ax=None,
     seed: Optional[int] = 0,
     title: Optional[str] = None,
-    label_non_targeting: str = "non-targeting",
+    label_non_targeting: str = "non-targeting (raw)",
+    label_skew: str = "non-targeting (skew)",
     label_null: str = "null",
     color_non_targeting: str = "#1f77b4",
+    color_skew: str = "#ff7f0e",
     color_null: str = "#7f7f7f",
     show_ref_line: bool = True,
     show_conf_band: bool = True,
@@ -27,6 +30,7 @@ def qq_plot_non_targeting_pvals(
 ):
     """
     QQ plot comparing non-targeting p-values to a null Uniform(0,1) reference.
+    If pvals_skew_df is provided, plots both raw and skew-calibrated curves.
     """
     non_targeting = list(dict.fromkeys(non_targeting_genes))
     if len(non_targeting) == 0:
@@ -40,29 +44,40 @@ def qq_plot_non_targeting_pvals(
             + ", ".join(sorted(missing))
         )
 
-    missing_idx = [g for g in non_targeting if g not in pvals_df.index]
-    if missing_idx:
-        raise ValueError(
-            "non_targeting_genes not found in pvals_df index: "
-            + ", ".join(sorted(missing_idx))
-        )
+    def _extract_pvals(df: pd.DataFrame, label: str) -> np.ndarray:
+        missing_idx = [g for g in non_targeting if g not in df.index]
+        if missing_idx:
+            raise ValueError(
+                f"non_targeting_genes not found in {label} index: "
+                + ", ".join(sorted(missing_idx))
+            )
+        pvals = df.loc[non_targeting].to_numpy().ravel()
+        pvals = pvals[np.isfinite(pvals)]
+        if pvals.size == 0:
+            raise ValueError(f"No finite p-values available for {label}.")
+        return np.clip(pvals, 1e-300, 1.0)
 
-    pvals = pvals_df.loc[non_targeting].to_numpy().ravel()
-    pvals = pvals[np.isfinite(pvals)]
-    if pvals.size == 0:
-        raise ValueError("No finite p-values available for non-targeting genes.")
+    def _qq_data(pvals: np.ndarray):
+        m = pvals.size
+        expected = (np.arange(1, m + 1) - 0.5) / m
+        x = -np.log10(expected)
+        y = -np.log10(np.sort(pvals))
+        return x, y, m
 
-    pvals = np.clip(pvals, 1e-300, 1.0)
-    m = pvals.size
+    pvals_raw = _extract_pvals(pvals_df, "pvals_df")
+    x_raw, y_raw, m_raw = _qq_data(pvals_raw)
 
-    expected = (np.arange(1, m + 1) - 0.5) / m
-    x = -np.log10(expected)
+    if pvals_skew_df is not None:
+        pvals_skew = _extract_pvals(pvals_skew_df, "pvals_skew_df")
+        x_skew, y_skew, m_skew = _qq_data(pvals_skew)
+    else:
+        x_skew = y_skew = None
+        m_skew = 0
 
-    y_non_target = -np.log10(np.sort(pvals))
-
+    m_null = m_raw if m_raw > 0 else m_skew
     rng = np.random.default_rng(seed)
-    null_pvals = rng.uniform(size=m)
-    y_null = -np.log10(np.sort(null_pvals))
+    null_pvals = rng.uniform(size=m_null)
+    x_null, y_null, _ = _qq_data(null_pvals)
 
     if ax is None:
         import matplotlib.pyplot as plt
@@ -72,19 +87,27 @@ def qq_plot_non_targeting_pvals(
     if show_conf_band:
         from scipy.stats import beta
 
-        i = np.arange(1, m + 1)
-        lower = beta.ppf(conf_alpha / 2.0, i, m - i + 1)
-        upper = beta.ppf(1.0 - conf_alpha / 2.0, i, m - i + 1)
+        i = np.arange(1, m_null + 1)
+        lower = beta.ppf(conf_alpha / 2.0, i, m_null - i + 1)
+        upper = beta.ppf(1.0 - conf_alpha / 2.0, i, m_null - i + 1)
         lower = -np.log10(np.clip(lower, 1e-300, 1.0))
         upper = -np.log10(np.clip(upper, 1e-300, 1.0))
-        ax.fill_between(x, lower, upper, color=conf_color, alpha=0.5, label="95% CI")
+        ax.fill_between(
+            x_null, lower, upper, color=conf_color, alpha=0.5, label="95% CI"
+        )
 
     if show_ref_line:
-        xmin, xmax = float(x.min()), float(x.max())
+        xmin = float(np.min(x_raw))
+        xmax = float(np.max(x_raw))
+        if x_skew is not None:
+            xmin = min(xmin, float(np.min(x_skew)))
+            xmax = max(xmax, float(np.max(x_skew)))
         ax.plot([xmin, xmax], [xmin, xmax], color="#333333", linewidth=1.0, label="y=x")
 
-    ax.plot(x, y_non_target, label=label_non_targeting, color=color_non_targeting)
-    ax.plot(x, y_null, label=label_null, color=color_null, linestyle="--")
+    ax.plot(x_raw, y_raw, label=label_non_targeting, color=color_non_targeting)
+    if x_skew is not None:
+        ax.plot(x_skew, y_skew, label=label_skew, color=color_skew)
+    ax.plot(x_null, y_null, label=label_null, color=color_null, linestyle="--")
     ax.set_xlabel("Expected -log10(p)")
     ax.set_ylabel("Observed -log10(p)")
     if title is not None:
