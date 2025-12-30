@@ -47,6 +47,25 @@ This command executes the script `src/data/make_dataset.py`.
 
 ### Library Usage
 
+#### Required AnnData inputs
+
+`prepare_crt_inputs` expects the following to be present in `adata`. It searches
+common AnnData containers (`.obsm`, `.layers`, `.obsp`, `.uns`, `.obs`) by key.
+
+- **Covariates**: `adata.obsm["covar"]` (shape `N x p`, numeric). A `DataFrame`
+  or `ndarray` is fine. Columns are z-scored and an intercept is added.
+- **cNMF usage**: `adata.obsm["cnmf_usage"]` (shape `N x K`, numeric).
+  Each row should sum to 1 (the CLR step will floor and renormalize).
+- **Guide assignment**: `adata.obsm["guide_assignment"]` (shape `N x G`).
+  Can be dense or sparse; nonzero means guide present.
+- **Guide → gene mapping**: `adata.uns["guide2gene"]` (dict-like).
+  Keys are guide IDs, values are gene names.
+- **Guide names** (if guide_assignment is not a DataFrame with columns):
+  `adata.uns["guide_names"]` list of guide IDs in column order.
+- **Program names** (optional): `adata.uns["program_names"]` list of length `K`.
+
+All matrices must have the same number of rows (`N = number of cells`).
+
 The core functionality is the SCEPTRE-style union CRT. Here is a typical usage example:
 
 ```python
