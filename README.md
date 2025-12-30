@@ -53,7 +53,7 @@ This command executes the script `src/data/make_dataset.py`.
 common AnnData containers (`.obsm`, `.layers`, `.obsp`, `.uns`, `.obs`) by key.
 
 - **Covariates**: `adata.obsm["covar"]` (shape `N x p`, numeric). A `DataFrame`
-  or `ndarray` is fine. Columns are z-scored and an intercept is added.
+  or `ndarray` is fine. Count-based covariates should be already log-transformed. Columns are z-scored and an intercept is added by the pipeline. 
 - **cNMF usage**: `adata.obsm["cnmf_usage"]` (shape `N x K`, numeric).
   Each row should sum to 1 (the CLR step will floor and renormalize).
 - **Guide assignment**: `adata.obsm["guide_assignment"]` (shape `N x G`).
@@ -99,6 +99,29 @@ pvals_df, betas_df, treated_df, results = run_all_genes_union_crt(
 
 # Store results back into the AnnData object
 store_results_in_adata(adata, pvals_df, betas_df, treated_df)
+```
+
+#### QQ plot for non-targeting controls
+
+Use this to sanity-check calibration of p-values for non-targeting genes.
+
+```python
+from src.visualization import qq_plot_non_targeting_pvals
+
+# pvals_df comes from run_all_genes_union_crt
+ax = qq_plot_non_targeting_pvals(
+    pvals_df,
+    guide2gene=adata.uns["guide2gene"],
+    non_targeting_genes=["non-targeting", "safe-targeting"],
+    title="QQ plot: non-targeting vs null",
+    show_ref_line=True,
+    show_conf_band=True,
+)
+
+# Display the plot (e.g., in scripts)
+# In notebooks, returning `ax` is usually enough; in scripts, call plt.show().
+import matplotlib.pyplot as plt
+plt.show()
 ```
 
 #### Skew-normal calibration note
@@ -174,6 +197,9 @@ This project uses a `Makefile` to streamline common tasks.
 │   │   ├── shared_low_level_functions.cpp
 │   │   └── skew_normal.py
 │   └── visualization  # Scripts for plotting and visualization
+│   │   ├── __init__.py
+│   │   ├── qq_plot.py
+│   │   └── visualize.py
 ├── data
 │   ├── external       # Data from third-party sources
 │   ├── interim        # Intermediate transformed data
