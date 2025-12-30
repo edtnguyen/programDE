@@ -96,9 +96,10 @@ out = run_all_genes_union_crt(
 )
 
 # Store results back into the AnnData object
+# If calibrate_skew_normal=True, pvals_skew_df is also automatically stored
 store_results_in_adata(
     adata,
-    out["pvals_df"],
+    out["pvals_df"],    # raw p-values
     out["betas_df"],
     out["treated_df"],
 )
@@ -166,10 +167,10 @@ out = run_all_genes_union_crt(
 )
 
 ax = qq_plot_ntc_pvals(
-    pvals_df=out["pvals_raw_df"],
+    pvals_df=out["pvals_raw_df"],         # raw CRT p-values  
     guide2gene=adata.uns["guide2gene"],
     ntc_genes=["non-targeting", "safe-targeting"],
-    pvals_skew_df=out["pvals_df"],
+    pvals_skew_df=out["pvals_df"],        # skew-calibrated p-values
     title="QQ plot: NTC genes (raw vs skew) vs null",
     show_ref_line=True,
     show_conf_band=True,
