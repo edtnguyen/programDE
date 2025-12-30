@@ -60,7 +60,7 @@ common AnnData containers (`.obsm`, `.layers`, `.obsp`, `.uns`, `.obs`) by key.
   columns with a small number of unique values (<=20 by default) are also treated
   as categorical and one-hot encoded. If `covar` is a non-numeric array
   (object/string), it is auto-encoded as well. You can override the numeric
-  threshold via `prepare_crt_inputs(..., numeric_as_category_threshold=...)`.
+  threshold via `prepare_crt_inputs(..., numeric_as_category_threshold=...)` or set `numeric_as_category_threshold=None` to disable this heuristics.
 - **cNMF usage**: `adata.obsm["cnmf_usage"]` (shape `N x K`, numeric).
   Each row should sum to 1 (the CLR step will floor and renormalize).
 - **Guide assignment**: `adata.obsm["guide_assignment"]` (shape `N x G`).
@@ -73,20 +73,6 @@ common AnnData containers (`.obsm`, `.layers`, `.obsp`, `.uns`, `.obs`) by key.
 
 All matrices must have the same number of rows (`N = number of cells`).
 
-If you want to customize encoding (e.g., keep all category levels or disable
-numeric-to-categorical heuristics), pre-encode
-your covariates before storing them in `adata`:
-
-```python
-from src.sceptre import encode_categorical_covariates
-
-covar_df = encode_categorical_covariates(
-    covar_df,
-    drop_first=False,
-    numeric_as_category_threshold=None,
-)
-adata.obsm["covar"] = covar_df
-```
 
 The core functionality is the SCEPTRE-style union CRT. The recommended starting point is skew-normal calibrated p-values:
 
