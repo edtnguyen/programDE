@@ -104,10 +104,13 @@ Manual fitting for a single program:
 
 ```python
 import numpy as np
-from src.sceptre import fit_skew_normal
+from src.sceptre import fit_skew_normal, crt_betas_for_gene
 
 # beta_null is the CRT null distribution for a single gene-program (length B)
 # Example: beta_null = beta_null_mat[:, program_index]
+# If you already ran the pipeline, you can reuse stored results; otherwise,
+# generate beta_null directly:
+# beta_obs, beta_null_mat = crt_betas_for_gene(indptr, idx, C, Y, A, CTY, obs_idx, B)
 mu = beta_null.mean()
 sd = beta_null.std()
 z_nulls = (beta_null - mu) / sd
