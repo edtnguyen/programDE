@@ -7,10 +7,46 @@ import numpy as np
 from scipy.stats import skewnorm
 
 
-@nb.njit
-def _fit_skew_normal_numba_impl(y: np.ndarray) -> np.ndarray:
+def fit_skew_normal_funct(y: np.ndarray) -> np.ndarray:
     """
-    Numba implementation of skew-normal moment-matching.
+    Match skew-normal parameters (xi, omega, alpha) to sample moments.
+
+    Returns [xi, omega, alpha, mean, sd] to mirror the original C++ routine.
+    """
+    y = np.asarray(y, dtype=np.float64)
+    n = y.size
+    n_doub = float(n)
+
+    # Vectorized calculation of moments for performance
+    m_y = np.mean(y)
+    sd_y = np.std(y)  # defaults to ddof=0 (population std), matching C++ logic
+
+    diff = y - m_y
+    s_3 = np.sum(diff * diff * diff)
+    gamma1 = s_3 / (n_doub * np.power(sd_y, 3))
+
+    max_gamma_1 = 0.995
+    if abs(gamma1) > max_gamma_1:
+        gamma1 = np.sign(gamma1) * 0.9 * max_gamma_1
+
+    b = np.sqrt(2.0 / np.pi)
+    r = np.copysign(1.0, gamma1) * np.power(
+        2.0 * np.abs(gamma1) / (4.0 - np.pi), 1.0 / 3.0
+    )
+    delta = r / (b * np.sqrt(1.0 + r * r))
+    alpha = delta / np.sqrt(1.0 - delta * delta)
+    mu_z = b * delta
+    sd_z = np.sqrt(1.0 - mu_z * mu_z)
+    omega = sd_y / sd_z
+    xi = m_y - omega * mu_z
+
+    return np.array([xi, omega, alpha, m_y, sd_y], dtype=np.float64)
+
+
+@nb.njit
+def fit_skew_normal_funct_numba(y: np.ndarray) -> np.ndarray:
+    """
+    Numba-accelerated version of fit_skew_normal_funct.
     """
     n = y.size
     n_doub = float(n)
@@ -30,8 +66,11 @@ def _fit_skew_normal_numba_impl(y: np.ndarray) -> np.ndarray:
     gamma1 = s_3 / (n_doub * (sd_y * sd_y * sd_y))
 
     max_gamma_1 = 0.995
-    if np.abs(gamma1) > max_gamma_1:
-        gamma1 = np.copysign(0.9 * max_gamma_1, gamma1)
+    # Clamp magnitude to avoid NaNs for highly skewed distributions
+    if gamma1 > max_gamma_1:
+        gamma1 = 0.9 * max_gamma_1
+    elif gamma1 < -max_gamma_1:
+        gamma1 = -0.9 * max_gamma_1
 
     b = np.sqrt(2.0 / np.pi)
     r = np.copysign(1.0, gamma1) * np.power(
@@ -51,13 +90,6 @@ def _fit_skew_normal_numba_impl(y: np.ndarray) -> np.ndarray:
     out[3] = m_y
     out[4] = sd_y
     return out
-
-
-def fit_skew_normal(y: np.ndarray) -> np.ndarray:
-    """
-    Public wrapper for the numba implementation.
-    """
-    return _fit_skew_normal_numba_impl(np.asarray(y, dtype=np.float64))
 
 
 def compute_empirical_p_value(
@@ -142,7 +174,7 @@ def fit_and_evaluate_skew_normal(
     Fit skew-normal to nulls, check fit, and return [xi, omega, alpha, p].
     """
     p_val = -1.0
-    fitted_params = fit_skew_normal(np.asarray(null_statistics, dtype=np.float64))
+    fitted_params = fit_skew_normal_funct(null_statistics)
     if np.all(np.isfinite(fitted_params)):
         null_sorted = np.asarray(null_statistics, dtype=np.float64).copy()
         null_sorted.sort()
