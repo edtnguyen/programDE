@@ -96,10 +96,9 @@ out = run_all_genes_union_crt(
 )
 
 # Store results back into the AnnData object
-# If calibrate_skew_normal=True, pvals_skew_df is also automatically stored
 store_results_in_adata(
     adata,
-    out["pvals_df"],    # raw p-values
+    out["pvals_df"],    
     out["betas_df"],
     out["treated_df"],
 )
@@ -181,6 +180,20 @@ ax = qq_plot_ntc_pvals(
 import matplotlib.pyplot as plt
 plt.show()
 ```
+
+#### Output meanings (p-values)
+
+`run_all_genes_union_crt` always returns `pvals_df` as the main p-value output.
+What it contains depends on `calibrate_skew_normal`:
+
+- `calibrate_skew_normal=False`: `pvals_df` = raw CRT p-values.
+- `calibrate_skew_normal=True`: `pvals_df` = skew-normal calibrated p-values.
+
+Optional outputs (only when requested):
+
+- `pvals_raw_df` (if `return_raw_pvals=True`): raw CRT p-values.
+- `pvals_skew_df` (if `return_skew_normal=True`): skew-normal p-values.
+  When `calibrate_skew_normal=True`, this matches `pvals_df`.
 
 #### Skew-normal calibration note
 
