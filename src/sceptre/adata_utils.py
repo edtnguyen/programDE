@@ -75,10 +75,12 @@ def encode_categorical_covariates(
             pd.api.types.is_categorical_dtype(series)
             or pd.api.types.is_object_dtype(series)
             or pd.api.types.is_bool_dtype(series)
+            or pd.api.types.is_string_dtype(series)
         ):
             cat_cols.append(col)
-        elif numeric_as_category_threshold is not None and pd.api.types.is_numeric_dtype(
-            series
+        elif (
+            numeric_as_category_threshold is not None
+            and pd.api.types.is_numeric_dtype(series)
         ):
             unique_count = series.nunique(dropna=not dummy_na)
             if unique_count <= numeric_as_category_threshold:
