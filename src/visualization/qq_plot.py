@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from src.sceptre.diagnostics import crt_null_pvals_from_null_stats_fast
+from src.sceptre.skew_normal import fit_skew_normal
 
 
 def qq_plot_ntc_pvals(
@@ -19,14 +20,19 @@ def qq_plot_ntc_pvals(
     null_pvals: Optional[Sequence[float]] = None,
     null_stats: Optional[Sequence[float]] = None,
     null_two_sided: bool = True,
+    show_null_skew: bool = False,
+    null_skew_samples: Optional[int] = None,
+    null_skew_seed: Optional[int] = 0,
     ax=None,
     title: Optional[str] = None,
     label_ntc_raw: str = "NTC (raw)",
     label_skew: str = "NTC (skew)",
     label_null: str = "null",
+    label_null_skew: str = "null (skew)",
     color_ntc_raw: str = "#1f77b4",
     color_skew: str = "#ff7f0e",
     color_null: str = "#7f7f7f",
+    color_null_skew: str = "#2ca02c",
     show_ref_line: bool = True,
     show_conf_band: bool = True,
     conf_alpha: float = 0.05,
@@ -36,12 +42,15 @@ def qq_plot_ntc_pvals(
     QQ plot comparing NTC (negative-control) p-values to a CRT-null reference.
     If pvals_skew_df is provided, plots both raw and skew-calibrated curves.
     Provide null_pvals directly or pass null_stats to compute leave-one-out
-    CRT-null p-values.
+    CRT-null p-values. Optionally plot a skew-normal null curve by fitting
+    to null_stats and sampling from the fitted distribution.
     """
     if pvals_raw_df is None:
         raise ValueError("pvals_raw_df is required.")
     if null_pvals is None and null_stats is None:
         raise ValueError("Provide null_pvals or null_stats.")
+    if show_null_skew and null_stats is None:
+        raise ValueError("null_stats is required when show_null_skew=True.")
     ntc = list(dict.fromkeys(ntc_genes))
     if len(ntc) == 0:
         raise ValueError("ntc_genes must contain at least one gene name.")
@@ -98,6 +107,39 @@ def qq_plot_ntc_pvals(
         null_arr = _normalize_null_pvals(null_pvals)
     x_null, y_null, m_null = _qq_data(null_arr)
 
+    x_null_skew = y_null_skew = None
+    if show_null_skew:
+        stats = np.asarray(null_stats, dtype=np.float64)
+        stats = stats[np.isfinite(stats)]
+        if stats.size == 0:
+            raise ValueError("null_stats contains no finite values.")
+        mu = stats.mean()
+        sd = stats.std()
+        if not np.isfinite(sd) or sd <= 0.0:
+            raise ValueError("null_stats must have non-zero variance.")
+
+        z_null = (stats - mu) / sd
+        params = fit_skew_normal(z_null)
+        if not np.all(np.isfinite(params[:3])):
+            raise ValueError("Skew-normal fit failed on null_stats.")
+
+        n_draw = stats.size if null_skew_samples is None else int(null_skew_samples)
+        if n_draw <= 0:
+            raise ValueError("null_skew_samples must be positive.")
+
+        from scipy.stats import skewnorm
+
+        dist = skewnorm(params[2], loc=params[0], scale=params[1])
+        rng = np.random.default_rng(null_skew_seed)
+        z_samp = dist.rvs(size=n_draw, random_state=rng)
+        u = dist.cdf(z_samp)
+        if null_two_sided:
+            p_skew = 2.0 * np.minimum(u, 1.0 - u)
+        else:
+            p_skew = 1.0 - u
+        p_skew = np.clip(p_skew, 1e-300, 1.0)
+        x_null_skew, y_null_skew, _ = _qq_data(p_skew)
+
     if ax is None:
         import matplotlib.pyplot as plt
 
@@ -129,6 +171,14 @@ def qq_plot_ntc_pvals(
     if x_skew is not None:
         ax.plot(x_skew, y_skew, label=label_skew, color=color_skew)
     ax.plot(x_null, y_null, label=label_null, color=color_null, linestyle="--")
+    if x_null_skew is not None:
+        ax.plot(
+            x_null_skew,
+            y_null_skew,
+            label=label_null_skew,
+            color=color_null_skew,
+            linestyle=":",
+        )
     ax.set_xlabel("Expected -log10(p)")
     ax.set_ylabel("Observed -log10(p)")
     if title is not None:
