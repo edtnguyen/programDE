@@ -4,6 +4,51 @@ A pipeline for testing differential effect (DE) of gene targets on gene programs
 
 The core analysis pipeline lives in the `src.sceptre` module.
 
+
+## Method overview
+
+This section summarizes the statistical steps used in the pipeline.
+
+### 1) Linear predictor for gene effect on program usage
+
+- Define a gene-level union indicator per cell:
+  x_i = 1 if any guide targeting the gene is present in cell i, else 0.
+- Let C be the covariate matrix (N x p) with intercept.
+- Let Y be the CLR-transformed usage matrix (N x K), one column per program.
+- For each program k, fit the linear model:
+  Y_{ik} = beta_k * x_i + C_i * gamma_k + epsilon_{ik}
+- The test statistic is the OLS coefficient beta_k for the gene effect on program k.
+
+### 2) Conditional Randomization Test (CRT)
+
+Step-by-step:
+
+1. Fit a propensity model for the union indicator:
+   p_i = P(x_i = 1 | C_i) (regularized logistic regression).
+2. Generate B synthetic resamples x~^(b) under the null, conditioned on C:
+   For each cell i, sample x~_i from Bernoulli(p_i) using the fast sampler.
+3. For each resample b, compute the OLS coefficient beta_k^(b)
+   for all programs using summary statistics.
+4. Compute the empirical CRT p-value per program:
+   p_k = (1 + #{b: |beta_k^(b)| >= |beta_k^(obs)|}) / (B + 1).
+
+### 3) Skew-normal calibration
+
+Purpose: smooth and calibrate tail probabilities when the CRT null is skewed.
+
+1. Build null z-scores for each program:
+   z_b = (beta_k^(b) - mu_k) / sd_k.
+2. Fit a skew-normal distribution SN(xi, omega, alpha) to {z_b}.
+   The skew-normal PDF is:
+     f(z) = (2 / omega) * phi((z - xi) / omega) * Phi(alpha * (z - xi) / omega)
+   where phi and Phi are the standard normal PDF/CDF.
+3. Compute calibrated p-values using the fitted skew-normal CDF:
+   - two-sided: p = 2 * min(F(z_obs), 1 - F(z_obs))
+   - right-tailed: p = 1 - F(z_obs)
+   - left-tailed: p = F(z_obs)
+4. If the skew-normal fit fails, fall back to empirical p-values on z-scores.
+
+
 ## Getting Started
 
 ### Prerequisites
