@@ -1,4 +1,9 @@
-from src.sceptre import limit_threading, prepare_crt_inputs, run_all_genes_union_crt
+from src.sceptre import (
+    compute_gene_null_pvals,
+    limit_threading,
+    prepare_crt_inputs,
+    run_all_genes_union_crt,
+)
 from src.visualization import qq_plot_ntc_pvals
 
 
@@ -27,11 +32,13 @@ def test_full_pipeline_integration(mock_adata):
     assert out["skew_params"].shape[:2] == out["pvals_df"].shape
     assert out["skew_params"].shape[2] == 3
 
+    null_pvals = compute_gene_null_pvals("non-targeting", inputs, B=31).ravel()
     ax = qq_plot_ntc_pvals(
         pvals_raw_df=out["pvals_raw_df"],
         guide2gene=mock_adata.uns["guide2gene"],
         ntc_genes=["non-targeting", "safe-targeting"],
         pvals_skew_df=out["pvals_df"],
+        null_pvals=null_pvals,
         show_ref_line=True,
         show_conf_band=True,
     )

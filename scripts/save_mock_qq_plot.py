@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Minimal in-memory smoke test for the CRT + skew-normal pipeline.
+Generate a mock CRT run and save a QQ plot PNG for visual inspection.
 """
 
+import argparse
 import os
 import sys
 import tempfile
@@ -20,41 +21,23 @@ def _set_runtime_env() -> None:
     os.environ.setdefault("MPLCONFIGDIR", mpl_dir)
 
 
-def _build_mock_adata(rng, n_cells=40, n_programs=5, n_guides=6):
-    class MockAdata:
-        def __init__(self):
-            self.obsm = {}
-            self.layers = {}
-            self.obsp = {}
-            self.uns = {}
-            self.obs = {}
-
-    adata = MockAdata()
-
-    adata.obsm["covar"] = rng.normal(size=(n_cells, 3))
-    adata.obsm["cnmf_usage"] = rng.dirichlet(
-        alpha=[1.0] * n_programs, size=n_cells
+def _parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Save a mock CRT QQ plot to disk."
     )
-
-    guide_mat = (rng.random((n_cells, n_guides)) < 0.25).astype("int8")
-    adata.obsm["guide_assignment"] = guide_mat
-
-    guide_names = [f"g{j}" for j in range(n_guides)]
-    adata.uns["guide_names"] = guide_names
-    adata.uns["guide2gene"] = {
-        "g0": "geneA",
-        "g1": "geneA",
-        "g2": "geneB",
-        "g3": "geneB",
-        "g4": "non-targeting",
-        "g5": "safe-targeting",
-    }
-    adata.uns["program_names"] = [f"program_{k}" for k in range(n_programs)]
-    return adata
+    parser.add_argument(
+        "--out",
+        default=os.path.join("reports", "qq_plot_mock.png"),
+        help="Output PNG path (default: reports/qq_plot_mock.png).",
+    )
+    parser.add_argument("--seed", type=int, default=0, help="RNG seed.")
+    return parser.parse_args()
 
 
 def main() -> None:
     _set_runtime_env()
+    args = _parse_args()
+
     repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     if repo_root not in sys.path:
         sys.path.insert(0, repo_root)
@@ -63,15 +46,23 @@ def main() -> None:
 
     from src.sceptre import prepare_crt_inputs, run_all_genes_union_crt, limit_threading
     from src.visualization import qq_plot_ntc_pvals
+    from tests.synthetic_data import make_synthetic_adata
 
     limit_threading()
-    rng = np.random.default_rng(0)
-    adata = _build_mock_adata(rng)
+    rng = np.random.default_rng(args.seed)
+    adata, _ = make_synthetic_adata(
+        rng,
+        n_cells=200,
+        n_programs=6,
+        n_genes=4,
+        guides_per_gene=2,
+        n_covariates=4,
+    )
 
     inputs = prepare_crt_inputs(adata)
     out = run_all_genes_union_crt(
         inputs,
-        B=31,
+        B=63,
         n_jobs=1,
         calibrate_skew_normal=True,
         return_raw_pvals=True,
@@ -80,17 +71,23 @@ def main() -> None:
 
     from src.sceptre import compute_gene_null_pvals
 
-    null_pvals = compute_gene_null_pvals("non-targeting", inputs, B=31).ravel()
+    null_pvals = compute_gene_null_pvals("non-targeting", inputs, B=63).ravel()
     ax = qq_plot_ntc_pvals(
         pvals_raw_df=out["pvals_raw_df"],
         guide2gene=adata.uns["guide2gene"],
         ntc_genes=["non-targeting", "safe-targeting"],
         pvals_skew_df=out["pvals_df"],
         null_pvals=null_pvals,
+        title="Mock NTC QQ plot (raw vs skew)",
         show_ref_line=True,
         show_conf_band=True,
     )
-    print("Mock CRT run OK. QQ plot axis:", type(ax))
+
+    out_path = os.path.abspath(args.out)
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    ax.figure.tight_layout()
+    ax.figure.savefig(out_path, dpi=150)
+    print(f"Saved QQ plot to {out_path}")
 
 
 if __name__ == "__main__":

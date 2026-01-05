@@ -20,10 +20,16 @@ from .adata_utils import (
     to_csc_matrix,
     union_obs_idx_from_cols,
 )
-from .crt import crt_betas_for_gene, crt_index_sampler_fast_numba, crt_pvals_for_gene
+from .crt import (
+    compute_null_pvals_from_null_stats,
+    crt_betas_for_gene,
+    crt_index_sampler_fast_numba,
+    crt_pvals_for_gene,
+)
 from .pipeline import (
     CRTGeneResult,
     CRTInputs,
+    compute_gene_null_pvals,
     prepare_crt_inputs,
     run_all_genes_union_crt,
     run_one_gene_union_crt,
@@ -51,8 +57,10 @@ __all__ = [
     "crt_index_sampler_fast_numba",
     "crt_pvals_for_gene",
     "crt_betas_for_gene",
+    "compute_null_pvals_from_null_stats",
     "CRTGeneResult",
     "CRTInputs",
+    "compute_gene_null_pvals",
     "prepare_crt_inputs",
     "run_all_genes_union_crt",
     "run_one_gene_union_crt",

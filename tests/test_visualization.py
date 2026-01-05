@@ -16,6 +16,27 @@ def test_qq_plot_ntc_pvals_raw_only():
         guide2gene=guide2gene,
         ntc_genes=["non-targeting", "safe-targeting"],
         pvals_skew_df=None,
+        null_pvals=np.random.uniform(size=20),
+        show_ref_line=True,
+        show_conf_band=False,
+    )
+    assert ax is not None
+
+
+def test_qq_plot_ntc_pvals_with_null_pvals():
+    rng = np.random.default_rng(0)
+    pvals_df = pd.DataFrame(
+        rng.uniform(size=(2, 4)),
+        index=["non-targeting", "safe-targeting"],
+        columns=[f"program_{i}" for i in range(4)],
+    )
+    guide2gene = {"g0": "non-targeting", "g1": "safe-targeting"}
+    null_pvals = rng.uniform(size=50)
+    ax = qq_plot_ntc_pvals(
+        pvals_raw_df=pvals_df,
+        guide2gene=guide2gene,
+        ntc_genes=["non-targeting", "safe-targeting"],
+        null_pvals=null_pvals,
         show_ref_line=True,
         show_conf_band=False,
     )

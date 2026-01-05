@@ -1,6 +1,12 @@
 import numpy as np
+import pytest
 
-from src.sceptre import prepare_crt_inputs, run_all_genes_union_crt, run_one_gene_union_crt
+from src.sceptre import (
+    compute_gene_null_pvals,
+    prepare_crt_inputs,
+    run_all_genes_union_crt,
+    run_one_gene_union_crt,
+)
 from tests.synthetic_data import make_synthetic_adata
 
 
@@ -65,3 +71,24 @@ def test_union_crt_trivial_all_treated():
     result = run_one_gene_union_crt("gene_0", inputs, B=31)
     assert np.all(result.pvals == 1.0)
     assert np.all(result.betas == 0.0)
+
+
+def test_compute_gene_null_pvals_shape(mock_adata):
+    inputs = prepare_crt_inputs(mock_adata)
+    gene = list(inputs.gene_to_cols.keys())[0]
+    pvals = compute_gene_null_pvals(gene, inputs, B=31)
+    assert pvals.shape == (31, inputs.Y.shape[1])
+    assert np.all((pvals > 0.0) & (pvals <= 1.0))
+
+
+def test_compute_gene_null_pvals_raises_for_all_treated():
+    rng = np.random.default_rng(9)
+    adata, _ = make_synthetic_adata(
+        rng, n_cells=40, n_programs=3, n_genes=2, guides_per_gene=2
+    )
+    guide_names = adata.uns["guide_names"]
+    cols = [i for i, g in enumerate(guide_names) if g.startswith("gene_0_")]
+    adata.obsm["guide_assignment"][:, cols] = 1
+    inputs = prepare_crt_inputs(adata)
+    with pytest.raises(ValueError):
+        compute_gene_null_pvals("gene_0", inputs, B=31)
