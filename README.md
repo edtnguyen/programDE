@@ -291,7 +291,7 @@ from src.sceptre import (
 limit_threading()
 
 inputs = prepare_crt_inputs(
-    adata,
+    adata=adata,
     usage_key="cnmf_usage",
     covar_key="covar",
     guide_assignment_key="guide_assignment",
@@ -299,7 +299,7 @@ inputs = prepare_crt_inputs(
 )
 
 out = run_all_genes_union_crt(
-    inputs,
+    inputs=inputs,
     B=1023,      # Number of permutations
     n_jobs=16,   # Number of parallel jobs
     calibrate_skew_normal=True,
@@ -308,10 +308,10 @@ out = run_all_genes_union_crt(
 
 # Store results back into the AnnData object
 store_results_in_adata(
-    adata,
-    out["pvals_df"],    
-    out["betas_df"],
-    out["treated_df"],
+    adata=adata,
+    pvals_df=out["pvals_df"],
+    betas_df=out["betas_df"],
+    treated_df=out["treated_df"],
 )
 ```
 
@@ -333,7 +333,7 @@ limit_threading()
 # adata = anndata.read_h5ad(...) 
 
 inputs = prepare_crt_inputs(
-    adata,
+    adata=adata,
     usage_key="cnmf_usage",
     covar_key="covar",
     guide_assignment_key="guide_assignment",
@@ -341,20 +341,20 @@ inputs = prepare_crt_inputs(
 )
 
 out = run_all_genes_union_crt(
-    inputs,
+    inputs=inputs,
     B=1023,    # Number of permutations
     n_jobs=16, # Number of parallel jobs
 )
 
 # By default, run_all_genes_union_crt returns a dict. For legacy tuple output:
-# out = run_all_genes_union_crt(..., return_format="tuple")
+# out = run_all_genes_union_crt(inputs=inputs, return_format="tuple")
 
 # Store results back into the AnnData object
 store_results_in_adata(
-    adata,
-    out["pvals_df"],
-    out["betas_df"],
-    out["treated_df"],
+    adata=adata,
+    pvals_df=out["pvals_df"],
+    betas_df=out["betas_df"],
+    treated_df=out["treated_df"],
 )
 ```
 
@@ -389,14 +389,6 @@ Terminology:
 - `null_stats`: raw CRT null test statistics (e.g., `beta_null`)
 - `null_pvals`: leave-one-out CRT-null p-values computed from `null_stats`
 
-Quick conversion example (null stats → null p-values):
-
-```python
-from src.sceptre import crt_null_pvals_from_null_stats_fast
-
-# null_stats is a 1D array of CRT null test statistics (e.g., beta_null)
-null_pvals = crt_null_pvals_from_null_stats_fast(null_stats, two_sided=True)
-```
 
 ```python
 from src.sceptre import compute_gene_null_pvals, crt_null_stats_for_test
@@ -404,7 +396,7 @@ from src.visualization import qq_plot_ntc_pvals
 
 # Single run that returns both raw and skew-calibrated p-values
 out = run_all_genes_union_crt(
-    inputs,
+    inputs=inputs,
     B=1023,
     n_jobs=16,
     calibrate_skew_normal=True,
@@ -412,8 +404,17 @@ out = run_all_genes_union_crt(
     return_skew_normal=True,
 )
 
-null_pvals = compute_gene_null_pvals("non-targeting", inputs, B=1023).ravel()
-null_stats = crt_null_stats_for_test("non-targeting", 0, inputs, B=1023)
+null_pvals = compute_gene_null_pvals(
+    gene="non-targeting",
+    inputs=inputs,
+    B=1023,
+).ravel()
+null_stats = crt_null_stats_for_test(
+    gene="non-targeting",
+    program_index=0,
+    inputs=inputs,
+    B=1023,
+)
 
 ax = qq_plot_ntc_pvals(
     pvals_raw_df=out["pvals_raw_df"],     # raw CRT p-values
@@ -439,7 +440,7 @@ Raw-only example (no skew calibration):
 
 ```python
 out = run_all_genes_union_crt(
-    inputs,
+    inputs=inputs,
     B=1023,
     n_jobs=16,
     calibrate_skew_normal=False,
@@ -457,15 +458,25 @@ ax = qq_plot_ntc_pvals(
 )
 ```
 
-Note: if you want to use multiple NTC genes for the null curve, compute each
-gene’s CRT-null p-values and concatenate them before passing to `null_pvals`.
+Note: if you want to use multiple NTC genes and multiple programs for the null curve, compute each gene’s and program's CRT-null p-values and concatenate them before passing to `null_pvals`.
 
-Example (concatenate CRT-null p-values from multiple genes):
+Example (concatenate CRT-null p-values from multiple genes and programs):
 
 ```python
 ntc_genes = ["non-targeting", "safe-targeting"]
+program_indices = [0, 1]  # pick multiple programs
 null_list = [
-    compute_gene_null_pvals(gene, inputs, B=1023).ravel() for gene in ntc_genes
+    crt_null_pvals_from_null_stats_fast(
+        T_null=crt_null_stats_for_test(
+            gene=gene,
+            program_index=program_index,
+            inputs=inputs,
+            B=1023,
+        ),
+        two_sided=True,
+    )
+    for gene in ntc_genes
+    for program_index in program_indices
 ]
 null_pvals = np.concatenate(null_list)
 
@@ -497,7 +508,7 @@ mu = beta_null.mean()
 sd = beta_null.std()
 z_nulls = (beta_null - mu) / sd
 
-params = fit_skew_normal(z_nulls)  # [xi, omega, alpha, mean, sd]
+params = fit_skew_normal(y=z_nulls)  # [xi, omega, alpha, mean, sd]
 ```
 
 Where do `z_nulls` come from?
