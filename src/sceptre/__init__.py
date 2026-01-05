@@ -26,6 +26,11 @@ from .crt import (
     crt_index_sampler_fast_numba,
     crt_pvals_for_gene,
 )
+from .diagnostics import (
+    crt_null_pvals_from_null_stats_fast,
+    crt_null_pvals_from_null_stats_matrix,
+    crt_null_stats_for_test,
+)
 from .pipeline import (
     CRTGeneResult,
     CRTInputs,
@@ -58,6 +63,9 @@ __all__ = [
     "crt_pvals_for_gene",
     "crt_betas_for_gene",
     "compute_null_pvals_from_null_stats",
+    "crt_null_pvals_from_null_stats_fast",
+    "crt_null_pvals_from_null_stats_matrix",
+    "crt_null_stats_for_test",
     "CRTGeneResult",
     "CRTInputs",
     "compute_gene_null_pvals",

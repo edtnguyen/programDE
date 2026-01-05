@@ -31,7 +31,8 @@ from .pipeline_helpers import (
     _stack_skew_outputs,
 )
 from .propensity import fit_propensity_logistic
-from .crt import compute_null_pvals_from_null_stats, crt_betas_for_gene
+from .crt import crt_betas_for_gene
+from .diagnostics import crt_null_pvals_from_null_stats_matrix
 
 
 @dataclass
@@ -263,7 +264,13 @@ def compute_gene_null_pvals(
         obs_idx.astype(np.int32),
         B,
     )
-    return compute_null_pvals_from_null_stats(beta_null, side_code=side_code)
+    if side_code not in (-1, 0, 1):
+        raise ValueError("side_code must be -1, 0, or 1.")
+    if side_code == 0:
+        return crt_null_pvals_from_null_stats_matrix(beta_null, two_sided=True)
+    if side_code == 1:
+        return crt_null_pvals_from_null_stats_matrix(beta_null, two_sided=False)
+    return crt_null_pvals_from_null_stats_matrix(-beta_null, two_sided=False)
 
 
 def run_all_genes_union_crt(

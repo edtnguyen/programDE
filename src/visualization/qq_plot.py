@@ -7,6 +7,8 @@ from typing import Iterable, Mapping, Optional, Sequence
 import numpy as np
 import pandas as pd
 
+from src.sceptre.diagnostics import crt_null_pvals_from_null_stats_fast
+
 
 def qq_plot_ntc_pvals(
     pvals_raw_df: Optional[pd.DataFrame],
@@ -14,7 +16,9 @@ def qq_plot_ntc_pvals(
     ntc_genes: Iterable[str],
     *,
     pvals_skew_df: Optional[pd.DataFrame] = None,
-    null_pvals: Sequence[float],
+    null_pvals: Optional[Sequence[float]] = None,
+    null_stats: Optional[Sequence[float]] = None,
+    null_two_sided: bool = True,
     ax=None,
     title: Optional[str] = None,
     label_ntc_raw: str = "NTC (raw)",
@@ -31,11 +35,13 @@ def qq_plot_ntc_pvals(
     """
     QQ plot comparing NTC (negative-control) p-values to a CRT-null reference.
     If pvals_skew_df is provided, plots both raw and skew-calibrated curves.
+    Provide null_pvals directly or pass null_stats to compute leave-one-out
+    CRT-null p-values.
     """
     if pvals_raw_df is None:
         raise ValueError("pvals_raw_df is required.")
-    if null_pvals is None:
-        raise ValueError("null_pvals is required.")
+    if null_pvals is None and null_stats is None:
+        raise ValueError("Provide null_pvals or null_stats.")
     ntc = list(dict.fromkeys(ntc_genes))
     if len(ntc) == 0:
         raise ValueError("ntc_genes must contain at least one gene name.")
@@ -84,7 +90,12 @@ def qq_plot_ntc_pvals(
         x_skew = y_skew = None
         m_skew = 0
 
-    null_arr = _normalize_null_pvals(null_pvals)
+    if null_pvals is None:
+        null_arr = crt_null_pvals_from_null_stats_fast(
+            np.asarray(null_stats, dtype=np.float64), two_sided=null_two_sided
+        )
+    else:
+        null_arr = _normalize_null_pvals(null_pvals)
     x_null, y_null, m_null = _qq_data(null_arr)
 
     if ax is None:

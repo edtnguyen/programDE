@@ -7,7 +7,7 @@ def compute_null_pvals_from_null_stats(
     side_code: int = 0,
 ) -> np.ndarray:
     """
-    Compute empirical p-values for each null statistic against its own null pool.
+    Compute leave-one-out CRT-null p-values for each null statistic.
     null_stats: array (B,) or (B, K) of null test statistics.
     side_code: 0 two-sided, 1 right-tailed, -1 left-tailed.
     Returns:
@@ -15,7 +15,6 @@ def compute_null_pvals_from_null_stats(
     """
     stats = np.asarray(null_stats, dtype=np.float64)
     if stats.ndim == 1:
-        stats = stats[:, None]
         squeeze = True
     elif stats.ndim == 2:
         squeeze = False
@@ -25,29 +24,28 @@ def compute_null_pvals_from_null_stats(
     if side_code not in (-1, 0, 1):
         raise ValueError("side_code must be -1, 0, or 1.")
 
-    B, K = stats.shape
-    pvals = np.empty_like(stats, dtype=np.float64)
+    if stats.ndim == 1:
+        stats_2d = stats[:, None]
+    else:
+        stats_2d = stats
+
+    B, K = stats_2d.shape
+    pvals = np.empty_like(stats_2d, dtype=np.float64)
 
     for k in range(K):
-        vals = stats[:, k]
+        vals = stats_2d[:, k]
         if side_code == 0:
             vals = np.abs(vals)
-            sorted_vals = np.sort(vals)
-            left = np.searchsorted(sorted_vals, vals, side="left")
-            count = B - left
-        elif side_code == 1:
-            sorted_vals = np.sort(vals)
-            left = np.searchsorted(sorted_vals, vals, side="left")
-            count = B - left
-        else:
-            sorted_vals = np.sort(vals)
-            right = np.searchsorted(sorted_vals, vals, side="right")
-            count = right
-        pvals[:, k] = (1.0 + count) / (B + 1.0)
+        elif side_code == -1:
+            vals = -vals
+
+        sorted_vals = np.sort(vals)
+        count_lt = np.searchsorted(sorted_vals, vals, side="left")
+        pvals[:, k] = (B - count_lt) / float(B)
 
     if squeeze:
-        return pvals[:, 0]
-    return pvals
+        return np.clip(pvals[:, 0], 1.0 / float(B), 1.0)
+    return np.clip(pvals, 1.0 / float(B), 1.0)
 
 
 @nb.njit(inline="always")
