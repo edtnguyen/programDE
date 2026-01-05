@@ -7,7 +7,10 @@ from typing import Iterable, Mapping, Optional, Sequence
 import numpy as np
 import pandas as pd
 
-from src.sceptre.diagnostics import crt_null_pvals_from_null_stats_fast
+from src.sceptre.diagnostics import (
+    crt_null_pvals_from_null_stats_fast,
+    qq_expected_grid,
+)
 from src.sceptre.skew_normal import fit_skew_normal
 
 
@@ -23,6 +26,8 @@ def qq_plot_ntc_pvals(
     show_null_skew: bool = False,
     null_skew_samples: Optional[int] = None,
     null_skew_seed: Optional[int] = 0,
+    expected_grid_raw: Optional[Sequence[float]] = None,
+    expected_grid_all: Optional[Sequence[float]] = None,
     ax=None,
     title: Optional[str] = None,
     label_ntc_raw: str = "NTC (raw)",
@@ -89,9 +94,16 @@ def qq_plot_ntc_pvals(
             raise ValueError(f"No finite p-values available for {label}.")
         return np.clip(pvals, 1e-300, 1.0)
 
-    def _qq_data(pvals: np.ndarray):
+    def _qq_data(pvals: np.ndarray, expected: Optional[Sequence[float]] = None):
         m = pvals.size
-        expected = (np.arange(1, m + 1) - 0.5) / m
+        if expected is None:
+            expected = qq_expected_grid(pvals)
+        else:
+            expected = np.asarray(expected, dtype=np.float64)
+            if expected.size != m:
+                raise ValueError(
+                    "expected grid length does not match p-values length."
+                )
         x = -np.log10(expected)
         y = -np.log10(np.sort(pvals))
         return x, y, m
@@ -111,7 +123,7 @@ def qq_plot_ntc_pvals(
         return np.clip(pvals, 1e-300, 1.0)
 
     pvals_raw = _extract_pvals(pvals_raw_df, "pvals_raw_df")
-    x_raw, y_raw, m_raw = _qq_data(pvals_raw)
+    x_raw, y_raw, m_raw = _qq_data(pvals_raw, expected=expected_grid_raw)
 
     if pvals_skew_df is not None:
         pvals_skew = _extract_pvals(pvals_skew_df, "pvals_skew_df")
@@ -122,7 +134,7 @@ def qq_plot_ntc_pvals(
 
     if show_all_pvals:
         all_pvals = _extract_all_pvals(pvals_raw_df)
-        x_all, y_all, _ = _qq_data(all_pvals)
+        x_all, y_all, _ = _qq_data(all_pvals, expected=expected_grid_all)
     else:
         x_all = y_all = None
 

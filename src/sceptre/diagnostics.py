@@ -95,3 +95,28 @@ def crt_null_stats_for_test(
         B,
     )
     return beta_null[:, program_index]
+
+
+def qq_expected_grid(pvals: np.ndarray) -> np.ndarray:
+    """
+    Expected QQ quantiles for a p-value array.
+    """
+    arr = np.asarray(pvals)
+    m = arr.size
+    if m == 0:
+        raise ValueError("pvals must contain at least one value.")
+    return (np.arange(1, m + 1) - 0.5) / float(m)
+
+
+def is_bh_adjusted_like(pvals: np.ndarray) -> bool:
+    """
+    Heuristic detector for BH/q-value-like distributions.
+    """
+    arr = np.asarray(pvals, dtype=np.float64)
+    arr = arr[np.isfinite(arr)]
+    if arr.size == 0:
+        return False
+    frac_ones = np.mean(arr >= 1.0 - 1e-12)
+    unique_ratio = np.unique(arr).size / float(arr.size)
+    mean_val = np.mean(arr)
+    return (frac_ones > 0.2) or (mean_val > 0.6 and unique_ratio < 0.2)

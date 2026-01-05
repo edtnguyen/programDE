@@ -43,6 +43,8 @@ def make_synthetic_adata(
     effect_size: float = 0.0,
     include_categorical: bool = False,
     categorical_levels: int = 3,
+    propensity_mode: str = "covariate",
+    propensity_range: Tuple[float, float] = (0.1, 0.3),
     ntc_genes: Sequence[str] = ("non-targeting", "safe-targeting"),
     return_truth: bool = False,
 ) -> Tuple[MockAdata, Optional[SyntheticTruth]]:
@@ -83,10 +85,17 @@ def make_synthetic_adata(
         gene_to_cols[gene] = cols
 
     x_by_gene: Dict[str, np.ndarray] = {}
+    if propensity_mode not in ("covariate", "constant"):
+        raise ValueError("propensity_mode must be 'covariate' or 'constant'.")
+
     for gene in gene_names:
-        theta = rng.normal(scale=0.5, size=n_covariates)
-        p = _sigmoid(C_numeric @ theta)
-        p = np.clip(p, 0.05, 0.95)
+        if propensity_mode == "covariate":
+            theta = rng.normal(scale=0.5, size=n_covariates)
+            p = _sigmoid(C_numeric @ theta)
+            p = np.clip(p, 0.05, 0.95)
+        else:
+            p_val = rng.uniform(*propensity_range)
+            p = np.full(n_cells, p_val, dtype=np.float64)
         x_by_gene[gene] = rng.binomial(1, p, size=n_cells).astype(np.int8)
 
     n_guides = len(guide_names)

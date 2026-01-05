@@ -30,6 +30,8 @@ from .diagnostics import (
     crt_null_pvals_from_null_stats_fast,
     crt_null_pvals_from_null_stats_matrix,
     crt_null_stats_for_test,
+    is_bh_adjusted_like,
+    qq_expected_grid,
 )
 from .pipeline import (
     CRTGeneResult,
@@ -66,6 +68,8 @@ __all__ = [
     "crt_null_pvals_from_null_stats_fast",
     "crt_null_pvals_from_null_stats_matrix",
     "crt_null_stats_for_test",
+    "qq_expected_grid",
+    "is_bh_adjusted_like",
     "CRTGeneResult",
     "CRTInputs",
     "compute_gene_null_pvals",
