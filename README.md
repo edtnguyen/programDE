@@ -176,7 +176,13 @@ p = 1 - F(z^{(\mathrm{obs})}).
 ```math
 p = F(z^{(\mathrm{obs})}).
 ```
-**Note**: the default is two-sided after fitting the skew-normal. Use one-sided only if you pre-commit to a direction (e.g., “gene increases program usage”) and want extra power in that specific direction.
+**Note**: the default is two-sided after fitting the skew-normal. In code, the
+two-sided tail is chosen using the empirical median of the null z-scores
+(right tail if $z^{(\mathrm{obs})}$ is above the median, otherwise left), which
+is equivalent to $2\min(F,1-F)$ when the fit is well-behaved. Use one-sided only
+if you pre-commit to a direction (e.g., “gene increases program usage”) and want
+extra power in that specific direction. The skew-normal parameters are estimated
+via moment matching, not maximum likelihood.
 
 ### 3.3 Fallback
 
