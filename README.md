@@ -315,49 +315,6 @@ store_results_in_adata(
 )
 ```
 
-Here is a minimal usage example without skew-normal calibration:
-
-```python
-from src.sceptre import (
-    prepare_crt_inputs,
-    run_all_genes_union_crt,
-    store_results_in_adata,
-    limit_threading,
-)
-import anndata
-
-# It is recommended to limit BLAS threads for reproducibility
-limit_threading()
-
-# Assuming 'adata' is an AnnData object containing your single-cell data
-# adata = anndata.read_h5ad(...) 
-
-inputs = prepare_crt_inputs(
-    adata=adata,
-    usage_key="cnmf_usage",
-    covar_key="covar",
-    guide_assignment_key="guide_assignment",
-    guide2gene_key="guide2gene",
-)
-
-out = run_all_genes_union_crt(
-    inputs=inputs,
-    B=1023,    # Number of permutations
-    n_jobs=16, # Number of parallel jobs
-)
-
-# By default, run_all_genes_union_crt returns a dict. For legacy tuple output:
-# out = run_all_genes_union_crt(inputs=inputs, return_format="tuple")
-
-# Store results back into the AnnData object
-store_results_in_adata(
-    adata=adata,
-    pvals_df=out["pvals_df"],
-    betas_df=out["betas_df"],
-    treated_df=out["treated_df"],
-)
-```
-
 #### Output meanings (p-values)
 
 `run_all_genes_union_crt` always returns `pvals_df` as the main p-value output.
