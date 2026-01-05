@@ -51,6 +51,13 @@ def qq_plot_ntc_pvals(
     CRT-null p-values. Optionally plot a skew-normal null curve by fitting
     to null_stats and sampling from the fitted distribution. If show_all_pvals
     is True, plot all observed p-values from pvals_raw_df.
+
+    Notes:
+        - null_stats: raw CRT null test statistics (e.g., beta_null values)
+        - null_pvals: leave-one-out CRT-null p-values computed from null_stats
+          (these should be ~Uniform(0,1) under a correct null)
+        - If null_stats is provided without null_pvals, this function computes
+          leave-one-out null p-values internally.
     """
     if pvals_raw_df is None:
         raise ValueError("pvals_raw_df is required.")

@@ -385,6 +385,19 @@ Compute null p-values with `compute_gene_null_pvals` (typically using an NTC gen
 By default, the plot also includes an "All observed" scatter using all rows in
 `pvals_raw_df` (set `show_all_pvals=False` to disable).
 
+Terminology:
+- `null_stats`: raw CRT null test statistics (e.g., `beta_null`)
+- `null_pvals`: leave-one-out CRT-null p-values computed from `null_stats`
+
+Quick conversion example (null stats → null p-values):
+
+```python
+from src.sceptre import crt_null_pvals_from_null_stats_fast
+
+# null_stats is a 1D array of CRT null test statistics (e.g., beta_null)
+null_pvals = crt_null_pvals_from_null_stats_fast(null_stats, two_sided=True)
+```
+
 ```python
 from src.sceptre import compute_gene_null_pvals, crt_null_stats_for_test
 from src.visualization import qq_plot_ntc_pvals
