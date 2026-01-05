@@ -22,7 +22,7 @@ These tests should fail loudly if:
 - `tests/test_plot_expected_axis.py`
 
 ## Assumptions / Required Helper APIs (Codex should implement if missing)
-If these helpers don’t exist, create minimal versions under `src/yourpkg/diagnostics.py`:
+If these helpers don’t exist, create minimal versions under `src/sceptre/diagnostics.py`:
 
 1) `qq_expected_grid(pvals: np.ndarray) -> np.ndarray`
 Returns expected quantiles for QQ:
