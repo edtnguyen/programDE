@@ -44,7 +44,14 @@ def main() -> None:
 
     import numpy as np
 
-    from src.sceptre import prepare_crt_inputs, run_all_genes_union_crt, limit_threading
+    from src.sceptre import (
+        build_ntc_group_inputs,
+        crt_pvals_for_ntc_groups_ensemble,
+        limit_threading,
+        make_ntc_groups_ensemble,
+        prepare_crt_inputs,
+        run_all_genes_union_crt,
+    )
     from src.visualization import qq_plot_ntc_pvals
     from tests.synthetic_data import make_synthetic_adata
 
@@ -52,10 +59,10 @@ def main() -> None:
     rng = np.random.default_rng(args.seed)
     adata, _ = make_synthetic_adata(
         rng,
-        n_cells=200,
+        n_cells=300,
         n_programs=6,
         n_genes=4,
-        guides_per_gene=2,
+        guides_per_gene=12,
         n_covariates=4,
     )
 
@@ -71,6 +78,29 @@ def main() -> None:
 
     from src.sceptre import compute_gene_null_pvals, crt_null_stats_for_test
 
+    ntc_genes = ["non-targeting", "safe-targeting"]
+    ntc_guides, guide_freq, guide_to_bin, real_sigs = build_ntc_group_inputs(
+        inputs,
+        ntc_label=ntc_genes,
+        group_size=6,
+        n_bins=6,
+    )
+    ntc_groups_ens = make_ntc_groups_ensemble(
+        ntc_guides=ntc_guides,
+        ntc_freq=guide_freq,
+        real_gene_bin_sigs=real_sigs,
+        guide_to_bin=guide_to_bin,
+        n_ensemble=5,
+        seed0=11,
+        group_size=6,
+    )
+    ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
+        inputs=inputs,
+        ntc_groups_ens=ntc_groups_ens,
+        B=63,
+        seed0=23,
+    )
+
     null_pvals = compute_gene_null_pvals("non-targeting", inputs, B=63).ravel()
     null_stats = crt_null_stats_for_test(
         "non-targeting", 0, inputs, B=63
@@ -78,10 +108,11 @@ def main() -> None:
     ax = qq_plot_ntc_pvals(
         pvals_raw_df=out["pvals_raw_df"],
         guide2gene=adata.uns["guide2gene"],
-        ntc_genes=["non-targeting", "safe-targeting"],
+        ntc_genes=ntc_genes,
         pvals_skew_df=out["pvals_df"],
         null_pvals=null_pvals,
         null_stats=null_stats,
+        ntc_group_pvals_ens=ntc_group_pvals_ens,
         show_null_skew=True,
         null_skew_samples=500,
         title="Mock NTC QQ plot (raw vs skew)",

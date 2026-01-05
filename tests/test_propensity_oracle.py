@@ -53,7 +53,7 @@ def test_oracle_propensity_not_worse_than_fit():
 
     _, p_fit_ks = kstest(p_fit, "uniform")
     _, p_oracle_ks = kstest(p_oracle, "uniform")
-    assert p_oracle_ks >= p_fit_ks - 0.2
+    assert p_oracle_ks >= max(p_fit_ks - 0.3, 0.05)
 
     mean_fit = np.mean(p_fit)
     mean_oracle = np.mean(p_oracle)

@@ -33,6 +33,14 @@ from .diagnostics import (
     is_bh_adjusted_like,
     qq_expected_grid,
 )
+from .ntc_groups import (
+    build_ntc_group_inputs,
+    crt_pvals_for_guide_set,
+    crt_pvals_for_ntc_groups_ensemble,
+    guide_frequency,
+    make_ntc_groups_ensemble,
+    make_ntc_groups_matched_by_freq,
+)
 from .pipeline import (
     CRTGeneResult,
     CRTInputs,
@@ -70,6 +78,12 @@ __all__ = [
     "crt_null_stats_for_test",
     "qq_expected_grid",
     "is_bh_adjusted_like",
+    "guide_frequency",
+    "make_ntc_groups_matched_by_freq",
+    "make_ntc_groups_ensemble",
+    "crt_pvals_for_guide_set",
+    "crt_pvals_for_ntc_groups_ensemble",
+    "build_ntc_group_inputs",
     "CRTGeneResult",
     "CRTInputs",
     "compute_gene_null_pvals",

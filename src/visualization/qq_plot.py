@@ -28,6 +28,10 @@ def qq_plot_ntc_pvals(
     null_skew_seed: Optional[int] = 0,
     expected_grid_raw: Optional[Sequence[float]] = None,
     expected_grid_all: Optional[Sequence[float]] = None,
+    ntc_group_pvals_ens: Optional[Mapping[int, pd.DataFrame]] = None,
+    show_ntc_ensemble_band: bool = False,
+    ntc_band_quantiles: Optional[Sequence[float]] = None,
+    ntc_band_alpha: float = 0.15,
     ax=None,
     title: Optional[str] = None,
     label_ntc_raw: str = "NTC (raw)",
@@ -74,12 +78,14 @@ def qq_plot_ntc_pvals(
     if len(ntc) == 0:
         raise ValueError("ntc_genes must contain at least one gene name.")
 
-    gene_names = set(guide2gene.values())
-    missing = [g for g in ntc if g not in gene_names]
-    if missing:
-        raise ValueError(
-            "ntc_genes not found in guide2gene values: " + ", ".join(sorted(missing))
-        )
+    if ntc_group_pvals_ens is None:
+        gene_names = set(guide2gene.values())
+        missing = [g for g in ntc if g not in gene_names]
+        if missing:
+            raise ValueError(
+                "ntc_genes not found in guide2gene values: "
+                + ", ".join(sorted(missing))
+            )
 
     def _extract_pvals(df: pd.DataFrame, label: str) -> np.ndarray:
         missing_idx = [g for g in ntc if g not in df.index]
@@ -122,7 +128,18 @@ def qq_plot_ntc_pvals(
             raise ValueError("No finite p-values available in pvals_raw_df.")
         return np.clip(pvals, 1e-300, 1.0)
 
-    pvals_raw = _extract_pvals(pvals_raw_df, "pvals_raw_df")
+    if ntc_group_pvals_ens is not None:
+        pvals_list = []
+        for df in ntc_group_pvals_ens.values():
+            arr = df.to_numpy().ravel()
+            arr = arr[np.isfinite(arr)]
+            if arr.size:
+                pvals_list.append(arr)
+        if not pvals_list:
+            raise ValueError("ntc_group_pvals_ens contains no finite values.")
+        pvals_raw = np.concatenate(pvals_list)
+    else:
+        pvals_raw = _extract_pvals(pvals_raw_df, "pvals_raw_df")
     x_raw, y_raw, m_raw = _qq_data(pvals_raw, expected=expected_grid_raw)
 
     if pvals_skew_df is not None:
@@ -232,6 +249,37 @@ def qq_plot_ntc_pvals(
             color=color_null_skew,
             linestyle=":",
         )
+
+    if ntc_group_pvals_ens is not None and show_ntc_ensemble_band:
+        q_grid = (
+            np.linspace(0.01, 0.99, 200)
+            if ntc_band_quantiles is None
+            else np.asarray(ntc_band_quantiles, dtype=np.float64)
+        )
+        q_grid = q_grid[(q_grid > 0.0) & (q_grid < 1.0)]
+        if q_grid.size == 0:
+            raise ValueError("ntc_band_quantiles must contain values in (0,1).")
+
+        curves = []
+        for df in ntc_group_pvals_ens.values():
+            arr = df.to_numpy().ravel()
+            arr = arr[np.isfinite(arr)]
+            if arr.size:
+                curves.append(np.quantile(arr, q_grid))
+        if curves:
+            curves = np.vstack(curves)
+            median = np.median(curves, axis=0)
+            lower = np.quantile(curves, 0.25, axis=0)
+            upper = np.quantile(curves, 0.75, axis=0)
+            x_band = -np.log10(q_grid)
+            ax.fill_between(
+                x_band,
+                -np.log10(lower),
+                -np.log10(upper),
+                color=color_ntc_raw,
+                alpha=ntc_band_alpha,
+                label="NTC ensemble IQR",
+            )
     ax.set_xlabel("Expected -log10(p)")
     ax.set_ylabel("Observed -log10(p)")
     if title is not None:
