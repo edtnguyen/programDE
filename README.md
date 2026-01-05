@@ -1,6 +1,6 @@
 # programDE
 
-A pipeline for testing differential effect (DE) of gene targets on gene programs. This pipeline implements a SCEPTRE-like Conditional Randomization Test (CRT) to assess the statistical significance of perturbations.
+A pipeline for testing differential effect (DE) of gene targets on gene programs. This pipeline implements a Conditional Randomization Test (CRT) to assess the statistical significance of perturbations.
 
 The core analysis pipeline lives in the `src.sceptre` module.
 
