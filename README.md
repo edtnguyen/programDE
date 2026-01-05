@@ -473,6 +473,18 @@ Run the mock in-memory smoke test:
 python3 scripts/test_mock_crt.py
 ```
 
+Run the full test suite (excluding performance):
+
+```bash
+python3 -m pytest -q -m "not performance"
+```
+
+Run performance tests explicitly:
+
+```bash
+python3 -m pytest -q -m performance
+```
+
 ## Project Structure
 
 ```
