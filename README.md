@@ -378,16 +378,24 @@ Optional outputs (only when requested):
 Use this to sanity-check calibration of p-values for negative-control genes.
 If you have both raw and skew-calibrated p-values, pass both to compare them.
 Provide CRT-null p-values (from resampling) via `null_pvals`, or pass `null_stats`
-and let the QQ helper compute leave-one-out CRT-null p-values for you.
-Optionally set `show_null_skew=True` to add a second null curve drawn from a
-skew-normal fit to `null_stats`.
-Compute null p-values with `compute_gene_null_pvals` (typically using an NTC gene).
-By default, the plot also includes an "All observed" scatter using all rows in
-`pvals_raw_df` (set `show_all_pvals=False` to disable).
+and let the QQ helper compute leave-one-out CRT-null p-values for you. The dashed
+null curve is always based on CRT-null p-values (not a theoretical curve).
+
+Required inputs:
+- `pvals_raw_df`: observed raw CRT p-values (genes × programs).
+- `guide2gene`: guide → gene mapping.
+- `ntc_genes`: list of negative-control gene labels (must exist in `guide2gene` values).
+- `null_pvals` **or** `null_stats`.
+
+Optional inputs:
+- `pvals_skew_df`: skew-calibrated p-values (for comparison).
+- `ntc_group_pvals_ens`: grouped NTC control p-values (recommended; see below).
+- `show_null_skew=True`: add a second null curve drawn from a skew-normal fit to `null_stats`.
+- `show_all_pvals=True`: scatter all observed p-values from `pvals_raw_df`.
 
 Terminology:
-- `null_stats`: raw CRT null test statistics (e.g., `beta_null`)
-- `null_pvals`: leave-one-out CRT-null p-values computed from `null_stats`
+- `null_stats`: raw CRT null test statistics (e.g., `beta_null` from resamples).
+- `null_pvals`: leave-one-out CRT-null p-values computed from `null_stats`.
 
 
 ```python
@@ -425,7 +433,7 @@ ax = qq_plot_ntc_pvals(
     null_stats=null_stats,
     show_null_skew=True,
     show_all_pvals=True,
-    title="QQ plot: NTC genes (raw vs skew) vs null",
+    title="QQ plot: NTC genes (raw vs skew) vs CRT null",
     show_ref_line=True,
     show_conf_band=True,
 )
@@ -489,34 +497,48 @@ ax = qq_plot_ntc_pvals(
 )
 ```
 
-#### Skew-normal calibration note
-
-The skew-normal fitting entry point is `fit_skew_normal` (numba-backed).
-
-Manual fitting for a single program:
+Grouped NTC controls (matched by guide frequency, ensemble):
 
 ```python
-import numpy as np
-from src.sceptre import fit_skew_normal, crt_betas_for_gene
+from src.sceptre import (
+    build_ntc_group_inputs,
+    make_ntc_groups_ensemble,
+    crt_pvals_for_ntc_groups_ensemble,
+)
 
-# beta_null is the CRT null distribution for a single gene-program (length B)
-# Example: beta_null = beta_null_mat[:, program_index]
-# If you already ran the pipeline, you can reuse stored results; otherwise,
-# generate beta_null directly:
-# beta_obs, beta_null_mat = crt_betas_for_gene(indptr, idx, C, Y, A, CTY, obs_idx, B)
-mu = beta_null.mean()
-sd = beta_null.std()
-z_nulls = (beta_null - mu) / sd
+ntc_labels = ["non-targeting", "safe-targeting"]
+ntc_guides, guide_freq, guide_to_bin, real_sigs = build_ntc_group_inputs(
+    inputs=inputs,
+    ntc_label=ntc_labels,
+    group_size=6,
+    n_bins=10,
+)
+ntc_groups_ens = make_ntc_groups_ensemble(
+    ntc_guides=ntc_guides,
+    ntc_freq=guide_freq,
+    real_gene_bin_sigs=real_sigs,
+    guide_to_bin=guide_to_bin,
+    n_ensemble=10,
+    seed0=7,
+    group_size=6,
+)
+ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
+    inputs=inputs,
+    ntc_groups_ens=ntc_groups_ens,
+    B=1023,
+    seed0=23,
+)
 
-params = fit_skew_normal(y=z_nulls)  # [xi, omega, alpha, mean, sd]
+ax = qq_plot_ntc_pvals(
+    pvals_raw_df=out["pvals_raw_df"],
+    guide2gene=adata.uns["guide2gene"],
+    ntc_genes=ntc_labels,
+    null_pvals=null_pvals,
+    ntc_group_pvals_ens=ntc_group_pvals_ens,
+    show_ntc_ensemble_band=True,
+    title="QQ plot: grouped NTC controls vs CRT null",
+)
 ```
-
-Where do `z_nulls` come from?
-
-`z_nulls` are standardized CRT null statistics. You first generate the null
-beta coefficients from CRT resamples, then standardize them by their mean and
-standard deviation. The pipeline does this internally when
-`calibrate_skew_normal=True`.
 
 ### Makefile Commands
 
