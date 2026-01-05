@@ -176,6 +176,7 @@ p = 1 - F(z^{(\mathrm{obs})}).
 ```math
 p = F(z^{(\mathrm{obs})}).
 ```
+Note: the default is two-sided after fitting the skew-normal. Use one-sided only if you pre-commit to a direction (e.g., “gene increases program usage”) and want extra power in that specific direction.
 
 ### 3.3 Fallback
 
