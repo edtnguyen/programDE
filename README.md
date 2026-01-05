@@ -5,48 +5,197 @@ A pipeline for testing differential effect (DE) of gene targets on gene programs
 The core analysis pipeline lives in the `src.sceptre` module.
 
 
+```md
 ## Method overview
 
-This section summarizes the statistical steps used in the pipeline.
+This section summarizes the statistical steps used to test **target gene → program usage** effects using a Conditional Randomization Test (CRT) with optional skew-normal calibration.
 
-### 1) Linear predictor for gene effect on program usage
+### Notation
 
-- Define a gene-level union indicator per cell:
-  x_i = 1 if any guide targeting the gene is present in cell i, else 0.
-- Let C be the covariate matrix (N x p) with intercept.
-- Let Y be the CLR-transformed usage matrix (N x K), one column per program.
-- For each program k, fit the linear model:
-  Y_{ik} = beta_k * x_i + C_i * gamma_k + epsilon_{ik}
-- The test statistic is the OLS coefficient beta_k for the gene effect on program k.
+- Cells: \(i = 1,\dots,N\)
+- Programs: \(k = 1,\dots,K\) (here \(K \approx 70\))
+- Covariates: \(C \in \mathbb{R}^{N \times p}\) (includes an intercept column)
+- cNMF usage (composition): \(u_i \in \Delta^{K-1}\), with \(\sum_{k=1}^K u_{ik} = 1\) and \(u_{ik} \ge 0\)
 
-### 2) Conditional Randomization Test (CRT)
+---
 
-Step-by-step:
+## 1) Linear model for gene effect on program usage
 
-1. Fit a propensity model for the union indicator:
-   p_i = P(x_i = 1 | C_i) (regularized logistic regression).
-2. Generate B synthetic resamples x~^(b) under the null, conditioned on C:
-   For each cell i, sample x~_i from Bernoulli(p_i) using the fast sampler.
-3. For each resample b, compute the OLS coefficient beta_k^(b)
-   for all programs using summary statistics.
-4. Compute the empirical CRT p-value per program:
-   p_k = (1 + #{b: |beta_k^(b)| >= |beta_k^(obs)|}) / (B + 1).
+### 1.1 Gene-level perturbation indicator (union)
 
-### 3) Skew-normal calibration
+For each target gene \(g\), define a **gene-level union indicator**
+\[
+x_i \in \{0,1\},\qquad
+x_i = \mathbf{1}\left\{\exists\ \text{guide targeting } g \text{ present in cell } i\right\}.
+\]
 
-Purpose: smooth and calibrate tail probabilities when the CRT null is skewed.
+### 1.2 CLR transform of program usage
 
-1. Build null z-scores for each program:
-   z_b = (beta_k^(b) - mu_k) / sd_k.
-2. Fit a skew-normal distribution SN(xi, omega, alpha) to {z_b}.
-   The skew-normal PDF is:
-     f(z) = (2 / omega) * phi((z - xi) / omega) * Phi(alpha * (z - xi) / omega)
-   where phi and Phi are the standard normal PDF/CDF.
-3. Compute calibrated p-values using the fitted skew-normal CDF:
-   - two-sided: p = 2 * min(F(z_obs), 1 - F(z_obs))
-   - right-tailed: p = 1 - F(z_obs)
-   - left-tailed: p = F(z_obs)
-4. If the skew-normal fit fails, fall back to empirical p-values on z-scores.
+Because program usages are compositional (each row sums to 1), we apply a **centered log-ratio (CLR)** transform. After flooring and renormalization (to avoid \(\log 0\)), define:
+\[
+u'_{ik}=\frac{\max(u_{ik},\varepsilon)}{\sum_{j=1}^K \max(u_{ij},\varepsilon)}.
+\]
+Then the CLR-transformed outcome is
+\[
+Y_{ik}=\operatorname{CLR}(u'_i)_k
+= \log u'_{ik} - \frac{1}{K}\sum_{j=1}^K \log u'_{ij}.
+\]
+Collect all outcomes in \(Y \in \mathbb{R}^{N \times K}\).
+
+### 1.3 Per-program linear regression
+
+For each program \(k\), we fit the linear model
+\[
+Y_{ik} = \beta_k\, x_i + C_i^\top \gamma_k + \varepsilon_{ik},
+\]
+where:
+- \(\beta_k\) is the gene’s effect on program \(k\) (on the CLR scale),
+- \(\gamma_k \in \mathbb{R}^{p}\) are covariate coefficients,
+- \(\varepsilon_{ik}\) is residual noise.
+
+**Test statistic.** For each program \(k\), the test statistic is the OLS coefficient \(\hat\beta_k\) from the above regression.
+
+---
+
+## 2) Conditional Randomization Test (CRT)
+
+The CRT tests \(H_0: Y \perp x \mid C\) by resampling \(x\) from its conditional distribution given covariates.
+
+### 2.1 Propensity model
+
+For each gene (union indicator \(x\)), fit a regularized logistic regression:
+\[
+p_i = \mathbb{P}(x_i = 1 \mid C_i)
+= \operatorname{logit}^{-1}\!\left(C_i^\top \theta\right),
+\qquad \operatorname{logit}^{-1}(t)=\frac{1}{1+e^{-t}}.
+\]
+
+### 2.2 Null resampling of \(x\)
+
+Generate \(B\) synthetic perturbation vectors under the null:
+\[
+\tilde x_i^{(b)} \sim \operatorname{Bernoulli}(p_i),
+\qquad b=1,\dots,B,\ i=1,\dots,N,
+\]
+conditionally independent across \(i\) and \(b\) given \(\{p_i\}\).
+
+**Efficient Bernoulli resampling (index sampler).** Rather than drawing \(B\) Bernoullis for every cell, we use the equivalent two-stage procedure per cell \(i\):
+
+1. Draw the number of resamples in which cell \(i\) is “treated”:
+\[
+M_i \sim \operatorname{Binomial}(B, p_i).
+\]
+2. Sample \(M_i\) distinct resample indices without replacement:
+\[
+S_i \subset \{1,\dots,B\},\quad |S_i|=M_i,\quad S_i \text{ uniform}.
+\]
+3. Set \(\tilde x_i^{(b)}=1\) for \(b\in S_i\) and \(\tilde x_i^{(b)}=0\) otherwise.
+
+This yields exactly the same distribution as i.i.d. Bernoulli draws across \(b\), but is much faster when \(p_i\) is small (sparse perturbations).
+
+### 2.3 Recompute the test statistic under the null
+
+For each resample \(b\), compute the OLS coefficient \(\hat\beta_k^{(b)}\) for all programs \(k\) using \(\tilde x^{(b)}\) in place of \(x\):
+\[
+Y_{ik} = \beta_k^{(b)}\, \tilde x_i^{(b)} + C_i^\top \gamma_k^{(b)} + \varepsilon_{ik}^{(b)}.
+\]
+
+In the implementation, \(\hat\beta_k^{(b)}\) is computed via precomputed OLS summary quantities (no repeated least-squares solves).
+
+### 2.4 Empirical CRT p-values
+
+Let \(\hat\beta_k^{(\mathrm{obs})}\) be the coefficient from the observed \(x\), and \(\hat\beta_k^{(b)}\) the coefficient from resample \(b\). The two-sided CRT p-value is:
+\[
+p_k
+=
+\frac{
+1 + \sum_{b=1}^B \mathbf{1}\!\left(\left|\hat\beta_k^{(b)}\right| \ge \left|\hat\beta_k^{(\mathrm{obs})}\right|\right)
+}{
+B+1
+}.
+\]
+
+---
+
+## 3) Skew-normal calibration (optional)
+
+Empirical CRT nulls can be skewed, especially with sparse perturbations and heterogeneous covariates. We optionally smooth tail probabilities by fitting a skew-normal distribution to the null statistics.
+
+### 3.1 Null z-scores
+
+For each program \(k\), compute mean and standard deviation from the null draws:
+\[
+\mu_k = \frac{1}{B}\sum_{b=1}^B \hat\beta_k^{(b)},
+\qquad
+\sigma_k = \sqrt{\frac{1}{B}\sum_{b=1}^B\left(\hat\beta_k^{(b)}-\mu_k\right)^2}.
+\]
+Define null z-scores and the observed z-score:
+\[
+z_k^{(b)}=\frac{\hat\beta_k^{(b)}-\mu_k}{\sigma_k},
+\qquad
+z_k^{(\mathrm{obs})}=\frac{\hat\beta_k^{(\mathrm{obs})}-\mu_k}{\sigma_k}.
+\]
+
+### 3.2 Skew-normal fit
+
+Fit a skew-normal distribution \(\mathrm{SN}(\xi,\omega,\alpha)\) to \(\{z_k^{(b)}\}_{b=1}^B\). Its density is
+\[
+f(z;\xi,\omega,\alpha)
+=
+\frac{2}{\omega}\,
+\phi\!\left(\frac{z-\xi}{\omega}\right)\,
+\Phi\!\left(\alpha\,\frac{z-\xi}{\omega}\right),
+\]
+where \(\phi\) and \(\Phi\) are the standard normal PDF and CDF.
+
+Let \(F(\cdot)\) be the fitted skew-normal CDF. Calibrated p-values are:
+
+- Two-sided:
+\[
+p = 2 \min\{F(z^{(\mathrm{obs})}),\, 1 - F(z^{(\mathrm{obs})})\}.
+\]
+- Right-tailed:
+\[
+p = 1 - F(z^{(\mathrm{obs})}).
+\]
+- Left-tailed:
+\[
+p = F(z^{(\mathrm{obs})}).
+\]
+
+### 3.3 Fallback
+
+If the skew-normal fit is unstable or fails diagnostics, we fall back to the empirical CRT p-values (computed from \(\hat\beta_k^{(b)}\) or equivalently from \(z_k^{(b)}\)).
+
+---
+
+## Interpretation (CLR scale)
+
+- Because \(Y_{ik}=\operatorname{CLR}(u'_i)_k\), the coefficient \(\beta_k\) should be interpreted as a **log-ratio shift** of program \(k\) relative to the **geometric mean across all programs**:
+\[
+\beta_k \approx \Delta \log\!\left(\frac{u'_{k}}{g(u')}\right),
+\qquad
+g(u')=\left(\prod_{j=1}^K u'_j\right)^{1/K}.
+\]
+- If \(\beta_k>0\), then program \(k\) tends to increase **relative to the overall composition** (other programs must collectively decrease because the usage is compositional). If \(\beta_k<0\), program \(k\) decreases relative to the geometric mean.
+- Note that effects are **relative**: a positive effect on one program implies compensating negative shifts somewhere else in the composition.
+
+---
+
+## Flooring \(\varepsilon\) (handling near-zeros)
+
+cNMF usages can be extremely close to zero, making \(\log(u_{ik})\) unstable. We apply flooring and renormalization:
+\[
+u'_{ik}=\frac{\max(u_{ik},\varepsilon)}{\sum_{j=1}^K \max(u_{ij},\varepsilon)}.
+\]
+
+Practical choices for \(\varepsilon\):
+- **Quantile-based**: \(\varepsilon = \operatorname{quantile}(\{u_{ik}\}, q)\) with a small \(q\) (e.g., \(10^{-4}\) to \(10^{-6}\)).
+- **Fixed**: \(\varepsilon = 10^{-6}\) (works if usage values are well-scaled and not exactly zero).
+
+Smaller \(\varepsilon\) preserves dynamic range but can amplify noise in extremely small components; larger \(\varepsilon\) stabilizes logs but slightly shrinks contrasts involving tiny programs.
+```
+
 
 
 ## Getting Started
