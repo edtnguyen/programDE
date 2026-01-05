@@ -436,6 +436,24 @@ ax = qq_plot_ntc_pvals(
 Note: if you want to use multiple NTC genes for the null curve, compute each
 gene’s CRT-null p-values and concatenate them before passing to `null_pvals`.
 
+Example (concatenate CRT-null p-values from multiple genes):
+
+```python
+ntc_genes = ["non-targeting", "safe-targeting"]
+null_list = [
+    compute_gene_null_pvals(gene, inputs, B=1023).ravel() for gene in ntc_genes
+]
+null_pvals = np.concatenate(null_list)
+
+ax = qq_plot_ntc_pvals(
+    pvals_raw_df=out["pvals_df"],
+    guide2gene=adata.uns["guide2gene"],
+    ntc_genes=ntc_genes,
+    null_pvals=null_pvals,
+    title="QQ plot: NTC genes vs CRT null (pooled)",
+)
+```
+
 #### Skew-normal calibration note
 
 The skew-normal fitting entry point is `fit_skew_normal` (numba-backed).
