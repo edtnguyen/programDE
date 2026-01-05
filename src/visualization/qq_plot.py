@@ -29,21 +29,28 @@ def qq_plot_ntc_pvals(
     label_skew: str = "NTC (skew)",
     label_null: str = "null",
     label_null_skew: str = "null (skew)",
+    label_all: str = "All observed",
     color_ntc_raw: str = "#1f77b4",
     color_skew: str = "#ff7f0e",
     color_null: str = "#7f7f7f",
     color_null_skew: str = "#2ca02c",
+    color_all: str = "#9467bd",
+    all_marker: str = ".",
+    all_marker_size: float = 12.0,
+    all_alpha: float = 0.6,
     show_ref_line: bool = True,
     show_conf_band: bool = True,
     conf_alpha: float = 0.05,
     conf_color: str = "#d9d9d9",
+    show_all_pvals: bool = True,
 ):
     """
     QQ plot comparing NTC (negative-control) p-values to a CRT-null reference.
     If pvals_skew_df is provided, plots both raw and skew-calibrated curves.
     Provide null_pvals directly or pass null_stats to compute leave-one-out
     CRT-null p-values. Optionally plot a skew-normal null curve by fitting
-    to null_stats and sampling from the fitted distribution.
+    to null_stats and sampling from the fitted distribution. If show_all_pvals
+    is True, plot all observed p-values from pvals_raw_df.
     """
     if pvals_raw_df is None:
         raise ValueError("pvals_raw_df is required.")
@@ -89,6 +96,13 @@ def qq_plot_ntc_pvals(
             raise ValueError("null_pvals contains no finite values.")
         return np.clip(arr, 1e-300, 1.0)
 
+    def _extract_all_pvals(df: pd.DataFrame) -> np.ndarray:
+        pvals = df.to_numpy().ravel()
+        pvals = pvals[np.isfinite(pvals)]
+        if pvals.size == 0:
+            raise ValueError("No finite p-values available in pvals_raw_df.")
+        return np.clip(pvals, 1e-300, 1.0)
+
     pvals_raw = _extract_pvals(pvals_raw_df, "pvals_raw_df")
     x_raw, y_raw, m_raw = _qq_data(pvals_raw)
 
@@ -98,6 +112,12 @@ def qq_plot_ntc_pvals(
     else:
         x_skew = y_skew = None
         m_skew = 0
+
+    if show_all_pvals:
+        all_pvals = _extract_all_pvals(pvals_raw_df)
+        x_all, y_all, _ = _qq_data(all_pvals)
+    else:
+        x_all = y_all = None
 
     if null_pvals is None:
         null_arr = crt_null_pvals_from_null_stats_fast(
@@ -160,13 +180,27 @@ def qq_plot_ntc_pvals(
         )
 
     if show_ref_line:
-        xmin = float(np.min(x_raw))
-        xmax = float(np.max(x_raw))
+        x_candidates = [x_raw, x_null]
         if x_skew is not None:
-            xmin = min(xmin, float(np.min(x_skew)))
-            xmax = max(xmax, float(np.max(x_skew)))
+            x_candidates.append(x_skew)
+        if x_null_skew is not None:
+            x_candidates.append(x_null_skew)
+        if x_all is not None:
+            x_candidates.append(x_all)
+        xmin = min(float(np.min(x)) for x in x_candidates)
+        xmax = max(float(np.max(x)) for x in x_candidates)
         ax.plot([xmin, xmax], [xmin, xmax], color="#333333", linewidth=1.0, label="y=x")
 
+    if x_all is not None:
+        ax.scatter(
+            x_all,
+            y_all,
+            label=label_all,
+            color=color_all,
+            marker=all_marker,
+            s=all_marker_size,
+            alpha=all_alpha,
+        )
     ax.plot(x_raw, y_raw, label=label_ntc_raw, color=color_ntc_raw)
     if x_skew is not None:
         ax.plot(x_skew, y_skew, label=label_skew, color=color_skew)

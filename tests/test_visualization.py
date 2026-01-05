@@ -17,6 +17,7 @@ def test_qq_plot_ntc_pvals_raw_only():
         ntc_genes=["non-targeting", "safe-targeting"],
         pvals_skew_df=None,
         null_pvals=np.random.uniform(size=20),
+        show_all_pvals=True,
         show_ref_line=True,
         show_conf_band=False,
     )
@@ -37,6 +38,7 @@ def test_qq_plot_ntc_pvals_with_null_pvals():
         guide2gene=guide2gene,
         ntc_genes=["non-targeting", "safe-targeting"],
         null_pvals=null_pvals,
+        show_all_pvals=True,
         show_ref_line=True,
         show_conf_band=False,
     )
@@ -58,6 +60,9 @@ def test_qq_plot_ntc_pvals_with_null_stats():
         ntc_genes=["non-targeting", "safe-targeting"],
         null_stats=null_stats,
         null_two_sided=True,
+        show_null_skew=True,
+        null_skew_samples=200,
+        show_all_pvals=True,
         show_ref_line=True,
         show_conf_band=False,
     )

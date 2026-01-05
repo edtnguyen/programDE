@@ -379,10 +379,14 @@ Use this to sanity-check calibration of p-values for negative-control genes.
 If you have both raw and skew-calibrated p-values, pass both to compare them.
 Provide CRT-null p-values (from resampling) via `null_pvals`, or pass `null_stats`
 and let the QQ helper compute leave-one-out CRT-null p-values for you.
+Optionally set `show_null_skew=True` to add a second null curve drawn from a
+skew-normal fit to `null_stats`.
 Compute null p-values with `compute_gene_null_pvals` (typically using an NTC gene).
+By default, the plot also includes an "All observed" scatter using all rows in
+`pvals_raw_df` (set `show_all_pvals=False` to disable).
 
 ```python
-from src.sceptre import compute_gene_null_pvals
+from src.sceptre import compute_gene_null_pvals, crt_null_stats_for_test
 from src.visualization import qq_plot_ntc_pvals
 
 # Single run that returns both raw and skew-calibrated p-values
@@ -396,6 +400,7 @@ out = run_all_genes_union_crt(
 )
 
 null_pvals = compute_gene_null_pvals("non-targeting", inputs, B=1023).ravel()
+null_stats = crt_null_stats_for_test("non-targeting", 0, inputs, B=1023)
 
 ax = qq_plot_ntc_pvals(
     pvals_raw_df=out["pvals_raw_df"],     # raw CRT p-values
@@ -403,6 +408,9 @@ ax = qq_plot_ntc_pvals(
     ntc_genes=["non-targeting", "safe-targeting"],
     pvals_skew_df=out["pvals_df"],        # skew-calibrated p-values
     null_pvals=null_pvals,
+    null_stats=null_stats,
+    show_null_skew=True,
+    show_all_pvals=True,
     title="QQ plot: NTC genes (raw vs skew) vs null",
     show_ref_line=True,
     show_conf_band=True,
@@ -429,6 +437,9 @@ ax = qq_plot_ntc_pvals(
     guide2gene=adata.uns["guide2gene"],
     ntc_genes=["non-targeting", "safe-targeting"],
     null_pvals=null_pvals,
+    null_stats=null_stats,
+    show_null_skew=True,
+    show_all_pvals=True,
     title="QQ plot: NTC genes (raw) vs null",
 )
 ```

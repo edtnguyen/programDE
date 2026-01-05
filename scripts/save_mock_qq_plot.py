@@ -69,15 +69,21 @@ def main() -> None:
         return_skew_normal=True,
     )
 
-    from src.sceptre import compute_gene_null_pvals
+    from src.sceptre import compute_gene_null_pvals, crt_null_stats_for_test
 
     null_pvals = compute_gene_null_pvals("non-targeting", inputs, B=63).ravel()
+    null_stats = crt_null_stats_for_test(
+        "non-targeting", 0, inputs, B=63
+    )
     ax = qq_plot_ntc_pvals(
         pvals_raw_df=out["pvals_raw_df"],
         guide2gene=adata.uns["guide2gene"],
         ntc_genes=["non-targeting", "safe-targeting"],
         pvals_skew_df=out["pvals_df"],
         null_pvals=null_pvals,
+        null_stats=null_stats,
+        show_null_skew=True,
+        null_skew_samples=500,
         title="Mock NTC QQ plot (raw vs skew)",
         show_ref_line=True,
         show_conf_band=True,
