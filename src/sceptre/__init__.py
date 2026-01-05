@@ -44,6 +44,7 @@ from .ntc_groups import (
 from .pipeline import (
     CRTGeneResult,
     CRTInputs,
+    compute_guide_set_null_pvals,
     compute_gene_null_pvals,
     prepare_crt_inputs,
     run_all_genes_union_crt,
@@ -86,6 +87,7 @@ __all__ = [
     "build_ntc_group_inputs",
     "CRTGeneResult",
     "CRTInputs",
+    "compute_guide_set_null_pvals",
     "compute_gene_null_pvals",
     "prepare_crt_inputs",
     "run_all_genes_union_crt",

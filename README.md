@@ -352,12 +352,16 @@ Terminology:
 - `null_stats`: raw CRT null test statistics (e.g., `beta_null` from resamples).
 - `null_pvals`: leave-one-out CRT-null p-values computed from `null_stats`.
 
+Important: the null curve should be built from the same unit as the observed NTC
+curve. If you plot grouped NTC controls (6‑guide units), compute CRT‑null p-values
+for those same guide groups (not the whole NTC union).
+
 Example (raw vs skew, grouped NTC controls, CRT-null curve):
 
 ```python
 from src.sceptre import (
     build_ntc_group_inputs,
-    compute_gene_null_pvals,
+    compute_guide_set_null_pvals,
     crt_pvals_for_ntc_groups_ensemble,
     make_ntc_groups_ensemble,
     run_all_genes_union_crt,
@@ -374,11 +378,6 @@ out = run_all_genes_union_crt(
 )
 
 ntc_labels = ["non-targeting", "safe-targeting"]
-null_pvals = compute_gene_null_pvals(
-    gene="non-targeting",
-    inputs=inputs,
-    B=1023,
-).ravel()
 ntc_guides, guide_freq, guide_to_bin, real_sigs = build_ntc_group_inputs(
     inputs=inputs,
     ntc_label=ntc_labels,
@@ -400,6 +399,16 @@ ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
     B=1023,
     seed0=23,
 )
+
+# Build CRT-null p-values matched to NTC group units (recommended)
+guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
+null_list = []
+for group_id, guides in list(ntc_groups_ens[0].items())[:10]:
+    cols = [guide_to_col[g] for g in guides]
+    null_list.append(
+        compute_guide_set_null_pvals(guide_idx=cols, inputs=inputs, B=1023).ravel()
+    )
+null_pvals = np.concatenate(null_list)
 
 ax = qq_plot_ntc_pvals(
     pvals_raw_df=out["pvals_raw_df"],
