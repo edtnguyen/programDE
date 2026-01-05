@@ -375,16 +375,14 @@ Optional outputs (only when requested):
 
 #### QQ plot for negative controls
 
-Use this to sanity-check calibration of p-values for negative-control genes.
-If you have both raw and skew-calibrated p-values, pass both to compare them.
-Provide CRT-null p-values (from resampling) via `null_pvals`, or pass `null_stats`
-and let the QQ helper compute leave-one-out CRT-null p-values for you. The dashed
-null curve is always based on CRT-null p-values (not a theoretical curve).
+Use this to sanity-check calibration of p-values for negative-control genes. The dashed
+null curve is built from CRT-null p-values (leave-one-out), so you must provide
+`null_pvals` directly or pass `null_stats` and let the helper compute them.
 
 Required inputs:
 - `pvals_raw_df`: observed raw CRT p-values (genes × programs).
 - `guide2gene`: guide → gene mapping.
-- `ntc_genes`: list of negative-control gene labels (must exist in `guide2gene` values).
+- `ntc_genes`: negative-control gene labels (must exist in `guide2gene` values).
 - `null_pvals` **or** `null_stats`.
 
 Optional inputs:
@@ -397,12 +395,18 @@ Terminology:
 - `null_stats`: raw CRT null test statistics (e.g., `beta_null` from resamples).
 - `null_pvals`: leave-one-out CRT-null p-values computed from `null_stats`.
 
+Example (raw vs skew, grouped NTC controls, CRT-null curve):
 
 ```python
-from src.sceptre import compute_gene_null_pvals, crt_null_stats_for_test
+from src.sceptre import (
+    build_ntc_group_inputs,
+    compute_gene_null_pvals,
+    crt_pvals_for_ntc_groups_ensemble,
+    make_ntc_groups_ensemble,
+    run_all_genes_union_crt,
+)
 from src.visualization import qq_plot_ntc_pvals
 
-# Single run that returns both raw and skew-calibrated p-values
 out = run_all_genes_union_crt(
     inputs=inputs,
     B=1023,
@@ -412,101 +416,12 @@ out = run_all_genes_union_crt(
     return_skew_normal=True,
 )
 
+ntc_labels = ["non-targeting", "safe-targeting"]
 null_pvals = compute_gene_null_pvals(
     gene="non-targeting",
     inputs=inputs,
     B=1023,
 ).ravel()
-null_stats = crt_null_stats_for_test(
-    gene="non-targeting",
-    program_index=0,
-    inputs=inputs,
-    B=1023,
-)
-
-ax = qq_plot_ntc_pvals(
-    pvals_raw_df=out["pvals_raw_df"],     # raw CRT p-values
-    guide2gene=adata.uns["guide2gene"],
-    ntc_genes=["non-targeting", "safe-targeting"],
-    pvals_skew_df=out["pvals_df"],        # skew-calibrated p-values
-    null_pvals=null_pvals,
-    null_stats=null_stats,
-    show_null_skew=True,
-    show_all_pvals=True,
-    title="QQ plot: NTC genes (raw vs skew) vs CRT null",
-    show_ref_line=True,
-    show_conf_band=True,
-)
-
-# Display the plot (e.g., in scripts)
-# In notebooks, returning `ax` is usually enough; in scripts, call plt.show().
-import matplotlib.pyplot as plt
-plt.show()
-```
-
-Raw-only example (no skew calibration):
-
-```python
-out = run_all_genes_union_crt(
-    inputs=inputs,
-    B=1023,
-    n_jobs=16,
-    calibrate_skew_normal=False,
-)
-
-ax = qq_plot_ntc_pvals(
-    pvals_raw_df=out["pvals_df"],  # raw CRT p-values
-    guide2gene=adata.uns["guide2gene"],
-    ntc_genes=["non-targeting", "safe-targeting"],
-    null_pvals=null_pvals,
-    null_stats=null_stats,
-    show_null_skew=True,
-    show_all_pvals=True,
-    title="QQ plot: NTC genes (raw) vs null",
-)
-```
-
-Note: if you want to use multiple NTC genes and multiple programs for the null curve, compute each gene’s and program's CRT-null p-values and concatenate them before passing to `null_pvals`.
-
-Example (concatenate CRT-null p-values from multiple genes and programs):
-
-```python
-ntc_genes = ["non-targeting", "safe-targeting"]
-program_indices = [0, 1]  # pick multiple programs
-null_list = [
-    crt_null_pvals_from_null_stats_fast(
-        T_null=crt_null_stats_for_test(
-            gene=gene,
-            program_index=program_index,
-            inputs=inputs,
-            B=1023,
-        ),
-        two_sided=True,
-    )
-    for gene in ntc_genes
-    for program_index in program_indices
-]
-null_pvals = np.concatenate(null_list)
-
-ax = qq_plot_ntc_pvals(
-    pvals_raw_df=out["pvals_df"],
-    guide2gene=adata.uns["guide2gene"],
-    ntc_genes=ntc_genes,
-    null_pvals=null_pvals,
-    title="QQ plot: NTC genes vs CRT null (pooled)",
-)
-```
-
-Grouped NTC controls (matched by guide frequency, ensemble):
-
-```python
-from src.sceptre import (
-    build_ntc_group_inputs,
-    make_ntc_groups_ensemble,
-    crt_pvals_for_ntc_groups_ensemble,
-)
-
-ntc_labels = ["non-targeting", "safe-targeting"]
 ntc_guides, guide_freq, guide_to_bin, real_sigs = build_ntc_group_inputs(
     inputs=inputs,
     ntc_label=ntc_labels,
@@ -533,12 +448,48 @@ ax = qq_plot_ntc_pvals(
     pvals_raw_df=out["pvals_raw_df"],
     guide2gene=adata.uns["guide2gene"],
     ntc_genes=ntc_labels,
+    pvals_skew_df=out["pvals_df"],
     null_pvals=null_pvals,
     ntc_group_pvals_ens=ntc_group_pvals_ens,
     show_ntc_ensemble_band=True,
-    title="QQ plot: grouped NTC controls vs CRT null",
+    show_all_pvals=True,
+    title="QQ plot: grouped NTC controls (raw vs skew) vs CRT null",
 )
+
+import matplotlib.pyplot as plt
+plt.show()
 ```
+
+#### Synthetic data
+
+Use the synthetic generator for large‑scale diagnostics:
+
+```python
+from tests.synthetic_data import make_sceptre_style_synth
+from src.sceptre import prepare_crt_inputs
+
+adata = make_sceptre_style_synth(
+    N=10000,
+    K=20,
+    n_target_genes=200,
+    guides_per_gene=6,
+    ntc_frac_guides=0.15,
+    moi_mean=5.5,
+    frac_causal_genes=0.10,
+    n_effect_programs=3,
+    effect_size=0.6,
+    confound_strength=0.0,
+    seed=0,
+)
+
+# The generator stores usage in adata.obsm["usage"].
+# Pass usage_key="usage" when preparing inputs.
+inputs = prepare_crt_inputs(adata=adata, usage_key="usage")
+```
+
+Note on scale: this generator is designed for large synthetic cohorts (e.g., tens of
+thousands of cells). For quick smoke tests, reduce `N`, `K`, and `n_target_genes`
+to keep runtime and memory low.
 
 ### Makefile Commands
 
