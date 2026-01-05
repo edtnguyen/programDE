@@ -2,6 +2,7 @@
 NTC guide-group construction and evaluation for QQ diagnostics.
 """
 
+import logging
 from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple, Union
 
 import numpy as np
@@ -9,8 +10,15 @@ import pandas as pd
 import scipy.sparse as sp
 
 from .adata_utils import build_gene_to_cols, union_obs_idx_from_cols
-from .pipeline_helpers import _empirical_crt, _fit_propensity, _sample_crt_indices
+from .pipeline_helpers import (
+    _empirical_crt,
+    _fit_propensity,
+    _sample_crt_indices,
+    _skew_calibrated_crt,
+)
 from .propensity import fit_propensity_logistic
+
+logger = logging.getLogger(__name__)
 
 
 def guide_frequency(
@@ -200,6 +208,34 @@ def make_ntc_groups_ensemble(
     return groups_ens
 
 
+def _validate_group_sizes(
+    groups: Mapping[str, Sequence[str]],
+    expected_size: int,
+) -> Dict[str, float]:
+    sizes = np.array([len(guides) for guides in groups.values()], dtype=np.int32)
+    if sizes.size == 0:
+        raise ValueError("No NTC groups provided for size validation.")
+    stats = {
+        "n_groups": int(sizes.size),
+        "min": int(np.min(sizes)),
+        "median": float(np.median(sizes)),
+        "max": int(np.max(sizes)),
+    }
+    logger.info(
+        "NTC group sizes: n=%d min=%d median=%.1f max=%d",
+        stats["n_groups"],
+        stats["min"],
+        stats["median"],
+        stats["max"],
+    )
+    if np.any(sizes != expected_size):
+        raise ValueError(
+            f"NTC group size mismatch: expected {expected_size}, "
+            f"got min={stats['min']} max={stats['max']}."
+        )
+    return stats
+
+
 def crt_pvals_for_guide_set(
     inputs,
     guide_idx: np.ndarray,
@@ -220,12 +256,37 @@ def crt_pvals_for_guide_set(
     return pvals
 
 
+def crt_pvals_for_guide_set_skew(
+    inputs,
+    guide_idx: np.ndarray,
+    B: int,
+    seed: int,
+    propensity_model=fit_propensity_logistic,
+    side_code: int = 0,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Returns skew-calibrated and raw CRT p-values across programs for one guide set.
+    """
+    obs_idx = union_obs_idx_from_cols(inputs.G, guide_idx)
+    if obs_idx.size == 0 or obs_idx.size == inputs.C.shape[0] or B <= 0:
+        ones = np.ones(inputs.Y.shape[1], dtype=np.float64)
+        return ones, ones
+
+    p = _fit_propensity(inputs, obs_idx, propensity_model)
+    indptr, idx = _sample_crt_indices(p, B, seed)
+    pvals_sn, _, _, pvals_raw = _skew_calibrated_crt(
+        inputs, indptr, idx, obs_idx, B, side_code
+    )
+    return pvals_sn, pvals_raw
+
+
 def crt_pvals_for_ntc_groups_ensemble(
     inputs,
     ntc_groups_ens: Sequence[Mapping[str, Sequence[str]]],
     B: int,
     seed0: int,
     propensity_model=fit_propensity_logistic,
+    expected_group_size: int = 6,
 ) -> Dict[int, pd.DataFrame]:
     """
     Returns mapping e -> DataFrame(rows=group_id, cols=programs).
@@ -234,6 +295,7 @@ def crt_pvals_for_ntc_groups_ensemble(
     out: Dict[int, pd.DataFrame] = {}
 
     for e, groups in enumerate(ntc_groups_ens):
+        _validate_group_sizes(groups, expected_group_size)
         rows: List[np.ndarray] = []
         group_ids: List[str] = []
         for group_id, guides in groups.items():
@@ -249,6 +311,48 @@ def crt_pvals_for_ntc_groups_ensemble(
                 propensity_model=propensity_model,
             )
             rows.append(pvals)
+            group_ids.append(group_id)
+        if rows:
+            mat = np.vstack(rows)
+        else:
+            mat = np.empty((0, inputs.Y.shape[1]), dtype=np.float64)
+        out[e] = pd.DataFrame(mat, index=group_ids, columns=inputs.program_names)
+    return out
+
+
+def crt_pvals_for_ntc_groups_ensemble_skew(
+    inputs,
+    ntc_groups_ens: Sequence[Mapping[str, Sequence[str]]],
+    B: int,
+    seed0: int,
+    propensity_model=fit_propensity_logistic,
+    side_code: int = 0,
+    expected_group_size: int = 6,
+) -> Dict[int, pd.DataFrame]:
+    """
+    Returns mapping e -> DataFrame(rows=group_id, cols=programs) of skew p-values.
+    """
+    guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
+    out: Dict[int, pd.DataFrame] = {}
+
+    for e, groups in enumerate(ntc_groups_ens):
+        _validate_group_sizes(groups, expected_group_size)
+        rows: List[np.ndarray] = []
+        group_ids: List[str] = []
+        for group_id, guides in groups.items():
+            cols = [guide_to_col[g] for g in guides if g in guide_to_col]
+            if not cols:
+                continue
+            seed = (hash((seed0, e, group_id)) & 0xFFFFFFFF)
+            pvals_skew, _ = crt_pvals_for_guide_set_skew(
+                inputs=inputs,
+                guide_idx=np.asarray(cols, dtype=np.int32),
+                B=B,
+                seed=seed,
+                propensity_model=propensity_model,
+                side_code=side_code,
+            )
+            rows.append(pvals_skew)
             group_ids.append(group_id)
         if rows:
             mat = np.vstack(rows)

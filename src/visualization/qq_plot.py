@@ -29,6 +29,7 @@ def qq_plot_ntc_pvals(
     expected_grid_raw: Optional[Sequence[float]] = None,
     expected_grid_all: Optional[Sequence[float]] = None,
     ntc_group_pvals_ens: Optional[Mapping[int, pd.DataFrame]] = None,
+    ntc_group_pvals_skew_ens: Optional[Mapping[int, pd.DataFrame]] = None,
     show_ntc_ensemble_band: bool = False,
     ntc_band_quantiles: Optional[Sequence[float]] = None,
     ntc_band_alpha: float = 0.15,
@@ -67,6 +68,10 @@ def qq_plot_ntc_pvals(
           (these should be ~Uniform(0,1) under a correct null)
         - If null_stats is provided without null_pvals, this function computes
           leave-one-out null p-values internally.
+        - If ntc_group_pvals_ens is provided and you want a skew curve, pass
+          ntc_group_pvals_skew_ens to use group-based skew p-values.
+        - When ntc_group_pvals_ens is provided, NTC curves concatenate values
+          across all groups and ensemble partitions.
     """
     if pvals_raw_df is None:
         raise ValueError("pvals_raw_df is required.")
@@ -143,7 +148,25 @@ def qq_plot_ntc_pvals(
     x_raw, y_raw, m_raw = _qq_data(pvals_raw, expected=expected_grid_raw)
 
     if pvals_skew_df is not None:
-        pvals_skew = _extract_pvals(pvals_skew_df, "pvals_skew_df")
+        if ntc_group_pvals_ens is not None:
+            if ntc_group_pvals_skew_ens is None:
+                raise ValueError(
+                    "Provide ntc_group_pvals_skew_ens when using grouped "
+                    "NTC controls with skew p-values."
+                )
+            pvals_list = []
+            for df in ntc_group_pvals_skew_ens.values():
+                arr = df.to_numpy().ravel()
+                arr = arr[np.isfinite(arr)]
+                if arr.size:
+                    pvals_list.append(arr)
+            if not pvals_list:
+                raise ValueError(
+                    "ntc_group_pvals_skew_ens contains no finite values."
+                )
+            pvals_skew = np.concatenate(pvals_list)
+        else:
+            pvals_skew = _extract_pvals(pvals_skew_df, "pvals_skew_df")
         x_skew, y_skew, m_skew = _qq_data(pvals_skew)
     else:
         x_skew = y_skew = None

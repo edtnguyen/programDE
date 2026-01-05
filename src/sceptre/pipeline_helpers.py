@@ -83,10 +83,13 @@ def _compute_skew_normal_pvals(
 
     for k in range(K):
         null_k = beta_null[:, k]
+        raw_k = (1.0 + np.sum(np.abs(null_k) >= abs(beta_obs[k]))) / (
+            null_k.shape[0] + 1.0
+        )
         mu = null_k.mean()
         sd = null_k.std()
         if not np.isfinite(sd) or sd <= 0.0:
-            pvals_sn[k] = 1.0
+            pvals_sn[k] = raw_k
             params[k, :] = np.nan
             continue
 
@@ -94,10 +97,13 @@ def _compute_skew_normal_pvals(
         z_obs = (beta_obs[k] - mu) / sd
 
         sn_result = fit_and_evaluate_skew_normal(z_obs, z_null, side_code)
-        params[k, :] = sn_result[:3]
+        params_k = sn_result[:3]
+        params[k, :] = params_k if np.all(np.isfinite(params_k)) else np.nan
         p_val = sn_result[3]
         if p_val < 0.0:
             p_val = compute_empirical_p_value(z_null, z_obs, side_code)
+        if not np.isfinite(p_val):
+            p_val = raw_k
         pvals_sn[k] = p_val
 
     return pvals_sn, params

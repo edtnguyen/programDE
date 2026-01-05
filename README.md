@@ -345,6 +345,7 @@ Required inputs:
 Optional inputs:
 - `pvals_skew_df`: skew-calibrated p-values (for comparison).
 - `ntc_group_pvals_ens`: grouped NTC control p-values (recommended; see below).
+- `ntc_group_pvals_skew_ens`: grouped skew p-values (required when comparing skew).
 - `show_null_skew=True`: add a second null curve drawn from a skew-normal fit to `null_stats`.
 - `show_all_pvals=True`: scatter all observed p-values from `pvals_raw_df`.
 
@@ -354,7 +355,11 @@ Terminology:
 
 Important: the null curve should be built from the same unit as the observed NTC
 curve. If you plot grouped NTC controls (6‑guide units), compute CRT‑null p-values
-for those same guide groups (not the whole NTC union).
+for those same guide groups (not the whole NTC union). When you use grouped NTC
+controls, concatenate p-values from all groups across all ensemble partitions for
+both raw and skew curves.
+If you want all possible NTC groups, use `max_groups=None` when building the
+ensemble and pass the full grouped outputs into `qq_plot_ntc_pvals`.
 
 Example (raw vs skew, grouped NTC controls, CRT-null curve):
 
@@ -363,6 +368,7 @@ from src.sceptre import (
     build_ntc_group_inputs,
     compute_guide_set_null_pvals,
     crt_pvals_for_ntc_groups_ensemble,
+    crt_pvals_for_ntc_groups_ensemble_skew,
     make_ntc_groups_ensemble,
     run_all_genes_union_crt,
 )
@@ -392,8 +398,15 @@ ntc_groups_ens = make_ntc_groups_ensemble(
     n_ensemble=10,
     seed0=7,
     group_size=6,
+    max_groups=None,
 )
 ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
+    inputs=inputs,
+    ntc_groups_ens=ntc_groups_ens,
+    B=1023,
+    seed0=23,
+)
+ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
     inputs=inputs,
     ntc_groups_ens=ntc_groups_ens,
     B=1023,
@@ -402,13 +415,17 @@ ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
 
 # Build CRT-null p-values matched to NTC group units (recommended)
 guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
-null_list = []
-for group_id, guides in list(ntc_groups_ens[0].items())[:10]:
-    cols = [guide_to_col[g] for g in guides]
-    null_list.append(
-        compute_guide_set_null_pvals(guide_idx=cols, inputs=inputs, B=1023).ravel()
-    )
-null_pvals = np.concatenate(null_list)
+null_pvals = np.concatenate(
+    [
+        compute_guide_set_null_pvals(
+            guide_idx=[guide_to_col[g] for g in guides],
+            inputs=inputs,
+            B=1023,
+        ).ravel()
+        for groups in ntc_groups_ens
+        for guides in groups.values()
+    ]
+)
 
 ax = qq_plot_ntc_pvals(
     pvals_raw_df=out["pvals_raw_df"],
@@ -417,6 +434,7 @@ ax = qq_plot_ntc_pvals(
     pvals_skew_df=out["pvals_df"],
     null_pvals=null_pvals,
     ntc_group_pvals_ens=ntc_group_pvals_ens,
+    ntc_group_pvals_skew_ens=ntc_group_pvals_skew_ens,
     show_ntc_ensemble_band=True,
     show_all_pvals=True,
     title="QQ plot: grouped NTC controls (raw vs skew) vs CRT null",

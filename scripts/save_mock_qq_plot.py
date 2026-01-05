@@ -47,6 +47,7 @@ def main() -> None:
     from src.sceptre import (
         build_ntc_group_inputs,
         crt_pvals_for_ntc_groups_ensemble,
+        crt_pvals_for_ntc_groups_ensemble_skew,
         limit_threading,
         make_ntc_groups_ensemble,
         prepare_crt_inputs,
@@ -76,7 +77,7 @@ def main() -> None:
         return_skew_normal=True,
     )
 
-    from src.sceptre import compute_gene_null_pvals, crt_null_stats_for_test
+    from src.sceptre import compute_guide_set_null_pvals
 
     ntc_genes = ["non-targeting", "safe-targeting"]
     ntc_guides, guide_freq, guide_to_bin, real_sigs = build_ntc_group_inputs(
@@ -100,21 +101,34 @@ def main() -> None:
         B=63,
         seed0=23,
     )
-
-    null_pvals = compute_gene_null_pvals("non-targeting", inputs, B=63).ravel()
-    null_stats = crt_null_stats_for_test(
-        "non-targeting", 0, inputs, B=63
+    ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
+        inputs=inputs,
+        ntc_groups_ens=ntc_groups_ens,
+        B=63,
+        seed0=23,
     )
+
+    guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
+    null_list = []
+    for groups in ntc_groups_ens:
+        for guides in groups.values():
+            cols = [guide_to_col[g] for g in guides if g in guide_to_col]
+            if not cols:
+                continue
+            null_list.append(
+                compute_guide_set_null_pvals(
+                    guide_idx=cols, inputs=inputs, B=63
+                ).ravel()
+            )
+    null_pvals = np.concatenate(null_list)
     ax = qq_plot_ntc_pvals(
         pvals_raw_df=out["pvals_raw_df"],
         guide2gene=adata.uns["guide2gene"],
         ntc_genes=ntc_genes,
         pvals_skew_df=out["pvals_df"],
         null_pvals=null_pvals,
-        null_stats=null_stats,
         ntc_group_pvals_ens=ntc_group_pvals_ens,
-        show_null_skew=True,
-        null_skew_samples=500,
+        ntc_group_pvals_skew_ens=ntc_group_pvals_skew_ens,
         title="Mock NTC QQ plot (raw vs skew)",
         show_ref_line=True,
         show_conf_band=True,

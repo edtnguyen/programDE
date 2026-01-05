@@ -1,0 +1,55 @@
+{
+  "B": 1000,
+  "seed_base": 0,
+  "n_units": 55,
+  "ntc_group": {
+    "n_units": 5,
+    "x_mean": {
+      "q10": 0.08248,
+      "median": 0.0894,
+      "q90": 0.0978
+    },
+    "n_treated": {
+      "q10": 412.4,
+      "median": 447.0,
+      "q90": 489.0
+    },
+    "den_is_bad_frac": 0.0,
+    "beta_obs_nan_frac": 0.0,
+    "pvals_raw_eq1_frac": 0.0,
+    "pvals_skew_eq1_frac": 0.0,
+    "p_hat_mean": {
+      "q10": 0.08247913054459655,
+      "median": 0.08940047003131515,
+      "q90": 0.09780056568479559
+    },
+    "propensity_separation_frac": 0.0
+  },
+  "real_gene": {
+    "n_units": 50,
+    "x_mean": {
+      "q10": 0.04302,
+      "median": 0.0822,
+      "q90": 0.14818
+    },
+    "n_treated": {
+      "q10": 215.1,
+      "median": 411.0,
+      "q90": 740.9
+    },
+    "den_is_bad_frac": 0.0,
+    "beta_obs_nan_frac": 0.0,
+    "pvals_raw_eq1_frac": 0.0,
+    "pvals_skew_eq1_frac": 0.002,
+    "p_hat_mean": {
+      "q10": 0.04302036583411612,
+      "median": 0.08220000137082854,
+      "q90": 0.14817605667110073
+    },
+    "propensity_separation_frac": 0.0
+  },
+  "overall_real_gene_p_raw_eq1_frac": 0.0,
+  "overall_real_gene_beta_nan_frac": 0.0,
+  "overall_ntc_p_raw_eq1_frac": 0.0,
+  "overall_ntc_beta_nan_frac": 0.0
+}
