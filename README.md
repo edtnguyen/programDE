@@ -177,7 +177,7 @@ p = 1 - F(z^{(\mathrm{obs})}).
 p = F(z^{(\mathrm{obs})}).
 ```
 
-**Note**: The skew‑normal calibration is two‑sided by default (`skew_normal_side_code=0`). The p‑value is computed as 2 × one tail, where the tail is chosen using the empirical median of the null z‑scores: use the right tail if ($z^{(\mathrm{obs})}$) is above the null median, otherwise the left tail. This is equivalent to $2 \min \{F(z^{(\mathrm{obs})}),\, 1 - F(z^{(\mathrm{obs})}) \}$ when the fitted skew‑normal median matches the empirical median.
+**Note**: The skew‑normal calibration is two‑sided by default (`skew_normal_side_code=0`). The p‑value is computed as 2 × one tail, where the tail is chosen using the empirical median of the null z‑scores: use the right tail if ($z^{(\mathrm{obs})}$) is above the null median, otherwise the left tail. This is equivalent to $2 \min \\{F(z^{(\mathrm{obs})}),\, 1 - F(z^{(\mathrm{obs})}) \\}$ when the fitted skew‑normal median matches the empirical median.
 
 
 
