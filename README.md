@@ -25,7 +25,7 @@ For each target gene $g$, define a **gene-level union indicator**:
 
 ```math
 x_i \in \{0,1\},\qquad
-x_i = \mathbf{1}\left\{\exists\ \text{guide targeting } g \text{ present in cell } i\right\}.
+x_i = \mathbf{1}\{ \exists\ \mathrm{guide\ targeting}\ g\ \mathrm{in\ cell}\ i \}.
 ```
 
 ### 1.2 CLR transform of program usage
@@ -50,14 +50,12 @@ Collect outcomes in $Y \in \mathbb{R}^{N \times K}$.
 For each program $k$, fit:
 
 ```math
-Y_{ik} = \beta_k\, x_i + C_i^\top \gamma_k + \varepsilon_{ik},
+Y_{ik} = \beta_k\, x_i + C_i^\top \gamma_k + \varepsilon_{ik}.
 ```
 
 where $\beta_k$ is the gene effect on program $k$ (on the CLR scale), and $\gamma_k$ are covariate effects.
 
 **Test statistic:** the OLS coefficient $\hat\beta_k$.
-
----
 
 ## 2) Conditional Randomization Test (CRT)
 
@@ -79,7 +77,7 @@ p_i = \mathbb{P}(x_i = 1 \mid C_i)
 Generate $B$ synthetic perturbation vectors:
 
 ```math
-\tilde x_i^{(b)} \sim \operatorname{Bernoulli}(p_i),
+\tilde x_i^{(b)} \sim \mathrm{Bernoulli}(p_i),
 \qquad b=1,\dots,B,\ i=1,\dots,N.
 ```
 
@@ -88,13 +86,13 @@ Generate $B$ synthetic perturbation vectors:
 1. Draw how many resamples include cell $i$ as treated:
 
 ```math
-M_i \sim \operatorname{Binomial}(B, p_i).
+M_i \sim \mathrm{Binomial}(B, p_i).
 ```
 
 2. Sample $M_i$ distinct resample indices uniformly without replacement:
 
 ```math
-S_i \subset \{1,\dots,B\},\quad |S_i|=M_i,\quad S_i \text{ uniform}.
+S_i \subset \{1,\dots,B\},\quad |S_i|=M_i,\quad S_i\ \mathrm{uniform}.
 ```
 
 3. Set $\tilde x_i^{(b)}=1$ for $b\in S_i$ and $\tilde x_i^{(b)}=0$ otherwise.
@@ -124,8 +122,6 @@ p_k
 B+1
 }.
 ```
-
----
 
 ## 3) Skew-normal calibration (optional)
 
@@ -158,7 +154,7 @@ f(z;\xi,\omega,\alpha)
 =
 \frac{2}{\omega}\,
 \phi\!\left(\frac{z-\xi}{\omega}\right)\,
-\Phi\!\left(\alpha\,\frac{z-\xi}{\omega}\right),
+\Phi\!\left(\alpha\,\frac{z-\xi}{\omega}\right).
 ```
 
 where $\phi$ and $\Phi$ are the standard normal PDF and CDF. Let $F(\cdot)$ be the fitted CDF. Calibrated p-values:
@@ -185,11 +181,9 @@ p = F(z^{(\mathrm{obs})}).
 
 If the skew-normal fit is unstable or fails diagnostics, fall back to the empirical CRT p-values.
 
----
-
 ## Interpretation (CLR scale)
 
-Because $Y_{ik}=\operatorname{CLR}(u'_i)_k$, $\beta_k$ is a **log-ratio shift** of program $k$ relative to the geometric mean across programs:
+Because $Y_{ik}=\mathrm{CLR}(u'_i)_k$, $\beta_k$ is a **log-ratio shift** of program $k$ relative to the geometric mean across programs:
 
 ```math
 \beta_k \approx \Delta \log\!\left(\frac{u'_k}{g(u')}\right),
@@ -198,8 +192,6 @@ g(u')=\left(\prod_{j=1}^K u'_j\right)^{1/K}.
 ```
 
 If $\beta_k>0$, program $k$ increases **relative to the overall composition**; if $\beta_k<0$, it decreases. Effects are **relative**: increases in some components imply decreases elsewhere.
-
----
 
 ## Flooring $\varepsilon$ (handling near-zeros)
 
@@ -211,10 +203,12 @@ u'_{ik}=\frac{\max(u_{ik},\varepsilon)}{\sum_{j=1}^K \max(u_{ij},\varepsilon)}.
 
 Practical choices for $\varepsilon$:
 
-* Quantile-based: $\varepsilon=\operatorname{quantile}({u_{ik}}, q)$ with small $q$ (e.g., $10^{-4}$ to $10^{-6}$)
+* Quantile-based: $\varepsilon=\mathrm{quantile}({u_{ik}}, q)$ with small $q$ (e.g., $10^{-4}$ to $10^{-6}$)
 * Fixed: $\varepsilon = 10^{-6}$
 
 Smaller $\varepsilon$ preserves dynamic range but can amplify noise in very small components; larger $\varepsilon$ stabilizes logs but shrinks contrasts involving tiny programs.
+
+---
 
 
 ## Getting Started
