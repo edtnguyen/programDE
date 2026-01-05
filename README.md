@@ -5,7 +5,6 @@ A pipeline for testing differential effect (DE) of gene targets on gene programs
 The core analysis pipeline lives in the `src.sceptre` module.
 
 
-```md
 ## Method overview
 
 This section summarizes the statistical steps used to test **target gene → program usage** effects using a Conditional Randomization Test (CRT) with optional skew-normal calibration.
@@ -194,7 +193,6 @@ Practical choices for \(\varepsilon\):
 - **Fixed**: \(\varepsilon = 10^{-6}\) (works if usage values are well-scaled and not exactly zero).
 
 Smaller \(\varepsilon\) preserves dynamic range but can amplify noise in extremely small components; larger \(\varepsilon\) stabilizes logs but slightly shrinks contrasts involving tiny programs.
-```
 
 
 
