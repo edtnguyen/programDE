@@ -39,8 +39,8 @@ u'_{ik}=\frac{\max(u_{ik},\varepsilon)}{\sum_{j=1}^K \max(u_{ij},\varepsilon)}.
 Then the CLR-transformed outcome is:
 
 ```math
-    Y_{ik}=\operatorname{CLR}(u'_i)_k
-    = \log u'_{ik} - \frac{1}{K}\sum_{j=1}^K \log u'_{ij}
+Y_{ik}=\mathrm{CLR}(u'_i)_k
+= \log u'_{ik} - \frac{1}{K}\sum_{j=1}^K \log u'_{ij}.
 ```
 
 Collect outcomes in $Y \in \mathbb{R}^{N \times K}$.
