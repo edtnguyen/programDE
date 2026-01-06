@@ -332,9 +332,7 @@ Optional outputs (only when requested):
 
 #### QQ plot for negative controls
 
-Use this to sanity-check calibration of p-values for negative-control genes. The dashed
-null curve is built from CRT-null p-values (leave-one-out), so you must provide
-`null_pvals` directly or pass `null_stats` and let the helper compute them.
+Use this to sanity-check calibration of p-values for negative-control genes. The dashed null curve is built from CRT-null p-valu (leave-one-out), so you must provide `null_pvals` directly or pass `null_stats` and let the helper compute them.
 
 Required inputs:
 - `pvals_raw_df`: observed raw CRT p-values (genes × programs).
@@ -344,7 +342,7 @@ Required inputs:
 
 Optional inputs:
 - `pvals_skew_df`: skew-calibrated p-values (for comparison).
-- `ntc_group_pvals_ens`: grouped NTC control p-values (recommended; see below).
+- `ntc_group_pvals_ens`: grouped NTC control p-values to match real genes which has several guides/gene (recommended; see below).
 - `ntc_group_pvals_skew_ens`: grouped skew p-values (required when comparing skew).
 - `show_null_skew=True`: add a second null curve drawn from a skew-normal fit to `null_stats`.
 - `show_all_pvals=True`: scatter all observed p-values from `pvals_raw_df`.
@@ -353,13 +351,17 @@ Terminology:
 - `null_stats`: raw CRT null test statistics (e.g., `beta_null` from resamples).
 - `null_pvals`: leave-one-out CRT-null p-values computed from `null_stats`.
 
-Important: the null curve should be built from the same unit as the observed NTC
-curve. If you plot grouped NTC controls (6‑guide units), compute CRT‑null p-values
-for those same guide groups (not the whole NTC union). When you use grouped NTC
-controls, concatenate p-values from all groups across all ensemble partitions for
-both raw and skew curves.
-If you want all possible NTC groups, use `max_groups=None` when building the
-ensemble and pass the full grouped outputs into `qq_plot_ntc_pvals`.
+Curve notes:
+- NTC raw curve (grouped): QQ of **all grouped raw p-values pooled across all ensembles**.
+- NTC skew curve (grouped): QQ of **all grouped skew p-values pooled across all ensembles**.
+- NTC ensemble IQR band: variability across ensembles (median + IQR of per-ensemble QQ quantiles), not the curve itself.
+- 95% CI band: theoretical uniform QQ band using `m_null` (the number of null p-values), not fit to NTC or skew curves.
+- Each curve uses its own `m` (number of p-values) when forming expected quantiles.
+- By default, NTC curves include **all programs**; slice DataFrames first if you want a subset.
+
+Important: the null curve should be built from the same unit as the observed NTC curve. If you plot grouped NTC controls (6‑guide units), compute CRT‑null p-values for those same guide groups (not the whole NTC union into one giant gene). When you use grouped NTC controls, concatenate p-values from all groups across all ensemble partitions for both raw and skew curves. One ensemble replicate = one random partition of NTC guides into groups while respecting the guide frequency signature of a real gene. 
+
+If you want all groups generated within each ensemble replicate (no truncation), use `max_groups=None` when building the ensemble and pass the full grouped outputs into `qq_plot_ntc_pvals`.
 
 Example (raw vs skew, grouped NTC controls, CRT-null curve):
 
@@ -384,12 +386,14 @@ out = run_all_genes_union_crt(
 )
 
 ntc_labels = ["non-targeting", "safe-targeting"]
+# Identify NTC guides and build guide-frequency bins / real-gene signatures
 ntc_guides, guide_freq, guide_to_bin, real_sigs = build_ntc_group_inputs(
     inputs=inputs,
     ntc_label=ntc_labels,
     group_size=6,
     n_bins=10,
 )
+# Create multiple random partitions (ensembles) of NTC guides into 6-guide groups
 ntc_groups_ens = make_ntc_groups_ensemble(
     ntc_guides=ntc_guides,
     ntc_freq=guide_freq,
@@ -400,12 +404,14 @@ ntc_groups_ens = make_ntc_groups_ensemble(
     group_size=6,
     max_groups=None,
 )
+# Compute raw CRT p-values for each NTC group in each ensemble
 ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
     inputs=inputs,
     ntc_groups_ens=ntc_groups_ens,
     B=1023,
     seed0=23,
 )
+# Compute skew-calibrated CRT p-values for each NTC group in each ensemble
 ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
     inputs=inputs,
     ntc_groups_ens=ntc_groups_ens,
@@ -417,6 +423,7 @@ ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
 guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
 null_pvals = np.concatenate(
     [
+        # Each entry is a (B, K) matrix of null p-values for one NTC group
         compute_guide_set_null_pvals(
             guide_idx=[guide_to_col[g] for g in guides],
             inputs=inputs,
