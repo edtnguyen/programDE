@@ -352,6 +352,11 @@ Terminology:
 - `null_pvals`: leave-one-out CRT-null p-values computed from `null_stats`.
 
 Curve notes:
+
+Important: the null curve should be built from the same unit as the observed NTC curve. If you plot grouped NTC controls (6‑guide units), compute CRT‑null p-values for those same guide groups (not the whole NTC union into one giant gene). When you use grouped NTC controls, concatenate p-values from all groups across all ensemble partitions for both raw and skew curves. One ensemble replicate = one random partition of NTC guides into groups while respecting the guide frequency signature of a real gene. 
+
+If you want all groups generated within each ensemble replicate (no truncation), use `max_groups=None` when building the ensemble and pass the full grouped outputs into `qq_plot_ntc_pvals`.
+
 - NTC raw curve (grouped): QQ of **all grouped raw p-values pooled across all ensembles**.
 - NTC skew curve (grouped): QQ of **all grouped skew p-values pooled across all ensembles**.
 - NTC ensemble IQR band: variability across ensembles (median + IQR of per-ensemble QQ quantiles), not the curve itself.
@@ -359,9 +364,6 @@ Curve notes:
 - Each curve uses its own `m` (number of p-values) when forming expected quantiles.
 - By default, NTC curves include **all programs**; slice DataFrames first if you want a subset.
 
-Important: the null curve should be built from the same unit as the observed NTC curve. If you plot grouped NTC controls (6‑guide units), compute CRT‑null p-values for those same guide groups (not the whole NTC union into one giant gene). When you use grouped NTC controls, concatenate p-values from all groups across all ensemble partitions for both raw and skew curves. One ensemble replicate = one random partition of NTC guides into groups while respecting the guide frequency signature of a real gene. 
-
-If you want all groups generated within each ensemble replicate (no truncation), use `max_groups=None` when building the ensemble and pass the full grouped outputs into `qq_plot_ntc_pvals`.
 
 Example (raw vs skew, grouped NTC controls, CRT-null curve):
 
