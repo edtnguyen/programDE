@@ -351,7 +351,7 @@ Terminology:
 - `null_stats`: raw CRT null test statistics (e.g., `beta_null` from resamples).
 - `null_pvals`: leave-one-out CRT-null p-values computed from `null_stats`.
 
-Curve notes:
+**Curve notes:**
 
 Important: the null curve should be built from the same unit as the observed NTC curve. If you plot grouped NTC controls (6‑guide units), compute CRT‑null p-values for those same guide groups (not the whole NTC union into one giant gene). When you use grouped NTC controls, concatenate p-values from all groups across all ensemble partitions for both raw and skew curves. One ensemble replicate = one random partition of NTC guides into groups while respecting the guide frequency signature of a real gene. 
 
