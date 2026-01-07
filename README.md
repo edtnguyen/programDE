@@ -248,14 +248,6 @@ Smaller $\varepsilon$ preserves dynamic range but can amplify noise in very smal
 
 ## Usage
 
-### Data Processing
-
-To process the raw data and generate the final datasets for analysis, run the following command:
-```bash
-make data
-```
-This command executes the script `src/data/make_dataset.py`.
-
 ### Library Usage
 
 #### Required AnnData inputs
