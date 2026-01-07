@@ -324,7 +324,7 @@ Optional outputs (only when requested):
 
 #### QQ plot for negative controls
 
-Use this to sanity-check calibration of p-values for negative-control genes. The dashed null curve is built from CRT-null p-valu (leave-one-out), so you must provide `null_pvals` directly or pass `null_stats` and let the helper compute them.
+Use this to sanity-check calibration of p-values for negative-control genes. The dashed null curve is built from CRT-null p-values (leave-one-out), so you must provide `null_pvals` directly or pass `null_stats` and let the helper compute them.
 
 Required inputs:
 - `pvals_raw_df`: observed raw CRT p-values (genes × programs).
