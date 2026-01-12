@@ -362,7 +362,7 @@ Example (raw vs skew, grouped NTC controls, CRT-null curve):
 ```python
 from src.sceptre import (
     build_ntc_group_inputs,
-    compute_guide_set_null_pvals,
+    compute_ntc_group_null_pvals_parallel,
     crt_pvals_for_ntc_groups_ensemble,
     crt_pvals_for_ntc_groups_ensemble_skew,
     make_ntc_groups_ensemble,
@@ -414,18 +414,12 @@ ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
 )
 
 # Build CRT-null p-values matched to NTC group units (recommended)
-guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
-null_pvals = np.concatenate(
-    [
-        # Each entry is a (B, K) matrix of null p-values for one NTC group
-        compute_guide_set_null_pvals(
-            guide_idx=[guide_to_col[g] for g in guides],
-            inputs=inputs,
-            B=1023,
-        ).ravel()
-        for groups in ntc_groups_ens
-        for guides in groups.values()
-    ]
+null_pvals = compute_ntc_group_null_pvals_parallel(
+    inputs=inputs,
+    ntc_groups_ens=ntc_groups_ens,
+    B=1023,
+    n_jobs=8,
+    backend="threading",
 )
 
 ax = qq_plot_ntc_pvals(

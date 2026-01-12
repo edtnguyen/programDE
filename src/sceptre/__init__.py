@@ -42,6 +42,7 @@ from .ntc_groups import (
     make_ntc_groups_ensemble,
     make_ntc_groups_matched_by_freq,
 )
+from .ntc_parallel import compute_ntc_group_null_pvals_parallel
 from .pipeline import (
     CRTGeneResult,
     CRTInputs,
@@ -87,6 +88,7 @@ __all__ = [
     "crt_pvals_for_ntc_groups_ensemble",
     "crt_pvals_for_ntc_groups_ensemble_skew",
     "build_ntc_group_inputs",
+    "compute_ntc_group_null_pvals_parallel",
     "CRTGeneResult",
     "CRTInputs",
     "compute_guide_set_null_pvals",
