@@ -71,3 +71,7 @@ NTC empirical null QQ (step 2):
 NTC empirical null QQ (step 3):
 - Added `tests/test_ntc_empirical_qq.py` (QQ utilities + cross-fit calibration under global null).
 - Added README section for NTC empirical-null QQ plots (cross-fit usage and notes).
+
+NTC empirical null pbar matching:
+- Added optional pbar matching (`mean(logit(p_hat))`) in NTC empirical-null binning and cross-fit helpers.
+- Implemented pbar computation per unit (real + NTC, per batch if meta) when `matching.use_pbar=True`.

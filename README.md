@@ -366,7 +366,13 @@ out = run_all_genes_union_crt(
         n_ntc_units=5000,
         batch_mode="meta",          # per-batch pvals + Fisher combine
         combine_method="fisher",
-        matching=dict(n_n1_bins=10, n_d_bins=10, min_ntc_per_bin=50),
+        matching=dict(
+            n_n1_bins=10,
+            n_d_bins=10,
+            min_ntc_per_bin=50,
+            use_pbar=True,           # optional: add pbar matching
+            n_pbar_bins=8,
+        ),
         min_treated=10,
         min_control=10,
     ),
@@ -447,6 +453,7 @@ Notes:
 - The holdout calibration curve is **NTC_B vs NTC_A** (with a bootstrap band).
 - The “Real genes vs A” curve should be interpreted relative to that holdout band.
 - Program-level QQ uses a subset of programs (default: top variance in `betas_df`).
+- Enabling `use_pbar` adds a propensity-fit per unit, so it increases runtime.
 
 #### S-CRT workflow (stratified-permutation)
 
