@@ -460,6 +460,54 @@ import matplotlib.pyplot as plt
 plt.show()
 ```
 
+Stratified‑permutation variant (S‑CRT) for the QQ plot:
+
+```python
+resampling_kwargs = dict(
+    n_bins=20,
+    stratify_by_batch=True,
+    batch_key="batch",
+    min_stratum_size=2,
+)
+
+out = run_all_genes_union_crt(
+    inputs=inputs,
+    B=1023,
+    n_jobs=16,
+    resampling_method="stratified_perm",
+    resampling_kwargs=resampling_kwargs,
+    calibrate_skew_normal=True,
+    return_raw_pvals=True,
+    return_skew_normal=True,
+)
+
+ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
+    inputs=inputs,
+    ntc_groups_ens=ntc_groups_ens,
+    B=1023,
+    seed0=23,
+    resampling_method="stratified_perm",
+    resampling_kwargs=resampling_kwargs,
+)
+ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
+    inputs=inputs,
+    ntc_groups_ens=ntc_groups_ens,
+    B=1023,
+    seed0=23,
+    resampling_method="stratified_perm",
+    resampling_kwargs=resampling_kwargs,
+)
+null_pvals = compute_ntc_group_null_pvals_parallel(
+    inputs=inputs,
+    ntc_groups_ens=ntc_groups_ens,
+    B=1023,
+    n_jobs=8,
+    backend="threading",
+    resampling_method="stratified_perm",
+    resampling_kwargs=resampling_kwargs,
+)
+```
+
 #### Synthetic data
 
 Use the synthetic generator for large‑scale diagnostics:
