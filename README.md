@@ -418,6 +418,31 @@ make_ntc_empirical_qq_plots(
 )
 ```
 
+Step-by-step workflow (including what to do after plotting):
+
+1. **Prepare inputs**: `adata.obsm["covar"]` must be a DataFrame with a `batch` column, then run `prepare_crt_inputs(...)`.
+2. **Run NTC empirical-null with cross-fit**: set `null_method="ntc_empirical"` and `qq_crossfit=True` so `out["ntc_crossfit"]` is produced.
+3. **Generate QQ plots**: call `make_ntc_empirical_qq_plots(...)` as shown above.
+4. **Inspect outputs on disk** (the function saves PNGs; it does not display them):
+
+```python
+from pathlib import Path
+print(sorted(Path("results/qq_ntc").glob("**/*.png")))
+```
+
+Expected files:
+- Meta (combined across batches):
+  - `results/qq_ntc/qq_ntc_empirical_genelevel_meta.png`
+  - `results/qq_ntc/qq_ntc_empirical_program_<program>_meta.png`
+- Per-batch (if `make_per_batch=True`):
+  - `results/qq_ntc/per_batch/<batch>/qq_ntc_empirical_genelevel.png`
+  - `results/qq_ntc/per_batch/<batch>/qq_ntc_empirical_program_<program>.png`
+
+If no images appear, verify:
+- `qq_crossfit=True` and `null_method="ntc_empirical"`
+- `out["ntc_crossfit"]` is present (it’s required by the plotting function)
+- `programs_to_plot` matches program names in `out["betas_df"].columns`
+
 Notes:
 - The holdout calibration curve is **NTC_B vs NTC_A** (with a bootstrap band).
 - The “Real genes vs A” curve should be interpreted relative to that holdout band.
