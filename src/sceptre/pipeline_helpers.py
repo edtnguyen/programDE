@@ -2,13 +2,14 @@
 Internal helpers for CRT pipeline orchestration.
 """
 
-from typing import Any, Callable, List, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 
 from .adata_utils import union_obs_idx_from_cols
-from .crt import crt_betas_for_gene, crt_index_sampler_fast_numba, crt_pvals_for_gene
+from .crt import crt_betas_for_gene, crt_pvals_for_gene
+from .samplers import bernoulli_index_sampler, stratified_permutation_sampler
 from .skew_normal import compute_empirical_p_value, fit_and_evaluate_skew_normal
 
 
@@ -46,8 +47,51 @@ def _fit_propensity(
     return _extract_probabilities(propensity_model(inputs.C, y01))
 
 
-def _sample_crt_indices(p: np.ndarray, B: int, seed: int) -> Tuple[np.ndarray, np.ndarray]:
-    return crt_index_sampler_fast_numba(p, B, seed)
+def _sample_crt_indices(
+    p: np.ndarray,
+    B: int,
+    seed: int,
+    *,
+    resampling_method: str = "bernoulli_index",
+    resampling_kwargs: Optional[Dict[str, Any]] = None,
+    obs_idx: Optional[np.ndarray] = None,
+    inputs: Optional[Any] = None,
+) -> Tuple[np.ndarray, np.ndarray]:
+    if resampling_method == "bernoulli_index":
+        return bernoulli_index_sampler(p, B, seed)
+
+    if resampling_method != "stratified_perm":
+        raise ValueError(
+            "resampling_method must be 'bernoulli_index' or 'stratified_perm'."
+        )
+    if obs_idx is None:
+        raise ValueError("obs_idx is required for stratified_perm resampling.")
+
+    kwargs = dict(resampling_kwargs or {})
+    n_bins = int(kwargs.get("n_bins", 20))
+    stratify_by_batch = bool(kwargs.get("stratify_by_batch", True))
+    batch_key = kwargs.get("batch_key", "batch")
+    min_stratum_size = kwargs.get("min_stratum_size", 2)
+
+    batch_raw = None
+    if stratify_by_batch and inputs is not None:
+        covar_df_raw = getattr(inputs, "covar_df_raw", None)
+        if covar_df_raw is not None and batch_key in covar_df_raw.columns:
+            batch_raw = covar_df_raw[batch_key].to_numpy()
+        else:
+            batch_raw = getattr(inputs, "batch_raw", None)
+
+    x_obs = _union_indicator(p.shape[0], obs_idx)
+    return stratified_permutation_sampler(
+        x_obs=x_obs,
+        p_hat=p,
+        B=B,
+        seed=seed,
+        batch_raw=batch_raw,
+        n_bins=n_bins,
+        stratify_by_batch=stratify_by_batch,
+        min_stratum_size=min_stratum_size,
+    )
 
 
 def _empirical_crt(

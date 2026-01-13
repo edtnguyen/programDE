@@ -37,7 +37,7 @@ def test_compute_ntc_group_null_pvals_parallel_matches_manual():
         {"g0": ["ntc0", "ntc2"], "g1": ["ntc1", "ntc3"]},
     ]
 
-    def _fake_compute(guide_idx, inputs, B, base_seed):
+    def _fake_compute(guide_idx, inputs, B, base_seed, **kwargs):
         val = float(sum(guide_idx) + base_seed)
         return np.full((B, 1), val, dtype=np.float64)
 

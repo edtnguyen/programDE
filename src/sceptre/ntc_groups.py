@@ -3,7 +3,7 @@ NTC guide-group construction and evaluation for QQ diagnostics.
 """
 
 import logging
-from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple, Union
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -242,6 +242,8 @@ def crt_pvals_for_guide_set(
     B: int,
     seed: int,
     propensity_model=fit_propensity_logistic,
+    resampling_method: str = "bernoulli_index",
+    resampling_kwargs: Optional[Dict[str, Any]] = None,
 ) -> np.ndarray:
     """
     Returns CRT p-values across programs for one guide set.
@@ -251,7 +253,15 @@ def crt_pvals_for_guide_set(
         return np.ones(inputs.Y.shape[1], dtype=np.float64)
 
     p = _fit_propensity(inputs, obs_idx, propensity_model)
-    indptr, idx = _sample_crt_indices(p, B, seed)
+    indptr, idx = _sample_crt_indices(
+        p,
+        B,
+        seed,
+        resampling_method=resampling_method,
+        resampling_kwargs=resampling_kwargs,
+        obs_idx=obs_idx,
+        inputs=inputs,
+    )
     pvals, _ = _empirical_crt(inputs, indptr, idx, obs_idx, B)
     return pvals
 
@@ -262,6 +272,8 @@ def crt_pvals_for_guide_set_skew(
     B: int,
     seed: int,
     propensity_model=fit_propensity_logistic,
+    resampling_method: str = "bernoulli_index",
+    resampling_kwargs: Optional[Dict[str, Any]] = None,
     side_code: int = 0,
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
@@ -273,7 +285,15 @@ def crt_pvals_for_guide_set_skew(
         return ones, ones
 
     p = _fit_propensity(inputs, obs_idx, propensity_model)
-    indptr, idx = _sample_crt_indices(p, B, seed)
+    indptr, idx = _sample_crt_indices(
+        p,
+        B,
+        seed,
+        resampling_method=resampling_method,
+        resampling_kwargs=resampling_kwargs,
+        obs_idx=obs_idx,
+        inputs=inputs,
+    )
     pvals_sn, _, _, pvals_raw = _skew_calibrated_crt(
         inputs, indptr, idx, obs_idx, B, side_code
     )
@@ -286,6 +306,8 @@ def crt_pvals_for_ntc_groups_ensemble(
     B: int,
     seed0: int,
     propensity_model=fit_propensity_logistic,
+    resampling_method: str = "bernoulli_index",
+    resampling_kwargs: Optional[Dict[str, Any]] = None,
     expected_group_size: int = 6,
 ) -> Dict[int, pd.DataFrame]:
     """
@@ -309,6 +331,8 @@ def crt_pvals_for_ntc_groups_ensemble(
                 B=B,
                 seed=seed,
                 propensity_model=propensity_model,
+                resampling_method=resampling_method,
+                resampling_kwargs=resampling_kwargs,
             )
             rows.append(pvals)
             group_ids.append(group_id)
@@ -326,6 +350,8 @@ def crt_pvals_for_ntc_groups_ensemble_skew(
     B: int,
     seed0: int,
     propensity_model=fit_propensity_logistic,
+    resampling_method: str = "bernoulli_index",
+    resampling_kwargs: Optional[Dict[str, Any]] = None,
     side_code: int = 0,
     expected_group_size: int = 6,
 ) -> Dict[int, pd.DataFrame]:
@@ -350,6 +376,8 @@ def crt_pvals_for_ntc_groups_ensemble_skew(
                 B=B,
                 seed=seed,
                 propensity_model=propensity_model,
+                resampling_method=resampling_method,
+                resampling_kwargs=resampling_kwargs,
                 side_code=side_code,
             )
             rows.append(pvals_skew)

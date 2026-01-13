@@ -255,7 +255,7 @@ Smaller $\varepsilon$ preserves dynamic range but can amplify noise in very smal
 `prepare_crt_inputs` expects the following to be present in `adata`. It searches
 common AnnData containers (`.obsm`, `.layers`, `.obsp`, `.uns`, `.obs`) by key.
 
-- **Covariates**: `adata.obsm["covar"]` (shape `N x p`, numeric, catergorical, or object). A `DataFrame`or `ndarray` is fine. Count-based covariates should be already log-transformed. Columns are z-scored and an intercept is added by the pipeline. If `covar` is a `DataFrame` with categorical/string/bool/mixed columns, they are one-hot encoded automatically (dropping one level by default to avoid collinearity). Numeric columns with a small number of unique values (<=20 by default) are also treated as categorical and one-hot encoded. You can override the numeric threshold via `prepare_crt_inputs(..., numeric_as_category_threshold=...)` or set `numeric_as_category_threshold=None` to disable this heuristics.
+- **Covariates**: `adata.obsm["covar"]` (shape `N x p`, numeric, catergorical, or object). A `DataFrame`or `ndarray` is fine. Count-based covariates should be already log-transformed. Columns are z-scored and an intercept is added by the pipeline. If `covar` is a `DataFrame` with categorical/string/bool/mixed columns, they are one-hot encoded automatically (dropping one level by default to avoid collinearity). Numeric columns with a small number of unique values (<=20 by default) are also treated as categorical and one-hot encoded. You can override the numeric threshold via `prepare_crt_inputs(..., numeric_as_category_threshold=...)` or set `numeric_as_category_threshold=None` to disable this heuristics. If you want stratified-permutation CRT with batch stratification, include a `batch` column (or choose another `batch_key`) in this DataFrame.
 - **cNMF usage**: `adata.obsm["cnmf_usage"]` (shape `N x K`, numeric).
   Each row should sum to 1 (the CLR step will floor and renormalize).
 - **Guide assignment**: `adata.obsm["guide_assignment"]` (shape `N x G`).
@@ -306,6 +306,27 @@ store_results_in_adata(
     treated_df=out["treated_df"],
 )
 ```
+
+Optional: switch to the stratified-permutation CRT sampler (S-CRT):
+
+```python
+out = run_all_genes_union_crt(
+    inputs=inputs,
+    B=1023,
+    n_jobs=16,
+    resampling_method="stratified_perm",
+    resampling_kwargs=dict(
+        n_bins=20,
+        stratify_by_batch=True,
+        batch_key="batch",
+        min_stratum_size=2,
+    ),
+    calibrate_skew_normal=False,
+    return_raw_pvals=True,
+)
+```
+
+Batch stratification uses the raw covariate DataFrame (before one-hot encoding). If your covariates were provided as an `ndarray`, `stratify_by_batch` is ignored.
 
 #### Output meanings (p-values)
 

@@ -48,6 +48,8 @@ class CRTInputs:
     gene_to_cols: Dict[str, List[int]]
     program_names: List[str]
     covar_cols: Optional[List[str]] = None
+    covar_df_raw: Optional[pd.DataFrame] = None
+    batch_raw: Optional[np.ndarray] = None
 
 
 @dataclass
@@ -72,6 +74,7 @@ def prepare_crt_inputs(
     add_intercept: bool = True,
     standardize: bool = True,
     numeric_as_category_threshold: Optional[int] = 20,
+    batch_key: str = "batch",
     clamp_threads: bool = True,
 ) -> CRTInputs:
     """
@@ -86,12 +89,19 @@ def prepare_crt_inputs(
     add_intercept: whether to add intercept column to covariate matrix
     standardize: whether to z-score covariate columns
     numeric_as_category_threshold: treat numeric columns with <= this many unique values as categorical
+    batch_key: column in raw covariate DataFrame to store for batch stratification
     clamp_threads: whether to limit threading for numerical libraries
     Returns:
         CRTInputs dataclass with all required inputs for CRT
     """
     if clamp_threads:
         limit_threading()
+
+    covar_raw = get_from_adata_any(adata, covar_key)
+    covar_df_raw = covar_raw.copy() if isinstance(covar_raw, pd.DataFrame) else None
+    batch_raw = None
+    if covar_df_raw is not None and batch_key in covar_df_raw.columns:
+        batch_raw = covar_df_raw[batch_key].to_numpy()
 
     C, covar_cols = get_covar_matrix(
         adata,
@@ -150,6 +160,8 @@ def prepare_crt_inputs(
         gene_to_cols=gene_to_cols,
         program_names=program_names,
         covar_cols=covar_cols,
+        covar_df_raw=covar_df_raw,
+        batch_raw=batch_raw,
     )
 
 
@@ -177,6 +189,8 @@ def run_one_gene_union_crt(
     B: int = 1023,
     base_seed: int = 123,
     propensity_model: Callable = fit_propensity_logistic,
+    resampling_method: str = "bernoulli_index",
+    resampling_kwargs: Optional[Dict[str, Any]] = None,
     calibrate_skew_normal: bool = False,
     skew_normal_side_code: int = 0,
 ) -> CRTGeneResult:
@@ -187,6 +201,8 @@ def run_one_gene_union_crt(
     B: number of resamples for CRT
     base_seed: base random seed for reproducibility
     propensity_model: function to fit propensity scores given C and y01
+    resampling_method: "bernoulli_index" (default) or "stratified_perm"
+    resampling_kwargs: optional sampler-specific arguments
     calibrate_skew_normal: if True, compute skew-normal calibrated p-values
     skew_normal_side_code: 0 two-sided, 1 right-tailed, -1 left-tailed
     y01: binary union indicator for the gene
@@ -207,7 +223,15 @@ def run_one_gene_union_crt(
     p = _fit_propensity(inputs, obs_idx, propensity_model)
     seed = _gene_seed(gene, base_seed)
 
-    indptr, idx = _sample_crt_indices(p, B, seed)
+    indptr, idx = _sample_crt_indices(
+        p,
+        B,
+        seed,
+        resampling_method=resampling_method,
+        resampling_kwargs=resampling_kwargs,
+        obs_idx=obs_idx,
+        inputs=inputs,
+    )
 
     if calibrate_skew_normal:
         pvals_sn, beta_obs, skew_params, pvals_raw = _skew_calibrated_crt(
@@ -236,6 +260,8 @@ def compute_gene_null_pvals(
     B: int = 1023,
     base_seed: int = 123,
     propensity_model: Callable = fit_propensity_logistic,
+    resampling_method: str = "bernoulli_index",
+    resampling_kwargs: Optional[Dict[str, Any]] = None,
     side_code: int = 0,
 ) -> np.ndarray:
     """
@@ -253,7 +279,15 @@ def compute_gene_null_pvals(
 
     p = _fit_propensity(inputs, obs_idx, propensity_model)
     seed = _gene_seed(gene, base_seed)
-    indptr, idx = _sample_crt_indices(p, B, seed)
+    indptr, idx = _sample_crt_indices(
+        p,
+        B,
+        seed,
+        resampling_method=resampling_method,
+        resampling_kwargs=resampling_kwargs,
+        obs_idx=obs_idx,
+        inputs=inputs,
+    )
 
     _, beta_null = crt_betas_for_gene(
         indptr,
@@ -280,6 +314,8 @@ def compute_guide_set_null_pvals(
     B: int = 1023,
     base_seed: int = 123,
     propensity_model: Callable = fit_propensity_logistic,
+    resampling_method: str = "bernoulli_index",
+    resampling_kwargs: Optional[Dict[str, Any]] = None,
     side_code: int = 0,
 ) -> np.ndarray:
     """
@@ -305,7 +341,15 @@ def compute_guide_set_null_pvals(
     for val in guide_idx:
         seed = (seed * 1000003) ^ int(val)
     seed &= 0xFFFFFFFF
-    indptr, idx = _sample_crt_indices(p, B, seed)
+    indptr, idx = _sample_crt_indices(
+        p,
+        B,
+        seed,
+        resampling_method=resampling_method,
+        resampling_kwargs=resampling_kwargs,
+        obs_idx=obs_idx,
+        inputs=inputs,
+    )
 
     _, beta_null = crt_betas_for_gene(
         indptr,
@@ -334,6 +378,8 @@ def run_all_genes_union_crt(
     base_seed: int = 123,
     propensity_model: Callable = fit_propensity_logistic,
     backend: str = "loky",
+    resampling_method: str = "bernoulli_index",
+    resampling_kwargs: Optional[Dict[str, Any]] = None,
     calibrate_skew_normal: bool = False,
     skew_normal_side_code: int = 0,
     return_skew_normal: bool = False,
@@ -349,6 +395,8 @@ def run_all_genes_union_crt(
     base_seed: base random seed for reproducibility
     propensity_model: function to fit propensity scores given C and y01
     backend: joblib parallelization backend
+    resampling_method: "bernoulli_index" (default) or "stratified_perm"
+    resampling_kwargs: optional sampler-specific arguments
     calibrate_skew_normal: if True, compute skew-normal calibrated p-values per gene
     skew_normal_side_code: 0 two-sided, 1 right-tailed, -1 left-tailed
     return_skew_normal: if True, return skew-normal pvals and parameters
@@ -374,6 +422,8 @@ def run_all_genes_union_crt(
             B=B,
             base_seed=base_seed,
             propensity_model=propensity_model,
+            resampling_method=resampling_method,
+            resampling_kwargs=resampling_kwargs,
             calibrate_skew_normal=calibrate_skew_normal,
             skew_normal_side_code=skew_normal_side_code,
         )

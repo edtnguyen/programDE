@@ -2,7 +2,7 @@
 Parallel helpers for NTC-group CRT diagnostics.
 """
 
-from typing import List, Mapping, Sequence
+from typing import Any, Dict, List, Mapping, Optional, Sequence
 
 import numpy as np
 
@@ -25,6 +25,8 @@ def compute_ntc_group_null_pvals_parallel(
     base_seed: int = 123,
     n_jobs: int = 8,
     backend: str = "threading",
+    resampling_method: str = "bernoulli_index",
+    resampling_kwargs: Optional[Dict[str, Any]] = None,
 ) -> np.ndarray:
     """
     Compute concatenated CRT-null p-values for all NTC groups across ensembles.
@@ -49,6 +51,8 @@ def compute_ntc_group_null_pvals_parallel(
             inputs=inputs,
             B=B,
             base_seed=base_seed,
+            resampling_method=resampling_method,
+            resampling_kwargs=resampling_kwargs,
         ).ravel()
 
     if n_jobs == 1:
