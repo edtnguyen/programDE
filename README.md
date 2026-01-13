@@ -328,6 +328,141 @@ out = run_all_genes_union_crt(
 
 Batch stratification uses the raw covariate DataFrame (before one-hot encoding). If your covariates were provided as an `ndarray`, `stratify_by_batch` is ignored.
 
+#### S-CRT workflow (stratified-permutation)
+
+Use this checklist to avoid missing any steps:
+
+1. Ensure `adata.obsm["covar"]` is a **DataFrame** with a `batch` column (or your chosen `batch_key`).
+2. (Optional) Add a **burden** column to `covar` (e.g., log1p non-NTC guides per cell).
+3. Call `prepare_crt_inputs(...)` (captures raw covariates for stratification).
+4. Define `resampling_kwargs` and reuse them everywhere (main CRT, NTC groups, CRT-null pvals).
+5. Run `run_all_genes_union_crt(..., resampling_method="stratified_perm")`.
+6. Build NTC guide groups and compute grouped NTC p-values with the same sampler options.
+7. Compute CRT-null p-values for the **same NTC units** (grouped guides).
+8. Plot the QQ curve using the NTC p-values + CRT-null p-values.
+
+End-to-end example:
+
+```python
+from src.sceptre import (
+    add_burden_covariate,
+    build_ntc_group_inputs,
+    compute_ntc_group_null_pvals_parallel,
+    crt_pvals_for_ntc_groups_ensemble,
+    crt_pvals_for_ntc_groups_ensemble_skew,
+    make_ntc_groups_ensemble,
+    prepare_crt_inputs,
+    run_all_genes_union_crt,
+)
+from src.visualization import qq_plot_ntc_pvals
+
+# 1) Make covariates a DataFrame with batch
+covar_df = adata.obsm["covar"].copy()
+if "batch" not in covar_df.columns:
+    raise ValueError("covar_df must contain a 'batch' column for stratification.")
+adata.obsm["covar"] = covar_df
+
+# 2) Optional burden column (exclude NTC guides if desired)
+add_burden_covariate(
+    adata=adata,
+    guide_assignment_key="guide_assignment",
+    covar_key="covar",
+    guide_names_key="guide_names",
+    guide2gene_key="guide2gene",
+    burden_key="log1p_non_ntc_guides_per_cell",
+    ntc_labels=["non-targeting", "safe-targeting", "NTC"],
+    include_ntc=False,
+    use_log1p=True,
+)
+
+# 3) Prepare CRT inputs
+inputs = prepare_crt_inputs(adata=adata, covar_key="covar", batch_key="batch")
+
+# 4) Shared S-CRT settings
+resampling_kwargs = dict(
+    n_bins=20,
+    stratify_by_batch=True,
+    batch_key="batch",
+    min_stratum_size=2,
+    # Optional burden stratification:
+    # burden_key="log1p_non_ntc_guides_per_cell",
+    # n_burden_bins=8,
+    # burden_bin_method="quantile",
+)
+
+# 5) Run gene-level CRT with stratified permutation
+out = run_all_genes_union_crt(
+    inputs=inputs,
+    B=1023,
+    n_jobs=16,
+    resampling_method="stratified_perm",
+    resampling_kwargs=resampling_kwargs,
+    calibrate_skew_normal=True,
+    return_raw_pvals=True,
+    return_skew_normal=True,
+)
+
+# 6) Build NTC guide groups (6-guide units) + compute NTC p-values
+ntc_labels = ["non-targeting", "safe-targeting", "NTC"]
+ntc_guides, guide_freq, guide_to_bin, real_sigs = build_ntc_group_inputs(
+    inputs=inputs,
+    ntc_label=ntc_labels,
+    group_size=6,
+    n_bins=10,
+)
+ntc_groups_ens = make_ntc_groups_ensemble(
+    ntc_guides=ntc_guides,
+    ntc_freq=guide_freq,
+    real_gene_bin_sigs=real_sigs,
+    guide_to_bin=guide_to_bin,
+    n_ensemble=10,
+    seed0=7,
+    group_size=6,
+    max_groups=None,
+)
+ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
+    inputs=inputs,
+    ntc_groups_ens=ntc_groups_ens,
+    B=1023,
+    seed0=23,
+    resampling_method="stratified_perm",
+    resampling_kwargs=resampling_kwargs,
+)
+ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
+    inputs=inputs,
+    ntc_groups_ens=ntc_groups_ens,
+    B=1023,
+    seed0=23,
+    resampling_method="stratified_perm",
+    resampling_kwargs=resampling_kwargs,
+)
+
+# 7) CRT-null p-values matched to the same NTC units
+null_pvals = compute_ntc_group_null_pvals_parallel(
+    inputs=inputs,
+    ntc_groups_ens=ntc_groups_ens,
+    B=1023,
+    n_jobs=8,
+    backend="threading",
+    resampling_method="stratified_perm",
+    resampling_kwargs=resampling_kwargs,
+)
+
+# 8) QQ plot
+ax = qq_plot_ntc_pvals(
+    pvals_raw_df=out["pvals_raw_df"],
+    guide2gene=adata.uns["guide2gene"],
+    ntc_genes=ntc_labels,
+    pvals_skew_df=out["pvals_df"],
+    null_pvals=null_pvals,
+    ntc_group_pvals_ens=ntc_group_pvals_ens,
+    ntc_group_pvals_skew_ens=ntc_group_pvals_skew_ens,
+    show_ntc_ensemble_band=True,
+    show_all_pvals=True,
+    title="QQ plot: S-CRT (grouped NTC controls)",
+)
+```
+
 #### Output meanings (p-values)
 
 `run_all_genes_union_crt` always returns `pvals_df` as the main p-value output.
