@@ -35,7 +35,20 @@ from .diagnostics import (
     is_bh_adjusted_like,
     qq_expected_grid,
 )
-from .ntc_null import run_ntc_empirical_null, sample_ntc_pseudogenes_with_replacement
+from .ntc_null import (
+    compute_ntc_empirical_pvals_crossfit,
+    compute_ntc_empirical_pvals_gene_agg_crossfit,
+    run_ntc_empirical_null,
+    sample_ntc_pseudogenes_with_replacement,
+    split_ntc_units,
+)
+from .ntc_qq import (
+    bootstrap_qq_envelope,
+    expected_quantiles,
+    make_ntc_empirical_qq_plots,
+    plot_qq_curves,
+    qq_coords,
+)
 from .ntc_groups import (
     build_ntc_group_inputs,
     crt_pvals_for_guide_set,
@@ -88,6 +101,14 @@ __all__ = [
     "is_bh_adjusted_like",
     "run_ntc_empirical_null",
     "sample_ntc_pseudogenes_with_replacement",
+    "split_ntc_units",
+    "compute_ntc_empirical_pvals_crossfit",
+    "compute_ntc_empirical_pvals_gene_agg_crossfit",
+    "expected_quantiles",
+    "qq_coords",
+    "bootstrap_qq_envelope",
+    "plot_qq_curves",
+    "make_ntc_empirical_qq_plots",
     "guide_frequency",
     "make_ntc_groups_matched_by_freq",
     "make_ntc_groups_ensemble",

@@ -57,4 +57,17 @@ NTC empirical null:
 - Threaded `null_method`/`null_kwargs` into `run_one_gene_union_crt` and `run_all_genes_union_crt`.
 - Added tests in `tests/test_ntc_empirical_null.py` for denom correctness, empirical matching, global null uniformity, power sanity, and default CRT compatibility.
 - README updated with NTC empirical null usage snippet.
-- Ran pytest: 86 passed, 1 xfailed (burden improvement), cache warnings only.
+- Made burden-binning improvement test deterministic (no xfail) using a controlled synthetic scenario.
+- Ran pytest: 87 passed, cache warnings only.
+
+NTC empirical null QQ (step 1):
+- Added `src/sceptre/ntc_qq.py` with expected quantiles, QQ coords, bootstrap envelope, and plotting helpers.
+
+NTC empirical null QQ (step 2):
+- Added NTC cross-fit helpers (`split_ntc_units`, cross-fit p-value functions) and wired cross-fit outputs into `run_ntc_empirical_null`.
+- Added `qq_crossfit` flag to `run_all_genes_union_crt` and exposed NTC cross-fit outputs in the returned dict.
+- Exported new NTC QQ and cross-fit helpers via `src/sceptre/__init__.py`.
+
+NTC empirical null QQ (step 3):
+- Added `tests/test_ntc_empirical_qq.py` (QQ utilities + cross-fit calibration under global null).
+- Added README section for NTC empirical-null QQ plots (cross-fit usage and notes).

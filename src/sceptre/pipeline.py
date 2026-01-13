@@ -403,6 +403,7 @@ def run_all_genes_union_crt(
     resampling_kwargs: Optional[Dict[str, Any]] = None,
     null_method: str = "crt",
     null_kwargs: Optional[Dict[str, Any]] = None,
+    qq_crossfit: bool = False,
     calibrate_skew_normal: bool = False,
     skew_normal_side_code: int = 0,
     return_skew_normal: bool = False,
@@ -422,6 +423,7 @@ def run_all_genes_union_crt(
     resampling_kwargs: optional sampler-specific arguments
     null_method: "crt" (default) or "ntc_empirical"
     null_kwargs: optional arguments for the NTC empirical null
+    qq_crossfit: if True, return NTC cross-fit QQ diagnostics (ntc_empirical only)
     calibrate_skew_normal: if True, compute skew-normal calibrated p-values per gene
     skew_normal_side_code: 0 two-sided, 1 right-tailed, -1 left-tailed
     return_skew_normal: if True, return skew-normal pvals and parameters
@@ -440,6 +442,9 @@ def run_all_genes_union_crt(
     """
     gene_list = sorted(inputs.gene_to_cols.keys()) if genes is None else list(genes)
 
+    if qq_crossfit and null_method != "ntc_empirical":
+        raise ValueError("qq_crossfit is only supported for null_method='ntc_empirical'.")
+
     if null_method == "ntc_empirical":
         if calibrate_skew_normal or return_skew_normal or return_raw_pvals:
             raise ValueError("Skew-normal outputs are not supported for ntc_empirical.")
@@ -448,6 +453,7 @@ def run_all_genes_union_crt(
             genes=gene_list,
             base_seed=base_seed,
             null_kwargs=null_kwargs,
+            qq_crossfit=qq_crossfit,
         )
         pvals_df = pd.DataFrame(
             ntc_res.pvals, index=gene_list, columns=inputs.program_names
@@ -476,6 +482,8 @@ def run_all_genes_union_crt(
             "null_method": "ntc_empirical",
             "ntc_matching_info": ntc_res.matching_info,
         }
+        if qq_crossfit:
+            out_dict["ntc_crossfit"] = ntc_res.ntc_crossfit
         if return_format == "tuple":
             return (pvals_df, betas_df, treated_df, results)
         return out_dict

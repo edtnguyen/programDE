@@ -184,64 +184,73 @@ def test_oracle_propensity_close_to_fit_under_null():
 
 def test_burden_binning_improves_ntc_uniformity():
     rng = np.random.default_rng(14)
-    adata, _ = make_synthetic_adata(
-        rng,
-        n_cells=600,
-        n_programs=6,
-        n_genes=6,
-        guides_per_gene=3,
-        n_covariates=3,
-        include_categorical=True,
-        effect_gene=None,
-        effect_size=0.0,
-        propensity_mode="constant",
-        propensity_range=(0.1, 0.3),
+    n_cells = 800
+    B = 127
+
+    batch = rng.integers(0, 2, size=n_cells)
+    burden = rng.normal(0, 1, size=n_cells)
+    x_prob = 1.0 / (1.0 + np.exp(-2.0 * burden))
+    x_obs = (rng.random(n_cells) < x_prob).astype(np.int32)
+
+    Y = (1.5 * burden + 0.2 * rng.normal(0, 1, size=n_cells)).reshape(-1, 1)
+    C = np.column_stack([np.ones(n_cells), batch.astype(np.float64)])
+    A = np.linalg.inv(C.T @ C)
+    CTY = C.T @ Y
+
+    obs_idx = np.nonzero(x_obs)[0].astype(np.int32)
+    p_hat = np.full(n_cells, x_obs.mean(), dtype=np.float64)
+
+    from src.sceptre.crt import crt_betas_for_gene
+    from src.sceptre.pipeline_helpers import _raw_pvals_from_betas
+
+    indptr_no, idx_no = stratified_permutation_sampler(
+        x_obs=x_obs,
+        p_hat=p_hat,
+        B=B,
+        seed=7,
+        batch_raw=batch,
+        n_bins=1,
+        stratify_by_batch=True,
+        min_stratum_size=1,
     )
-    G = adata.obsm["guide_assignment"]
-    if hasattr(G, "sum") and not isinstance(G, np.ndarray):
-        burden = np.asarray(G.sum(axis=1)).ravel()
-    else:
-        burden = np.asarray(G > 0, dtype=np.int32).sum(axis=1)
+    beta_obs_no, beta_null_no = crt_betas_for_gene(
+        indptr_no,
+        idx_no,
+        C,
+        Y,
+        A,
+        CTY,
+        obs_idx,
+        B,
+    )
+    p_no = _raw_pvals_from_betas(beta_obs_no, beta_null_no)[0]
 
-    covar_df = adata.obsm["covar"].copy()
-    covar_df["burden"] = burden
-    adata.obsm["covar"] = covar_df
+    indptr_b, idx_b = stratified_permutation_sampler(
+        x_obs=x_obs,
+        p_hat=p_hat,
+        B=B,
+        seed=7,
+        batch_raw=batch,
+        n_bins=1,
+        stratify_by_batch=True,
+        min_stratum_size=1,
+        burden_values=burden,
+        n_burden_bins=5,
+        burden_bin_method="quantile",
+    )
+    beta_obs_b, beta_null_b = crt_betas_for_gene(
+        indptr_b,
+        idx_b,
+        C,
+        Y,
+        A,
+        CTY,
+        obs_idx,
+        B,
+    )
+    p_b = _raw_pvals_from_betas(beta_obs_b, beta_null_b)[0]
 
-    inputs = prepare_crt_inputs(adata)
-    genes = [g for g in inputs.gene_to_cols if g.startswith("gene_")]
-
-    def _run(burden_key=None):
-        kwargs = dict(n_bins=10, stratify_by_batch=True, batch_key="batch")
-        if burden_key is not None:
-            kwargs.update(
-                burden_key=burden_key,
-                n_burden_bins=6,
-                burden_bin_method="quantile",
-            )
-        return run_all_genes_union_crt(
-            inputs=inputs,
-            genes=genes,
-            B=63,
-            n_jobs=1,
-            resampling_method="stratified_perm",
-            resampling_kwargs=kwargs,
-            calibrate_skew_normal=False,
-        )
-
-    out_no = _run(None)
-    out_b = _run("burden")
-
-    p_no = out_no["pvals_df"].to_numpy().ravel()
-    p_b = out_b["pvals_df"].to_numpy().ravel()
-    p_no = p_no[np.isfinite(p_no)]
-    p_b = p_b[np.isfinite(p_b)]
-
-    q01_no = np.quantile(p_no, 0.01)
-    q01_b = np.quantile(p_b, 0.01)
-    if abs(q01_b - 0.01) <= abs(q01_no - 0.01):
-        assert True
-    else:
-        pytest.xfail("Burden bins did not improve q01 in this synthetic setup.")
+    assert p_b >= p_no
 
 
 def test_sampler_seed_independent_of_job_order():

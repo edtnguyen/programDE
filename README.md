@@ -334,12 +334,64 @@ This mode uses NTC pseudo-genes as the null distribution and matches on:
 - `n1`: treated count (union)
 - `d`: OLS denominator `x^T M_C x` (computed from the same CLR-OLS statistic)
 
-Example:
+Workflow (don’t skip steps):
+
+1. Ensure `adata.obsm["covar"]` is a **DataFrame** with a `batch` column.
+2. Call `prepare_crt_inputs(...)` (captures raw covariates for batch meta‑analysis).
+3. Choose NTC labels that exist in `adata.uns["guide2gene"]` values.
+4. Run `run_all_genes_union_crt(..., null_method="ntc_empirical")`.
+5. Use `out["pvals_df"]` as the empirical‑null p-values; inspect `out["ntc_matching_info"]` for bin sizes/fallbacks.
+
+End‑to‑end example:
 
 ```python
+from src.sceptre import prepare_crt_inputs, run_all_genes_union_crt
+
+# 1) Ensure covariates are a DataFrame with batch
+covar_df = adata.obsm["covar"].copy()
+if "batch" not in covar_df.columns:
+    raise ValueError("covar_df must contain a 'batch' column for ntc_empirical.")
+adata.obsm["covar"] = covar_df
+
+# 2) Prepare inputs
+inputs = prepare_crt_inputs(adata=adata, usage_key="cnmf_usage", covar_key="covar")
+
+# 3) Run NTC empirical‑null CRT
 out = run_all_genes_union_crt(
     inputs=inputs,
     null_method="ntc_empirical",
+    null_kwargs=dict(
+        ntc_labels=["SAFE", "non-targeting", "NTC"],
+        guides_per_unit=6,
+        n_ntc_units=5000,
+        batch_mode="meta",          # per-batch pvals + Fisher combine
+        combine_method="fisher",
+        matching=dict(n_n1_bins=10, n_d_bins=10, min_ntc_per_bin=50),
+        min_treated=10,
+        min_control=10,
+    ),
+)
+
+pvals_ntc = out["pvals_df"]
+betas = out["betas_df"]
+matching_info = out.get("ntc_matching_info", {})
+```
+
+#### NTC empirical-null QQ plots (cross-fit)
+
+These QQ diagnostics **cross-fit** the NTC null: split NTC pseudo-genes into A/B,
+use **A** to define the null, then evaluate calibration using **B vs A**. This avoids
+the overly-optimistic “in-sample” QQ that happens if you compare NTC_A to itself.
+
+Recommended usage (gene-level QQ is the primary diagnostic):
+
+```python
+from src.sceptre import make_ntc_empirical_qq_plots, run_all_genes_union_crt
+
+out = run_all_genes_union_crt(
+    inputs=inputs,
+    null_method="ntc_empirical",
+    qq_crossfit=True,
     null_kwargs=dict(
         ntc_labels=["SAFE", "non-targeting", "NTC"],
         guides_per_unit=6,
@@ -349,9 +401,27 @@ out = run_all_genes_union_crt(
         matching=dict(n_n1_bins=10, n_d_bins=10, min_ntc_per_bin=50),
         min_treated=10,
         min_control=10,
+        qq_crossfit_seed=11,
+        qq_crossfit_frac_A=0.5,
     ),
 )
+
+make_ntc_empirical_qq_plots(
+    out=out,
+    out_dir="results/qq_ntc",
+    programs_to_plot="top_var",
+    n_programs=6,
+    make_per_batch=True,
+    make_meta=True,
+    envelope_boot=200,
+    seed=0,
+)
 ```
+
+Notes:
+- The holdout calibration curve is **NTC_B vs NTC_A** (with a bootstrap band).
+- The “Real genes vs A” curve should be interpreted relative to that holdout band.
+- Program-level QQ uses a subset of programs (default: top variance in `betas_df`).
 
 #### S-CRT workflow (stratified-permutation)
 
