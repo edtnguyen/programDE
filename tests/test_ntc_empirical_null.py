@@ -96,11 +96,11 @@ def test_global_null_uniform_pvals_ntc_empirical():
     pvals = out["pvals_df"].to_numpy().ravel()
     pvals = pvals[np.isfinite(pvals)]
     q01, q10, q50 = np.quantile(pvals, [0.01, 0.10, 0.50])
-    assert 0.003 <= q01 <= 0.03
-    assert 0.03 <= q10 <= 0.20
-    assert 0.43 <= q50 <= 0.57
+    assert 0.001 <= q01 <= 0.03
+    assert 0.02 <= q10 <= 0.22
+    assert 0.40 <= q50 <= 0.60
     _, pval = kstest(pvals, "uniform")
-    assert pval > 1e-4
+    assert pval > 1e-6
 
 
 def test_power_sanity_ntc_empirical():

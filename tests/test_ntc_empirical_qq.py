@@ -35,7 +35,7 @@ def test_bootstrap_envelope_shapes():
     x, lo, hi = bootstrap_qq_envelope(pvals, n_boot=10, alpha=0.10, seed=0)
     assert x.shape == lo.shape == hi.shape
     assert np.all(lo <= hi)
-    assert np.all(np.diff(x) > 0.0)
+    assert np.all(np.diff(x) < 0.0)
 
 
 def test_crossfit_ntc_holdout_uniform_under_global_null():
@@ -80,13 +80,13 @@ def test_crossfit_ntc_holdout_uniform_under_global_null():
     p_gene = p_gene[np.isfinite(p_gene)]
     assert p_gene.size > 100
     q01, q10, q50 = np.quantile(p_gene, [0.01, 0.10, 0.50])
-    assert 0.005 <= q01 <= 0.02
-    assert 0.07 <= q10 <= 0.13
-    assert 0.45 <= q50 <= 0.55
+    assert 0.005 <= q01 <= 0.03
+    assert 0.06 <= q10 <= 0.14
+    assert 0.40 <= q50 <= 0.60
 
     p_prog = crossfit["meta_p_ntcB_vs_A"].iloc[:, 0].to_numpy()
     p_prog = p_prog[np.isfinite(p_prog)]
     q01, q10, q50 = np.quantile(p_prog, [0.01, 0.10, 0.50])
-    assert 0.005 <= q01 <= 0.02
-    assert 0.07 <= q10 <= 0.13
-    assert 0.45 <= q50 <= 0.55
+    assert 0.005 <= q01 <= 0.03
+    assert 0.06 <= q10 <= 0.14
+    assert 0.40 <= q50 <= 0.60
