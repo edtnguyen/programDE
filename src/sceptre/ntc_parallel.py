@@ -6,7 +6,16 @@ from typing import List, Mapping, Sequence
 
 import numpy as np
 
-from .pipeline import compute_guide_set_null_pvals
+compute_guide_set_null_pvals = None
+
+
+def _resolve_compute_null_fn():
+    fn = globals().get("compute_guide_set_null_pvals")
+    if callable(fn):
+        return fn
+    from .pipeline import compute_guide_set_null_pvals as _compute
+
+    return _compute
 
 
 def compute_ntc_group_null_pvals_parallel(
@@ -32,27 +41,23 @@ def compute_ntc_group_null_pvals_parallel(
     if not guide_sets:
         raise ValueError("No NTC guide sets available for null p-value computation.")
 
+    compute_fn = _resolve_compute_null_fn()
+
+    def _null_for_cols(cols: List[int]) -> np.ndarray:
+        return compute_fn(
+            guide_idx=cols,
+            inputs=inputs,
+            B=B,
+            base_seed=base_seed,
+        ).ravel()
+
     if n_jobs == 1:
-        null_list = [
-            compute_guide_set_null_pvals(
-                guide_idx=cols,
-                inputs=inputs,
-                B=B,
-                base_seed=base_seed,
-            ).ravel()
-            for cols in guide_sets
-        ]
+        null_list = [_null_for_cols(cols) for cols in guide_sets]
     else:
         from joblib import Parallel, delayed
 
         null_list = Parallel(n_jobs=n_jobs, backend=backend)(
-            delayed(compute_guide_set_null_pvals)(
-                guide_idx=cols,
-                inputs=inputs,
-                B=B,
-                base_seed=base_seed,
-            ).ravel()
-            for cols in guide_sets
+            delayed(_null_for_cols)(cols) for cols in guide_sets
         )
 
     return np.concatenate(null_list)
