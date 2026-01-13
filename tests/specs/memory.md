@@ -17,3 +17,37 @@ Step 4 complete:
 - Added stratified-permutation sampler tests (stratum counts, reproducibility, pipeline uniformity, default equivalence).
 - Updated NTC-parallel test for new kwargs.
 - Ran full pytest suite: 71 passed (cache warnings only).
+
+S-CRT tests Step 1 complete:
+- Added `tests/test_strata.py` to validate non-degenerate strata and fallback when p_hat collapses.
+
+S-CRT tests Step 2 complete:
+- Added within-stratum uniformity check to `tests/test_stratified_perm_sampler.py`.
+
+S-CRT tests Step 3 complete:
+- Added integration checks in `tests/test_end_to_end_stratified_perm.py` for batch usage and bin counts from propensity.
+
+S-CRT tests Step 4 complete:
+- Added global-null stratified-permutation calibration test and oracle-vs-fit comparison in `tests/test_end_to_end_stratified_perm.py`.
+
+S-CRT tests Step 5 complete:
+- Added burden-binning test stub marked xfail when `burden_bin` is not implemented.
+
+S-CRT tests Step 7 complete:
+- Added order-independence determinism test in `tests/test_end_to_end_stratified_perm.py`.
+
+S-CRT tests Step 8 complete:
+- Added new pytest files `tests/test_strata.py` and `tests/test_end_to_end_stratified_perm.py` (plus expanded sampler tests).
+- Ran pytest: 79 passed, 1 xfailed (burden-bin stub), cache warnings only.
+
+Burden-bin CRT implementation:
+- Added `compute_bins` helper and burden-bin support in `stratified_permutation_sampler`.
+- `_sample_crt_indices` now accepts burden kwargs and pulls raw burden column from covariate DataFrame.
+- Extended sampler and strata tests for burden counts/strata; updated end-to-end burden improvement test (xfail if no improvement).
+- Updated README snippet with burden-bin options.
+- Ran pytest: 82 passed, cache warnings only.
+
+Burden helper doc:
+- Added `compute_guide_burden` helper with docstring and exported it.
+- Added README snippet showing how to compute/store burden covariate.
+ - Added `add_burden_covariate` wrapper for adata + updated README snippet to use it.

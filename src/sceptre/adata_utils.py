@@ -226,3 +226,133 @@ def get_program_names(adata: Any, n_programs: int) -> List[str]:
         if "program_names" in uns:
             return list(uns["program_names"])
     return [f"program_{k}" for k in range(n_programs)]
+
+
+def compute_guide_burden(
+    G: Any,
+    *,
+    guide_names: Optional[Sequence[str]] = None,
+    guide2gene: Optional[Mapping[str, str]] = None,
+    ntc_labels: Optional[Iterable[str]] = None,
+    include_ntc: bool = True,
+    count_nonzero: bool = True,
+    use_log1p: bool = True,
+) -> np.ndarray:
+    """
+    Compute per-cell guide burden for burden-bin stratification.
+
+    Recommended covariate keys (store in adata.obsm["covar"]):
+    - "log1p_guides_per_cell": log1p of total guide burden per cell.
+    - "log1p_non_ntc_guides_per_cell": log1p burden excluding NTC guides.
+
+    Parameters
+    ----------
+    G
+        Guide-assignment matrix (N x G), dense or sparse. Nonzero entries
+        indicate guide presence (counts allowed).
+    guide_names, guide2gene, ntc_labels
+        Needed only when include_ntc=False to exclude negative-control guides
+        by label (e.g., ["non-targeting", "safe-targeting", "NTC"]).
+    include_ntc
+        If False, exclude NTC guides based on guide2gene mapping.
+    count_nonzero
+        If True, burden counts number of nonzero guide assignments per cell.
+        If False, burden uses the sum of guide counts per cell.
+    use_log1p
+        If True, return log1p(burden). Otherwise return raw counts.
+
+    Returns
+    -------
+    np.ndarray
+        Vector of length N with per-cell burden.
+    """
+    if not include_ntc:
+        if guide_names is None or guide2gene is None:
+            raise ValueError("guide_names and guide2gene are required to exclude NTC.")
+        ntc_set = set(ntc_labels or [])
+        if not ntc_set:
+            raise ValueError("ntc_labels must be provided when include_ntc=False.")
+        keep_mask = np.array(
+            [guide2gene.get(g) not in ntc_set for g in guide_names], dtype=bool
+        )
+        if keep_mask.size == 0:
+            raise ValueError("No guides available after NTC filtering.")
+        if sp.issparse(G):
+            G_use = G[:, keep_mask]
+        else:
+            G_use = np.asarray(G)[:, keep_mask]
+    else:
+        G_use = G
+
+    if sp.issparse(G_use):
+        G_use = G_use.tocsr()
+        if count_nonzero:
+            burden = np.asarray(G_use.getnnz(axis=1)).ravel()
+        else:
+            burden = np.asarray(G_use.sum(axis=1)).ravel()
+    else:
+        arr = np.asarray(G_use)
+        if count_nonzero:
+            burden = (arr > 0).sum(axis=1)
+        else:
+            burden = arr.sum(axis=1)
+
+    burden = burden.astype(np.float64, copy=False)
+    if use_log1p:
+        return np.log1p(burden)
+    return burden
+
+
+def add_burden_covariate(
+    adata: Any,
+    *,
+    guide_assignment_key: str = "guide_assignment",
+    covar_key: str = "covar",
+    guide_names_key: str = "guide_names",
+    guide2gene_key: str = "guide2gene",
+    burden_key: str = "log1p_non_ntc_guides_per_cell",
+    ntc_labels: Optional[Iterable[str]] = ("non-targeting", "safe-targeting", "NTC"),
+    include_ntc: bool = False,
+    count_nonzero: bool = True,
+    use_log1p: bool = True,
+) -> pd.DataFrame:
+    """
+    Compute per-cell guide burden and append it to adata.obsm[covar_key].
+    Returns the updated covariate DataFrame.
+    """
+    G = get_from_adata_any(adata, guide_assignment_key)
+    covar = get_from_adata_any(adata, covar_key)
+
+    if isinstance(G, pd.DataFrame):
+        guide_names = list(G.columns)
+    else:
+        if not hasattr(adata, "uns") or guide_names_key not in adata.uns:
+            raise ValueError("guide_names are required when guide assignment is not a DataFrame.")
+        guide_names = list(adata.uns[guide_names_key])
+
+    if not hasattr(adata, "uns") or guide2gene_key not in adata.uns:
+        raise ValueError("guide2gene mapping is required to compute burden.")
+    guide2gene = dict(adata.uns[guide2gene_key])
+
+    if isinstance(covar, pd.DataFrame):
+        covar_df = covar.copy()
+    else:
+        arr = np.asarray(covar)
+        if arr.ndim == 1:
+            arr = arr.reshape(-1, 1)
+        idx = getattr(getattr(adata, "obs", None), "index", None)
+        col_names = [f"covar_{i}" for i in range(arr.shape[1])]
+        covar_df = pd.DataFrame(arr, columns=col_names, index=idx)
+
+    burden = compute_guide_burden(
+        G,
+        guide_names=guide_names,
+        guide2gene=guide2gene,
+        ntc_labels=ntc_labels,
+        include_ntc=include_ntc,
+        count_nonzero=count_nonzero,
+        use_log1p=use_log1p,
+    )
+    covar_df[burden_key] = burden
+    adata.obsm[covar_key] = covar_df
+    return covar_df

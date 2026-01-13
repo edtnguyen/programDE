@@ -72,14 +72,31 @@ def _sample_crt_indices(
     stratify_by_batch = bool(kwargs.get("stratify_by_batch", True))
     batch_key = kwargs.get("batch_key", "batch")
     min_stratum_size = kwargs.get("min_stratum_size", 2)
+    burden_key = kwargs.get("burden_key", None)
+    n_burden_bins = int(kwargs.get("n_burden_bins", 8))
+    burden_bin_method = kwargs.get("burden_bin_method", "quantile")
+    burden_clip_quantiles = kwargs.get("burden_clip_quantiles", (0.0, 1.0))
 
     batch_raw = None
+    burden_values = None
+    covar_df_raw = getattr(inputs, "covar_df_raw", None) if inputs is not None else None
+
     if stratify_by_batch and inputs is not None:
-        covar_df_raw = getattr(inputs, "covar_df_raw", None)
         if covar_df_raw is not None and batch_key in covar_df_raw.columns:
             batch_raw = covar_df_raw[batch_key].to_numpy()
         else:
             batch_raw = getattr(inputs, "batch_raw", None)
+
+    if burden_key is not None:
+        if covar_df_raw is None or burden_key not in covar_df_raw.columns:
+            raise ValueError(
+                f"burden_key '{burden_key}' not found in covariate DataFrame."
+            )
+        burden_series = pd.to_numeric(covar_df_raw[burden_key], errors="coerce")
+        burden_values = burden_series.to_numpy()
+
+    if burden_values is not None and not np.all(np.isfinite(burden_values)):
+        raise ValueError("burden_values contains NaNs or non-finite values.")
 
     x_obs = _union_indicator(p.shape[0], obs_idx)
     return stratified_permutation_sampler(
@@ -91,6 +108,10 @@ def _sample_crt_indices(
         n_bins=n_bins,
         stratify_by_batch=stratify_by_batch,
         min_stratum_size=min_stratum_size,
+        burden_values=burden_values,
+        n_burden_bins=n_burden_bins,
+        burden_bin_method=burden_bin_method,
+        burden_clip_quantiles=burden_clip_quantiles,
     )
 
 

@@ -19,18 +19,47 @@ def bernoulli_index_sampler(
     return crt_index_sampler_fast_numba(p, B, seed)
 
 
-def _propensity_bins(p_hat: np.ndarray, n_bins: int) -> Tuple[np.ndarray, int]:
+def compute_bins(
+    values: np.ndarray,
+    n_bins: int,
+    method: str = "quantile",
+    clip_quantiles: Tuple[float, float] = (0.0, 1.0),
+) -> Tuple[np.ndarray, int, np.ndarray]:
+    values = np.asarray(values, dtype=np.float64)
+    if values.ndim != 1:
+        raise ValueError("values must be a 1D array.")
     if n_bins <= 1:
-        return np.zeros_like(p_hat, dtype=np.int32), 1
+        return np.zeros(values.shape[0], dtype=np.int32), 1, np.array([])
 
-    edges = np.quantile(p_hat, np.linspace(0.0, 1.0, n_bins + 1))
+    vals = values
+    q_lo, q_hi = clip_quantiles
+    if q_lo < 0.0 or q_hi > 1.0 or q_lo > q_hi:
+        raise ValueError("clip_quantiles must be within [0,1] and q_lo <= q_hi.")
+
+    if q_lo > 0.0 or q_hi < 1.0:
+        lo = np.quantile(vals, q_lo)
+        hi = np.quantile(vals, q_hi)
+        vals = np.clip(vals, lo, hi)
+
+    if method == "quantile":
+        edges = np.quantile(vals, np.linspace(0.0, 1.0, n_bins + 1))
+    elif method == "uniform":
+        edges = np.linspace(np.min(vals), np.max(vals), n_bins + 1)
+    else:
+        raise ValueError("method must be 'quantile' or 'uniform'.")
+
     edges = np.unique(edges)
     if edges.size <= 2:
-        return np.zeros_like(p_hat, dtype=np.int32), 1
+        return np.zeros(values.shape[0], dtype=np.int32), 1, edges
 
     n_bins_eff = edges.size - 1
-    bin_id = np.searchsorted(edges, p_hat, side="right") - 1
+    bin_id = np.searchsorted(edges, vals, side="right") - 1
     bin_id = np.clip(bin_id, 0, n_bins_eff - 1).astype(np.int32)
+    return bin_id, n_bins_eff, edges
+
+
+def _propensity_bins(p_hat: np.ndarray, n_bins: int) -> Tuple[np.ndarray, int]:
+    bin_id, n_bins_eff, _ = compute_bins(p_hat, n_bins, method="quantile")
     return bin_id, n_bins_eff
 
 
@@ -43,6 +72,10 @@ def stratified_permutation_sampler(
     n_bins: int = 20,
     stratify_by_batch: bool = True,
     min_stratum_size: int = 2,
+    burden_values: Optional[np.ndarray] = None,
+    n_burden_bins: int = 8,
+    burden_bin_method: str = "quantile",
+    burden_clip_quantiles: Tuple[float, float] = (0.0, 1.0),
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
     Stratified permutation CRT sampler.
@@ -63,14 +96,33 @@ def stratified_permutation_sampler(
 
     bin_id, n_bins_eff = _propensity_bins(p_hat, n_bins)
 
+    burden_bin = None
+    n_burden_bins_eff = 1
+    if burden_values is not None:
+        burden_values = np.asarray(burden_values, dtype=np.float64)
+        if burden_values.ndim != 1:
+            raise ValueError("burden_values must be a 1D array.")
+        if burden_values.shape[0] != p_hat.shape[0]:
+            raise ValueError("burden_values must have the same length as p_hat.")
+        if not np.all(np.isfinite(burden_values)):
+            raise ValueError("burden_values contains non-finite values.")
+        burden_bin, n_burden_bins_eff, _ = compute_bins(
+            burden_values,
+            n_burden_bins,
+            method=burden_bin_method,
+            clip_quantiles=burden_clip_quantiles,
+        )
+    else:
+        burden_bin = np.zeros_like(bin_id, dtype=np.int32)
+
     if stratify_by_batch and batch_raw is not None:
         import pandas as pd
 
         batch_id, _ = pd.factorize(batch_raw, sort=False)
         batch_id = batch_id.astype(np.int64, copy=False)
-        stratum_id = batch_id * n_bins_eff + bin_id
+        stratum_id = batch_id * (n_bins_eff * n_burden_bins_eff) + bin_id * n_burden_bins_eff + burden_bin
     else:
-        stratum_id = bin_id.astype(np.int64, copy=False)
+        stratum_id = (bin_id * n_burden_bins_eff + burden_bin).astype(np.int64, copy=False)
 
     if min_stratum_size is not None and min_stratum_size > 1:
         unique, counts = np.unique(stratum_id, return_counts=True)

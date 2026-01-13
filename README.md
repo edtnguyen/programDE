@@ -468,6 +468,10 @@ resampling_kwargs = dict(
     stratify_by_batch=True,
     batch_key="batch",
     min_stratum_size=2,
+    burden_key="log1p_non_ntc_guides_per_cell",
+    n_burden_bins=8,
+    burden_bin_method="quantile",
+    burden_clip_quantiles=(0.0, 1.0),
 )
 
 out = run_all_genes_union_crt(
@@ -505,6 +509,25 @@ null_pvals = compute_ntc_group_null_pvals_parallel(
     backend="threading",
     resampling_method="stratified_perm",
     resampling_kwargs=resampling_kwargs,
+)
+```
+
+Burden helper (compute and store a recommended burden column):
+
+```python
+from src.sceptre import add_burden_covariate
+
+add_burden_covariate(
+    adata=adata,
+    guide_assignment_key="guide_assignment",
+    covar_key="covar",
+    guide_names_key="guide_names",
+    guide2gene_key="guide2gene",
+    burden_key="log1p_non_ntc_guides_per_cell",
+    ntc_labels=["non-targeting", "safe-targeting", "NTC"],
+    include_ntc=False,
+    count_nonzero=True,
+    use_log1p=True,
 )
 ```
 
