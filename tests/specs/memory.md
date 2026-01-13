@@ -50,4 +50,11 @@ Burden-bin CRT implementation:
 Burden helper doc:
 - Added `compute_guide_burden` helper with docstring and exported it.
 - Added README snippet showing how to compute/store burden covariate.
- - Added `add_burden_covariate` wrapper for adata + updated README snippet to use it.
+- Added `add_burden_covariate` wrapper for adata + updated README snippet to use it.
+
+NTC empirical null:
+- Added `src/sceptre/ntc_null.py` with NTC pseudo-gene sampling, unit summaries, bin matching, empirical p-values, and batch-meta combining.
+- Threaded `null_method`/`null_kwargs` into `run_one_gene_union_crt` and `run_all_genes_union_crt`.
+- Added tests in `tests/test_ntc_empirical_null.py` for denom correctness, empirical matching, global null uniformity, power sanity, and default CRT compatibility.
+- README updated with NTC empirical null usage snippet.
+- Ran pytest: 86 passed, 1 xfailed (burden improvement), cache warnings only.

@@ -35,6 +35,7 @@ from .diagnostics import (
     is_bh_adjusted_like,
     qq_expected_grid,
 )
+from .ntc_null import run_ntc_empirical_null, sample_ntc_pseudogenes_with_replacement
 from .ntc_groups import (
     build_ntc_group_inputs,
     crt_pvals_for_guide_set,
@@ -85,6 +86,8 @@ __all__ = [
     "crt_null_stats_for_test",
     "qq_expected_grid",
     "is_bh_adjusted_like",
+    "run_ntc_empirical_null",
+    "sample_ntc_pseudogenes_with_replacement",
     "guide_frequency",
     "make_ntc_groups_matched_by_freq",
     "make_ntc_groups_ensemble",

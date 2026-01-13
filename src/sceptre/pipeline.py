@@ -34,6 +34,7 @@ from .pipeline_helpers import (
 from .propensity import fit_propensity_logistic
 from .crt import crt_betas_for_gene
 from .diagnostics import crt_null_pvals_from_null_stats_matrix
+from .ntc_null import run_ntc_empirical_null
 
 
 @dataclass
@@ -191,6 +192,8 @@ def run_one_gene_union_crt(
     propensity_model: Callable = fit_propensity_logistic,
     resampling_method: str = "bernoulli_index",
     resampling_kwargs: Optional[Dict[str, Any]] = None,
+    null_method: str = "crt",
+    null_kwargs: Optional[Dict[str, Any]] = None,
     calibrate_skew_normal: bool = False,
     skew_normal_side_code: int = 0,
 ) -> CRTGeneResult:
@@ -203,6 +206,8 @@ def run_one_gene_union_crt(
     propensity_model: function to fit propensity scores given C and y01
     resampling_method: "bernoulli_index" (default) or "stratified_perm"
     resampling_kwargs: optional sampler-specific arguments
+    null_method: "crt" (default) or "ntc_empirical"
+    null_kwargs: optional arguments for the NTC empirical null
     calibrate_skew_normal: if True, compute skew-normal calibrated p-values
     skew_normal_side_code: 0 two-sided, 1 right-tailed, -1 left-tailed
     y01: binary union indicator for the gene
@@ -210,6 +215,22 @@ def run_one_gene_union_crt(
         CRTGeneResult dataclass with all results for the gene. If calibrate_skew_normal
         is True, pvals contain the skew-normal calibrated values.
     """
+    if null_method == "ntc_empirical":
+        if calibrate_skew_normal:
+            raise ValueError("Skew-normal calibration is not supported for ntc_empirical.")
+        ntc_res = run_ntc_empirical_null(
+            inputs=inputs,
+            genes=[gene],
+            base_seed=base_seed,
+            null_kwargs=null_kwargs,
+        )
+        return CRTGeneResult(
+            gene=gene,
+            pvals=ntc_res.pvals[0],
+            betas=ntc_res.betas[0],
+            n_treated=int(ntc_res.n_treated[0]),
+        )
+
     obs_idx = _gene_obs_idx(inputs, gene)
 
     """
@@ -380,6 +401,8 @@ def run_all_genes_union_crt(
     backend: str = "loky",
     resampling_method: str = "bernoulli_index",
     resampling_kwargs: Optional[Dict[str, Any]] = None,
+    null_method: str = "crt",
+    null_kwargs: Optional[Dict[str, Any]] = None,
     calibrate_skew_normal: bool = False,
     skew_normal_side_code: int = 0,
     return_skew_normal: bool = False,
@@ -397,6 +420,8 @@ def run_all_genes_union_crt(
     backend: joblib parallelization backend
     resampling_method: "bernoulli_index" (default) or "stratified_perm"
     resampling_kwargs: optional sampler-specific arguments
+    null_method: "crt" (default) or "ntc_empirical"
+    null_kwargs: optional arguments for the NTC empirical null
     calibrate_skew_normal: if True, compute skew-normal calibrated p-values per gene
     skew_normal_side_code: 0 two-sided, 1 right-tailed, -1 left-tailed
     return_skew_normal: if True, return skew-normal pvals and parameters
@@ -414,6 +439,46 @@ def run_all_genes_union_crt(
             skew_params (optional): fitted parameters (genes x programs x 3)
     """
     gene_list = sorted(inputs.gene_to_cols.keys()) if genes is None else list(genes)
+
+    if null_method == "ntc_empirical":
+        if calibrate_skew_normal or return_skew_normal or return_raw_pvals:
+            raise ValueError("Skew-normal outputs are not supported for ntc_empirical.")
+        ntc_res = run_ntc_empirical_null(
+            inputs=inputs,
+            genes=gene_list,
+            base_seed=base_seed,
+            null_kwargs=null_kwargs,
+        )
+        pvals_df = pd.DataFrame(
+            ntc_res.pvals, index=gene_list, columns=inputs.program_names
+        )
+        betas_df = pd.DataFrame(
+            ntc_res.betas, index=gene_list, columns=inputs.program_names
+        )
+        treated_df = pd.Series(
+            ntc_res.n_treated, index=gene_list, name="n_union_positive_cells"
+        )
+        results = [
+            CRTGeneResult(
+                gene=gene,
+                pvals=ntc_res.pvals[i],
+                betas=ntc_res.betas[i],
+                n_treated=int(ntc_res.n_treated[i]),
+            )
+            for i, gene in enumerate(gene_list)
+        ]
+
+        out_dict: Dict[str, Any] = {
+            "pvals_df": pvals_df,
+            "betas_df": betas_df,
+            "treated_df": treated_df,
+            "results": results,
+            "null_method": "ntc_empirical",
+            "ntc_matching_info": ntc_res.matching_info,
+        }
+        if return_format == "tuple":
+            return (pvals_df, betas_df, treated_df, results)
+        return out_dict
 
     results: List[CRTGeneResult] = Parallel(n_jobs=n_jobs, backend=backend)(
         delayed(run_one_gene_union_crt)(

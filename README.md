@@ -328,6 +328,31 @@ out = run_all_genes_union_crt(
 
 Batch stratification uses the raw covariate DataFrame (before one-hot encoding). If your covariates were provided as an `ndarray`, `stratify_by_batch` is ignored.
 
+#### NTC empirical null (CLR-OLS)
+
+This mode uses NTC pseudo-genes as the null distribution and matches on:
+- `n1`: treated count (union)
+- `d`: OLS denominator `x^T M_C x` (computed from the same CLR-OLS statistic)
+
+Example:
+
+```python
+out = run_all_genes_union_crt(
+    inputs=inputs,
+    null_method="ntc_empirical",
+    null_kwargs=dict(
+        ntc_labels=["SAFE", "non-targeting", "NTC"],
+        guides_per_unit=6,
+        n_ntc_units=5000,
+        batch_mode="meta",
+        combine_method="fisher",
+        matching=dict(n_n1_bins=10, n_d_bins=10, min_ntc_per_bin=50),
+        min_treated=10,
+        min_control=10,
+    ),
+)
+```
+
 #### S-CRT workflow (stratified-permutation)
 
 Use this checklist to avoid missing any steps:
