@@ -326,6 +326,31 @@ out = run_all_genes_union_crt(
 )
 ```
 
+Rank-based U-test statistic (S-CRT U-test):
+
+```python
+out = run_all_genes_union_crt(
+    inputs=inputs,
+    B=1023,
+    n_jobs=16,
+    resampling_method="stratified_perm",
+    resampling_kwargs=dict(
+        n_bins=20,
+        stratify_by_batch=True,
+        batch_key="batch",
+        min_stratum_size=2,
+    ),
+    test_stat="utest",
+    test_stat_kwargs=dict(use="clr", rank_method="average"),
+    calibrate_skew_normal=False,
+)
+
+# Rank-biserial effect sizes live in out["betas_df"];
+# out["stats_df"] is provided as an explicit alias when test_stat="utest".
+# To rank raw usage instead of CLR, use test_stat_kwargs={"use": "usage"}.
+# This uses the same eps_quantile flooring/renormalization from prepare_crt_inputs.
+```
+
 Batch stratification uses the raw covariate DataFrame (before one-hot encoding). If your covariates were provided as an `ndarray`, `stratify_by_batch` is ignored.
 
 #### NTC empirical null (CLR-OLS)
@@ -554,6 +579,9 @@ ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
     seed0=23,
     resampling_method="stratified_perm",
     resampling_kwargs=resampling_kwargs,
+    # If you ran the main CRT with test_stat="utest", pass the same here.
+    # test_stat="utest",
+    # test_stat_kwargs={"use": "clr", "rank_method": "average"},
 )
 ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
     inputs=inputs,
@@ -573,6 +601,9 @@ null_pvals = compute_ntc_group_null_pvals_parallel(
     backend="threading",
     resampling_method="stratified_perm",
     resampling_kwargs=resampling_kwargs,
+    # Keep test_stat/test_stat_kwargs in sync with your main run if needed.
+    # test_stat="utest",
+    # test_stat_kwargs={"use": "clr", "rank_method": "average"},
 )
 
 # 8) QQ plot
@@ -754,6 +785,9 @@ ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
     seed0=23,
     resampling_method="stratified_perm",
     resampling_kwargs=resampling_kwargs,
+    # If you ran the main CRT with test_stat="utest", pass the same here.
+    # test_stat="utest",
+    # test_stat_kwargs={"use": "clr", "rank_method": "average"},
 )
 ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
     inputs=inputs,
@@ -771,6 +805,9 @@ null_pvals = compute_ntc_group_null_pvals_parallel(
     backend="threading",
     resampling_method="stratified_perm",
     resampling_kwargs=resampling_kwargs,
+    # Keep test_stat/test_stat_kwargs in sync with your main run if needed.
+    # test_stat="utest",
+    # test_stat_kwargs={"use": "clr", "rank_method": "average"},
 )
 ```
 

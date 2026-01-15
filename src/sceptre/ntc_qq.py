@@ -5,7 +5,7 @@ QQ plot helpers for NTC empirical-null cross-fit diagnostics.
 from __future__ import annotations
 
 import os
-from typing import Any, Dict, Mapping, Optional, Sequence, Tuple, Union, List
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
 import numpy as np
 import pandas as pd

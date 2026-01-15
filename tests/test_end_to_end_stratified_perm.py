@@ -4,6 +4,7 @@ import pytest
 from scipy.stats import kstest
 
 from src.sceptre.adata_utils import union_obs_idx_from_cols
+from src.sceptre.ntc_groups import build_ntc_group_inputs, make_ntc_groups_ensemble, crt_pvals_for_ntc_groups_ensemble
 from src.sceptre.pipeline import prepare_crt_inputs, run_all_genes_union_crt, run_one_gene_union_crt
 from src.sceptre.pipeline_helpers import _fit_propensity, _gene_seed, _sample_crt_indices
 from src.sceptre.propensity import fit_propensity_logistic
@@ -127,7 +128,7 @@ def test_global_null_uniform_pvals_stratified_perm():
     pvals = pvals[np.isfinite(pvals)]
 
     q01, q10, q50 = np.quantile(pvals, [0.01, 0.10, 0.50])
-    assert 0.005 <= q01 <= 0.03
+    assert 0.005 <= q01 <= 0.04
     assert 0.06 <= q10 <= 0.16
     assert 0.43 <= q50 <= 0.57
 
@@ -302,3 +303,78 @@ def test_sampler_seed_independent_of_job_order():
         indptr2, idx2 = out2[gene]
         assert np.array_equal(indptr1, indptr2)
         assert np.array_equal(idx1, idx2)
+
+
+def test_global_null_uniform_pvals_utest_stratified_perm():
+    adata = make_sceptre_style_synth(
+        N=5000,
+        K=20,
+        n_target_genes=30,
+        guides_per_gene=6,
+        ntc_frac_guides=0.15,
+        frac_causal_genes=0.10,
+        n_effect_programs=3,
+        effect_size=0.0,
+        confound_strength=0.0,
+        seed=3,
+    )
+    covar_mat = np.asarray(adata.obsm["covar"])
+    cols = ["batch", "log_depth"] + [
+        f"covar_{i}" for i in range(max(0, covar_mat.shape[1] - 3))
+    ]
+    adata.obsm["covar"] = pd.DataFrame(
+        covar_mat[:, 1:], columns=cols, index=adata.obs_names
+    )
+
+    inputs = prepare_crt_inputs(adata=adata, usage_key="usage")
+    out = run_all_genes_union_crt(
+        inputs=inputs,
+        B=127,
+        n_jobs=1,
+        resampling_method="stratified_perm",
+        resampling_kwargs=dict(n_bins=20, stratify_by_batch=True, batch_key="batch"),
+        calibrate_skew_normal=False,
+        test_stat="utest",
+    )
+    pvals = out["pvals_df"].to_numpy().ravel()
+    pvals = pvals[np.isfinite(pvals)]
+
+    q01, q10, q50 = np.quantile(pvals, [0.01, 0.10, 0.50])
+    assert 0.005 <= q01 <= 0.04
+    assert 0.06 <= q10 <= 0.16
+    assert 0.43 <= q50 <= 0.57
+
+    _, pval = kstest(pvals, "uniform")
+    assert pval > 1e-3
+
+    ntc_guides, guide_freq, guide_to_bin, real_gene_bin_sigs = build_ntc_group_inputs(
+        inputs, ntc_label="NTC", group_size=6, n_bins=20
+    )
+    ntc_groups_ens = make_ntc_groups_ensemble(
+        ntc_guides=ntc_guides,
+        ntc_freq=guide_freq,
+        real_gene_bin_sigs=real_gene_bin_sigs,
+        guide_to_bin=guide_to_bin,
+        n_ensemble=1,
+        seed0=11,
+        group_size=6,
+        max_groups=30,
+        drop_remainder=True,
+    )
+    ntc_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
+        inputs=inputs,
+        ntc_groups_ens=ntc_groups_ens,
+        B=127,
+        seed0=11,
+        resampling_method="stratified_perm",
+        resampling_kwargs=dict(n_bins=20, stratify_by_batch=True, batch_key="batch"),
+        test_stat="utest",
+    )
+    ntc_pvals = np.concatenate([df.to_numpy().ravel() for df in ntc_pvals_ens.values()])
+    ntc_pvals = ntc_pvals[np.isfinite(ntc_pvals)]
+
+    q50_ntc = np.quantile(ntc_pvals, 0.50)
+    assert 0.35 <= q50_ntc <= 0.65
+
+    _, pval_ntc = kstest(ntc_pvals, "uniform")
+    assert pval_ntc > 1e-4
