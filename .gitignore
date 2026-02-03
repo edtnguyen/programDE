@@ -92,3 +92,4 @@ target/
 *.png
 *.mtx
 *.mtx
+*.csv
