@@ -1,0 +1,808 @@
+#!/usr/bin/env python3
+"""Sweep normalized h5ad/h5mu datasets and cNMF usage files to generate QQ plots.
+
+This script is a refactor of `notebooks/ipsc_ec_qq.ipynb` into a CLI.
+
+Typical usage (on OAK):
+
+  python scripts/ipsc_ec_qq_sweep.py \
+    --data-dir /oak/stanford/groups/engreitz/Users/opushkar/cc_perturb/2.preprocessing_tonys_pipeline/2.normalized_data/normalized_data \
+    --cnmf-dir /oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/012726_100k_cells_20iter_allHVG_torch_halsvar_batch_e7/012726_100k_cells_20iter_allHVG_torch_halsvar_batch_e7_all \
+    --guide-long-csv-template /oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/{day}_sceptre_transfer/{day}_grna_assignments_long.csv \
+    --guide-metadata-tsv notebooks/300genes_guide_metadata_v43.tsv \
+    --out-dir results/ipsc_ec_qq \
+    --B 1023 \
+    --n-jobs 16
+
+Notes:
+- Expects the MuData files to contain a GEX modality and a guide modality.
+- Aligns cNMF usage rows to `adata.obs_names`; missing rows are filled with zeros.
+- Floors zeros in usage and renormalizes rows before CLR.
+- If `--guide-long-csv-template` is provided, guide assignments are loaded from a
+  day-specific long CSV (as in the notebook) instead of from MuData.
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import re
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+
+import numpy as np
+import pandas as pd
+
+
+def _add_repo_root_to_syspath() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(repo_root))
+
+
+_add_repo_root_to_syspath()
+
+from src.sceptre import (  # noqa: E402
+    build_ntc_group_inputs,
+    compute_ntc_group_null_pvals_parallel,
+    crt_pvals_for_ntc_groups_ensemble,
+    crt_pvals_for_ntc_groups_ensemble_skew,
+    limit_threading,
+    make_ntc_groups_ensemble,
+    prepare_crt_inputs,
+    run_all_genes_union_crt,
+)
+from src.visualization import qq_plot_ntc_pvals  # noqa: E402
+
+
+USAGE_RE = re.compile(r"\.usages\.k_(\d+)\.dt_([0-9_]+)\.consensus\.txt$")
+DAY_RE = re.compile(r"(d\d+)", flags=re.IGNORECASE)
+
+
+@dataclass(frozen=True)
+class UsageFile:
+    path: Path
+    k: int
+    dt: str
+
+
+def _extract_day_label(path: Path) -> str:
+    m = DAY_RE.search(path.name)
+    if m:
+        return m.group(1).lower()
+    return path.stem
+
+
+def _find_h5_files(data_dir: Path) -> List[Path]:
+    out: List[Path] = []
+    for pat in ("*.h5ad", "*.h5mu"):
+        out.extend(sorted(data_dir.glob(pat)))
+    return sorted(out)
+
+
+def _parse_usage_file(path: Path) -> Optional[UsageFile]:
+    m = USAGE_RE.search(path.name)
+    if not m:
+        return None
+    return UsageFile(path=path, k=int(m.group(1)), dt=m.group(2))
+
+
+def _find_usage_files(cnmf_dir: Path) -> List[UsageFile]:
+    files: List[UsageFile] = []
+    for p in sorted(cnmf_dir.glob("*.consensus.txt")):
+        u = _parse_usage_file(p)
+        if u is not None:
+            files.append(u)
+    # stable ordering
+    files.sort(key=lambda x: (x.k, x.dt, x.path.name))
+    return files
+
+
+def _read_usage_aligned(
+    usage_path: Path,
+    obs_names: Sequence[str],
+) -> Tuple[np.ndarray, List[str], int]:
+    usage_df = pd.read_csv(usage_path, sep="\t", index_col=0)
+    program_names = list(usage_df.columns)
+
+    # Align to adata ordering; missing are filled with 0
+    usage_aligned = usage_df.reindex(obs_names).fillna(0.0)
+    n_matched = int(usage_df.index.intersection(pd.Index(obs_names)).shape[0])
+
+    U0 = usage_aligned.to_numpy(dtype=np.float64, copy=False)
+    return U0, program_names, n_matched
+
+
+def _floor_and_renorm_usage(
+    U0: np.ndarray,
+    *,
+    eps_min: float = 1e-8,
+    eps_pos_quantile: float = 0.01,
+    eps_pos_scale: float = 0.1,
+) -> np.ndarray:
+    pos = U0[U0 > 0]
+    if pos.size == 0:
+        raise ValueError(
+            "Usage matrix has no positive entries after alignment; check that cell IDs match."
+        )
+
+    eps = float(np.quantile(pos, eps_pos_quantile)) * float(eps_pos_scale)
+    eps = max(float(eps_min), eps)
+
+    Uf = np.where(U0 > 0, U0, eps)
+    row_sums = Uf.sum(axis=1, keepdims=True)
+    row_sums[row_sums == 0.0] = 1.0
+    Uf = Uf / row_sums
+    return Uf
+
+
+def _load_mdata(path: Path, gex_key: str, guide_key: str):
+    suffix = path.suffix.lower()
+    if suffix == ".h5mu":
+        try:
+            import muon as mu
+        except Exception as e:
+            raise ImportError(
+                "Reading .h5mu requires `muon` (and its deps). Install it in your env."
+            ) from e
+        mdata = mu.read(str(path))
+        if gex_key not in mdata.mod:
+            raise KeyError(
+                f"GEX modality '{gex_key}' not found in {path.name}. Available: {list(mdata.mod.keys())}"
+            )
+        adata = mdata[gex_key].copy()
+        guide = mdata[guide_key] if guide_key in mdata.mod else None
+        return adata, guide
+
+    if suffix == ".h5ad":
+        try:
+            import scanpy as sc
+        except Exception as e:
+            raise ImportError(
+                "Reading .h5ad requires `scanpy`. Install it in your env."
+            ) from e
+        adata = sc.read_h5ad(str(path))
+        return adata, None
+
+    raise ValueError(f"Unsupported file type: {path}")
+
+
+def _guide2gene_from_metadata(
+    guide_names: Sequence[str],
+    metadata_tsv: Optional[Path],
+    *,
+    guide_id_col: str = "guide_id",
+    guide_target_col: str = "intended_target_name",
+) -> Dict[str, str]:
+    if metadata_tsv is None:
+        return {g: g.split("_", 1)[0] for g in guide_names}
+
+    df = pd.read_csv(metadata_tsv, sep="\t")
+    if guide_id_col not in df.columns or guide_target_col not in df.columns:
+        raise KeyError(
+            f"Guide metadata must contain columns '{guide_id_col}' and '{guide_target_col}'. "
+            f"Got: {list(df.columns)}"
+        )
+
+    mapping = dict(zip(df[guide_id_col].astype(str), df[guide_target_col].astype(str)))
+    out: Dict[str, str] = {}
+    missing = 0
+    for g in guide_names:
+        gene = mapping.get(str(g))
+        if gene is None or gene == "nan":
+            missing += 1
+            gene = g.split("_", 1)[0]
+        out[str(g)] = str(gene)
+
+    if missing:
+        print(
+            f"[warn] {missing}/{len(guide_names)} guides missing from metadata; "
+            "falling back to prefix split for those."
+        )
+    return out
+
+
+def _ensure_guide_assignment(
+    adata,
+    guide_adata,
+    *,
+    guide_assignment_key: str,
+    guide_names_key: str,
+) -> List[str]:
+    # Priority:
+    # 1) if guide_adata provided from MuData, use its X
+    # 2) else if adata already has guide_assignment_key, use that
+    if guide_adata is not None:
+        guide_names = list(map(str, guide_adata.var_names))
+        G = guide_adata.X
+
+        # align rows if needed
+        if not np.array_equal(np.asarray(guide_adata.obs_names), np.asarray(adata.obs_names)):
+            guide_index = pd.Index(guide_adata.obs_names)
+            take = guide_index.get_indexer(adata.obs_names)
+            if np.any(take < 0):
+                raise ValueError(
+                    "Guide modality obs_names do not cover all GEX obs_names; cannot align guide matrix."
+                )
+            G = G[take, :]
+
+        adata.obsm[guide_assignment_key] = G
+        adata.uns[guide_names_key] = guide_names
+        return guide_names
+
+    if guide_assignment_key in getattr(adata, "obsm", {}):
+        G = adata.obsm[guide_assignment_key]
+        if isinstance(G, pd.DataFrame):
+            guide_names = list(map(str, G.columns))
+            adata.uns[guide_names_key] = guide_names
+            return guide_names
+        if guide_names_key in getattr(adata, "uns", {}):
+            return list(map(str, adata.uns[guide_names_key]))
+        raise ValueError(
+            f"{guide_assignment_key} exists but guide names not found; provide adata.uns['{guide_names_key}']."
+        )
+
+    raise ValueError(
+        "No guide assignment found. Provide a MuData file with a guide modality, "
+        "or set adata.obsm['guide_assignment'] and adata.uns['guide_names']."
+    )
+
+
+def _format_day_template(template: str, *, day: str) -> str:
+    """Format a template string with `{day}` placeholder (e.g. "{day}_foo.csv")."""
+    try:
+        return template.format(day=day)
+    except Exception as exc:  # pylint: disable=broad-except
+        raise ValueError(
+            "Failed to format --guide-long-csv-template. Expected a Python format "
+            "string containing '{day}', e.g. '/path/{day}_sceptre_transfer/{day}_grna_assignments_long.csv'."
+        ) from exc
+
+
+def _load_guide_assignment_long_csv_sparse(
+    adata,
+    csv_path: Path,
+    *,
+    guide_names: Optional[Sequence[str]] = None,
+    cell_id_col: str = "cell_id",
+    guide_col: str = "grna_target",
+    value_col: str = "value",
+    value_threshold: float = 0.0,
+    guide_assignment_key: str = "guide_assignment",
+    guide_names_key: str = "guide_names",
+) -> List[str]:
+    """Load a day-specific long CSV into a sparse guide assignment matrix.
+
+    This mirrors the notebook logic:
+      df_long.pivot_table(index='cell_id', columns='grna_target', values='value', aggfunc='max')
+
+    but avoids creating a dense DataFrame.
+    """
+    import scipy.sparse as sp
+
+    if not csv_path.exists():
+        raise FileNotFoundError(str(csv_path))
+
+    usecols = [cell_id_col, guide_col, value_col]
+    df = pd.read_csv(csv_path, usecols=usecols)
+    for col in usecols:
+        if col not in df.columns:
+            raise KeyError(f"Column '{col}' not found in {csv_path}. Got: {list(df.columns)}")
+
+    # Infer guide names (columns) from file if not provided.
+    if guide_names is None:
+        guide_names = list(pd.unique(df[guide_col].astype(str)))
+    guide_names = list(map(str, guide_names))
+
+    obs_index = pd.Index(pd.Index(adata.obs_names).astype(str))
+    guide_index = pd.Index(pd.Index(guide_names).astype(str))
+
+    cell_ids = df[cell_id_col].astype(str).to_numpy()
+    guide_ids = df[guide_col].astype(str).to_numpy()
+    values = pd.to_numeric(df[value_col], errors="coerce").to_numpy(dtype=np.float64)
+
+    row_idx = obs_index.get_indexer(cell_ids)
+    col_idx = guide_index.get_indexer(guide_ids)
+
+    mask = (row_idx >= 0) & (col_idx >= 0) & np.isfinite(values) & (values > value_threshold)
+    if not np.any(mask):
+        raise ValueError(
+            f"No nonzero (value > {value_threshold}) guide assignments matched adata.obs_names/guide_names "
+            f"from {csv_path}."
+        )
+
+    row_idx = row_idx[mask].astype(np.int32, copy=False)
+    col_idx = col_idx[mask].astype(np.int32, copy=False)
+
+    data = np.ones(row_idx.shape[0], dtype=np.int8)
+    G = sp.coo_matrix(
+        (data, (row_idx, col_idx)),
+        shape=(adata.n_obs, len(guide_names)),
+        dtype=np.int8,
+    ).tocsr()
+    if G.nnz:
+        # Collapse duplicates (COO->CSR sums duplicates) and binarize.
+        G.data[:] = 1
+
+    adata.obsm[guide_assignment_key] = G
+    adata.uns[guide_names_key] = guide_names
+    return guide_names
+
+
+def _build_covar_df(
+    adata,
+    *,
+    batch_col: str = "sample_id",
+    guides_per_cell_col: str = "guides_per_cell",
+    guide_umi_counts_col: str = "guide_umi_counts",
+    n_genes_by_counts_col: str = "n_genes_by_counts",
+    total_counts_col: str = "total_counts",
+    pct_counts_mt_col: str = "pct_counts_mt",
+    guide_assignment_key: str = "guide_assignment",
+) -> pd.DataFrame:
+    obs = adata.obs
+
+    covar: Dict[str, np.ndarray] = {}
+
+    # batch (categorical allowed)
+    if batch_col in obs.columns:
+        covar["batch"] = obs[batch_col]
+    elif "batch" in obs.columns:
+        covar["batch"] = obs["batch"]
+
+    # guide burden covariates
+    if guides_per_cell_col in obs.columns:
+        covar["grna_n_nonzero"] = np.log1p(obs[guides_per_cell_col].to_numpy())
+    if guide_umi_counts_col in obs.columns:
+        covar["grna_n_umis"] = np.log1p(obs[guide_umi_counts_col].to_numpy())
+
+    # response covariates
+    if n_genes_by_counts_col in obs.columns:
+        covar["response_n_nonzero"] = np.log1p(obs[n_genes_by_counts_col].to_numpy())
+    if total_counts_col in obs.columns:
+        covar["response_n_umis"] = np.log1p(obs[total_counts_col].to_numpy())
+    if pct_counts_mt_col in obs.columns:
+        covar["response_p_mito"] = obs[pct_counts_mt_col].to_numpy()
+
+    # minimal fallbacks if missing guide covars
+    if "grna_n_nonzero" not in covar or "grna_n_umis" not in covar:
+        G = adata.obsm.get(guide_assignment_key)
+        if G is not None:
+            try:
+                import scipy.sparse as sp
+
+                if sp.issparse(G):
+                    G_csr = G.tocsr()
+                    nnz = np.diff(G_csr.indptr)
+                    s = np.asarray(G_csr.sum(axis=1)).ravel()
+                else:
+                    G_arr = np.asarray(G)
+                    nnz = np.sum(G_arr > 0, axis=1)
+                    s = G_arr.sum(axis=1)
+                covar.setdefault("grna_n_nonzero", np.log1p(nnz.astype(np.float64)))
+                covar.setdefault("grna_n_umis", np.log1p(s.astype(np.float64)))
+            except Exception:
+                pass
+
+    if not covar:
+        raise ValueError(
+            "Could not build covariates (no recognized columns in adata.obs and no guide matrix fallback)."
+        )
+
+    return pd.DataFrame(covar, index=adata.obs_names)
+
+
+def _maybe_limit_threads() -> None:
+    # Best-effort; safe even if user doesn't care.
+    limit_threading()
+
+
+def run_one_dataset_one_usage(
+    *,
+    h5_path: Path,
+    usage: UsageFile,
+    out_dir: Path,
+    guide_metadata_tsv: Optional[Path],
+    guide_long_csv_template: Optional[str],
+    guide_long_cell_col: str,
+    guide_long_guide_col: str,
+    guide_long_value_col: str,
+    guide_long_value_threshold: float,
+    gex_key: str,
+    guide_key: str,
+    guide_assignment_key: str,
+    guide_names_key: str,
+    usage_key: str,
+    covar_key: str,
+    batch_col: str,
+    ntc_labels: Sequence[str],
+    B: int,
+    n_jobs: int,
+    ntc_n_bins: int,
+    ntc_n_ensemble: int,
+    ntc_seed0_groups: int,
+    ntc_seed0_crt: int,
+    max_groups: Optional[int],
+    group_size: int,
+    eps_min: float,
+    eps_pos_quantile: float,
+    eps_pos_scale: float,
+    skip_if_exists: bool,
+) -> Path:
+    import matplotlib.pyplot as plt
+
+    day = _extract_day_label(h5_path)
+    out_name = f"qq_{day}.k_{usage.k}.dt_{usage.dt}.png"
+    out_path = out_dir / out_name
+    if skip_if_exists and out_path.exists():
+        print(f"[skip] {out_path}")
+        return out_path
+
+    print(f"\n=== {h5_path.name} | k={usage.k} dt={usage.dt} ===")
+
+    adata, guide_adata = _load_mdata(h5_path, gex_key=gex_key, guide_key=guide_key)
+
+    # usage
+    U0, program_names, n_matched = _read_usage_aligned(usage.path, adata.obs_names)
+    print(f"usage: shape={U0.shape}, matched_cells={n_matched}/{adata.n_obs}")
+    Uf = _floor_and_renorm_usage(
+        U0,
+        eps_min=eps_min,
+        eps_pos_quantile=eps_pos_quantile,
+        eps_pos_scale=eps_pos_scale,
+    )
+    adata.obsm[usage_key] = Uf
+    adata.uns["program_names"] = program_names
+
+    # guides
+    if guide_long_csv_template is not None:
+        day_csv = Path(_format_day_template(guide_long_csv_template, day=day))
+        base_guide_names = (
+            list(map(str, guide_adata.var_names)) if guide_adata is not None else None
+        )
+        guide_names = _load_guide_assignment_long_csv_sparse(
+            adata,
+            csv_path=day_csv,
+            guide_names=base_guide_names,
+            cell_id_col=guide_long_cell_col,
+            guide_col=guide_long_guide_col,
+            value_col=guide_long_value_col,
+            value_threshold=guide_long_value_threshold,
+            guide_assignment_key=guide_assignment_key,
+            guide_names_key=guide_names_key,
+        )
+    else:
+        guide_names = _ensure_guide_assignment(
+            adata,
+            guide_adata,
+            guide_assignment_key=guide_assignment_key,
+            guide_names_key=guide_names_key,
+        )
+
+    # guide2gene
+    adata.uns["guide2gene"] = _guide2gene_from_metadata(
+        guide_names,
+        metadata_tsv=guide_metadata_tsv,
+    )
+
+    # covariates
+    covar_df = _build_covar_df(
+        adata,
+        batch_col=batch_col,
+        guide_assignment_key=guide_assignment_key,
+    )
+    adata.obsm[covar_key] = covar_df
+
+    inputs = prepare_crt_inputs(
+        adata=adata,
+        usage_key=usage_key,
+        covar_key=covar_key,
+        guide_assignment_key=guide_assignment_key,
+        guide2gene_key="guide2gene",
+    )
+
+    out = run_all_genes_union_crt(
+        inputs=inputs,
+        B=B,
+        n_jobs=n_jobs,
+        calibrate_skew_normal=True,
+        return_raw_pvals=True,
+        return_skew_normal=True,
+    )
+
+    # NTC grouping + null
+    ntc_guides, guide_freq, guide_to_bin, real_sigs = build_ntc_group_inputs(
+        inputs=inputs,
+        ntc_label=list(ntc_labels),
+        group_size=group_size,
+        n_bins=ntc_n_bins,
+    )
+    ntc_groups_ens = make_ntc_groups_ensemble(
+        ntc_guides=ntc_guides,
+        ntc_freq=guide_freq,
+        real_gene_bin_sigs=real_sigs,
+        guide_to_bin=guide_to_bin,
+        n_ensemble=ntc_n_ensemble,
+        seed0=ntc_seed0_groups,
+        group_size=group_size,
+        max_groups=max_groups,
+    )
+    ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
+        inputs=inputs,
+        ntc_groups_ens=ntc_groups_ens,
+        B=B,
+        seed0=ntc_seed0_crt,
+    )
+    ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
+        inputs=inputs,
+        ntc_groups_ens=ntc_groups_ens,
+        B=B,
+        seed0=ntc_seed0_crt,
+    )
+
+    null_pvals = compute_ntc_group_null_pvals_parallel(
+        inputs=inputs,
+        ntc_groups_ens=ntc_groups_ens,
+        B=B,
+        n_jobs=max(1, min(n_jobs, 16)),
+        backend="threading",
+    )
+
+    ax = qq_plot_ntc_pvals(
+        pvals_raw_df=out["pvals_raw_df"],
+        guide2gene=adata.uns["guide2gene"],
+        ntc_genes=list(ntc_labels),
+        pvals_skew_df=out["pvals_df"],
+        null_pvals=null_pvals,
+        ntc_group_pvals_ens=ntc_group_pvals_ens,
+        ntc_group_pvals_skew_ens=ntc_group_pvals_skew_ens,
+        show_ntc_ensemble_band=True,
+        show_all_pvals=True,
+        title=f"QQ: {day} | k={usage.k} dt={usage.dt}",
+    )
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    ax.figure.savefig(out_path, dpi=300, bbox_inches="tight")
+    plt.close(ax.figure)
+
+    print(f"[saved] {out_path}")
+    return out_path
+
+
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    p = argparse.ArgumentParser()
+
+    p.add_argument(
+        "--data-dir",
+        required=True,
+        type=Path,
+        help="Directory containing normalized .h5ad/.h5mu files.",
+    )
+    p.add_argument(
+        "--cnmf-dir",
+        required=True,
+        type=Path,
+        help="Directory containing cNMF usage consensus files (*.usages.k_*.dt_*.consensus.txt).",
+    )
+    p.add_argument(
+        "--out-dir",
+        required=True,
+        type=Path,
+        help="Output directory for QQ plots.",
+    )
+
+    p.add_argument(
+        "--guide-metadata-tsv",
+        default=None,
+        type=Path,
+        help="Optional TSV mapping guide_id -> intended_target_name (e.g. notebooks/300genes_guide_metadata_v43.tsv).",
+    )
+
+    p.add_argument(
+        "--guide-long-csv-template",
+        default=None,
+        help=(
+            "Optional: load guide assignments from a day-specific long CSV. "
+            "Use '{day}' placeholder (e.g. '/oak/.../{day}_sceptre_transfer/{day}_grna_assignments_long.csv'). "
+            "If provided, overrides guide modality / existing adata.obsm guide assignment."
+        ),
+    )
+    p.add_argument(
+        "--guide-long-cell-col",
+        default="cell_id",
+        help="Column name for cell IDs in the long guide assignment CSV.",
+    )
+    p.add_argument(
+        "--guide-long-guide-col",
+        default="grna_target",
+        help="Column name for guide IDs in the long guide assignment CSV.",
+    )
+    p.add_argument(
+        "--guide-long-value-col",
+        default="value",
+        help="Column name for assignment value in the long guide assignment CSV.",
+    )
+    p.add_argument(
+        "--guide-long-value-threshold",
+        type=float,
+        default=0.0,
+        help="Treat (cell, guide) as present if value > threshold (default: >0).",
+    )
+
+    p.add_argument("--gex-key", default="GEX", help="MuData modality key for expression.")
+    p.add_argument("--guide-key", default="guide", help="MuData modality key for guides.")
+
+    p.add_argument("--usage-key", default="cnmf_usage", help="Key to store usage in adata.obsm.")
+    p.add_argument("--covar-key", default="covar", help="Key to store covariates in adata.obsm.")
+    p.add_argument(
+        "--guide-assignment-key",
+        default="guide_assignment",
+        help="Key to store guide assignment matrix in adata.obsm.",
+    )
+    p.add_argument(
+        "--guide-names-key",
+        default="guide_names",
+        help="Key to store guide names in adata.uns.",
+    )
+
+    p.add_argument(
+        "--batch-col",
+        default="sample_id",
+        help="Column in adata.obs to use as batch for covariates.",
+    )
+
+    p.add_argument(
+        "--ntc-label",
+        action="append",
+        default=["SAFE", "non-targeting"],
+        help="NTC label(s) in guide2gene values (repeat to pass multiple).",
+    )
+
+    p.add_argument("--B", type=int, default=1023, help="Number of CRT resamples.")
+    p.add_argument(
+        "--n-jobs",
+        type=int,
+        default=int(os.environ.get("SLURM_CPUS_PER_TASK", 1)),
+        help="Parallel jobs for gene-level CRT.",
+    )
+
+    p.add_argument("--ntc-n-bins", type=int, default=10, help="Bins for NTC grouping.")
+    p.add_argument(
+        "--ntc-n-ensemble",
+        type=int,
+        default=10,
+        help="Number of random NTC partitions.",
+    )
+    p.add_argument(
+        "--ntc-seed0-groups",
+        type=int,
+        default=7,
+        help="Seed base for NTC partitioning.",
+    )
+    p.add_argument(
+        "--ntc-seed0-crt",
+        type=int,
+        default=23,
+        help="Seed base for NTC group CRT runs.",
+    )
+    p.add_argument(
+        "--max-groups",
+        type=int,
+        default=None,
+        help="Optional cap on number of NTC groups per ensemble.",
+    )
+    p.add_argument(
+        "--group-size",
+        type=int,
+        default=6,
+        help="Guides per NTC pseudo-target unit.",
+    )
+
+    p.add_argument(
+        "--eps-min",
+        type=float,
+        default=1e-8,
+        help="Minimum epsilon for usage flooring.",
+    )
+    p.add_argument(
+        "--eps-pos-quantile",
+        type=float,
+        default=0.01,
+        help="Quantile of positive usage to set epsilon.",
+    )
+    p.add_argument(
+        "--eps-pos-scale",
+        type=float,
+        default=0.1,
+        help="Scale factor applied to the positive-usage quantile.",
+    )
+
+    p.add_argument(
+        "--k",
+        type=int,
+        action="append",
+        default=None,
+        help="Optional: restrict to specific k values (repeatable).",
+    )
+    p.add_argument(
+        "--max-h5",
+        type=int,
+        default=None,
+        help="Optional: limit number of datasets processed.",
+    )
+    p.add_argument(
+        "--max-usage",
+        type=int,
+        default=None,
+        help="Optional: limit number of usage files processed.",
+    )
+    p.add_argument(
+        "--skip-if-exists",
+        action="store_true",
+        help="Skip runs where the output PNG already exists.",
+    )
+
+    args = p.parse_args(argv)
+
+    _maybe_limit_threads()
+
+    h5_files = _find_h5_files(args.data_dir)
+    if args.max_h5 is not None:
+        h5_files = h5_files[: int(args.max_h5)]
+
+    usage_files = _find_usage_files(args.cnmf_dir)
+    if args.k is not None:
+        allowed = set(args.k)
+        usage_files = [u for u in usage_files if u.k in allowed]
+    if args.max_usage is not None:
+        usage_files = usage_files[: int(args.max_usage)]
+
+    if not h5_files:
+        raise ValueError(f"No .h5ad/.h5mu files found under {args.data_dir}")
+    if not usage_files:
+        raise ValueError(f"No usage files found under {args.cnmf_dir}")
+
+    print(f"Found {len(h5_files)} dataset files")
+    print(f"Found {len(usage_files)} usage files")
+
+    # sweep
+    for usage in usage_files:
+        for h5_path in h5_files:
+            run_one_dataset_one_usage(
+                h5_path=h5_path,
+                usage=usage,
+                out_dir=args.out_dir,
+                guide_metadata_tsv=args.guide_metadata_tsv,
+                guide_long_csv_template=args.guide_long_csv_template,
+                guide_long_cell_col=args.guide_long_cell_col,
+                guide_long_guide_col=args.guide_long_guide_col,
+                guide_long_value_col=args.guide_long_value_col,
+                guide_long_value_threshold=args.guide_long_value_threshold,
+                gex_key=args.gex_key,
+                guide_key=args.guide_key,
+                guide_assignment_key=args.guide_assignment_key,
+                guide_names_key=args.guide_names_key,
+                usage_key=args.usage_key,
+                covar_key=args.covar_key,
+                batch_col=args.batch_col,
+                ntc_labels=args.ntc_label,
+                B=args.B,
+                n_jobs=args.n_jobs,
+                ntc_n_bins=args.ntc_n_bins,
+                ntc_n_ensemble=args.ntc_n_ensemble,
+                ntc_seed0_groups=args.ntc_seed0_groups,
+                ntc_seed0_crt=args.ntc_seed0_crt,
+                max_groups=args.max_groups,
+                group_size=args.group_size,
+                eps_min=args.eps_min,
+                eps_pos_quantile=args.eps_pos_quantile,
+                eps_pos_scale=args.eps_pos_scale,
+                skip_if_exists=args.skip_if_exists,
+            )
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
