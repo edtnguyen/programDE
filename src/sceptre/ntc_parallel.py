@@ -27,10 +27,13 @@ def compute_ntc_group_null_pvals_parallel(
     backend: str = "threading",
     resampling_method: str = "bernoulli_index",
     resampling_kwargs: Optional[Dict[str, Any]] = None,
+    test_stat: str = "ols",
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> np.ndarray:
     """
     Compute concatenated CRT-null p-values for all NTC groups across ensembles.
     Uses joblib for parallelization across guide sets.
+    test_stat/test_stat_kwargs are forwarded to compute_guide_set_null_pvals.
     """
     guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
     guide_sets: List[List[int]] = []
@@ -53,6 +56,8 @@ def compute_ntc_group_null_pvals_parallel(
             base_seed=base_seed,
             resampling_method=resampling_method,
             resampling_kwargs=resampling_kwargs,
+            test_stat=test_stat,
+            test_stat_kwargs=test_stat_kwargs,
         ).ravel()
 
     if n_jobs == 1:

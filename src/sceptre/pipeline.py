@@ -22,14 +22,19 @@ from .adata_utils import (
 )
 from .pipeline_helpers import (
     _empirical_crt,
+    _empirical_utest,
+    _ensure_rank_matrix,
     _fit_propensity,
     _gene_obs_idx,
     _gene_seed,
+    _normalize_test_stat,
     _sample_crt_indices,
     _skew_calibrated_crt,
     _stack_gene_results,
     _stack_raw_outputs,
     _stack_skew_outputs,
+    _utest_skew_calibrated_crt,
+    _utest_stats_from_indices,
 )
 from .propensity import fit_propensity_logistic
 from .crt import crt_betas_for_gene
@@ -48,6 +53,10 @@ class CRTInputs:
     guide2gene: Dict[str, str]
     gene_to_cols: Dict[str, List[int]]
     program_names: List[str]
+    U: Optional[np.ndarray] = None
+    R: Optional[np.ndarray] = None
+    rank_info: Optional[Dict[str, Any]] = None
+    usage_eps_quantile: float = 1e-4
     covar_cols: Optional[List[str]] = None
     covar_df_raw: Optional[pd.DataFrame] = None
     batch_raw: Optional[np.ndarray] = None
@@ -115,7 +124,9 @@ def prepare_crt_inputs(
     U = get_from_adata_any(adata, usage_key)
     if isinstance(U, pd.DataFrame):
         U = U.to_numpy()
+    U = np.asarray(U, dtype=np.float64)
     Y = clr_from_usage(U, eps_quantile=eps_quantile)
+    U_store = U.astype(np.float32, copy=False)
 
     G_raw = get_from_adata_any(adata, guide_assignment_key)
     G, guide_names = to_csc_matrix(G_raw)
@@ -153,6 +164,10 @@ def prepare_crt_inputs(
     return CRTInputs(
         C=C.astype(np.float64, copy=False),
         Y=Y.astype(np.float64, copy=False),
+        U=U_store,
+        R=None,
+        rank_info=None,
+        usage_eps_quantile=eps_quantile,
         A=A.astype(np.float64, copy=False),
         CTY=CTY.astype(np.float64, copy=False),
         G=G,
@@ -196,6 +211,8 @@ def run_one_gene_union_crt(
     null_kwargs: Optional[Dict[str, Any]] = None,
     calibrate_skew_normal: bool = False,
     skew_normal_side_code: int = 0,
+    test_stat: str = "ols",
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> CRTGeneResult:
     """
     Run union CRT for a single gene and return p-values and betas across programs.
@@ -210,12 +227,17 @@ def run_one_gene_union_crt(
     null_kwargs: optional arguments for the NTC empirical null
     calibrate_skew_normal: if True, compute skew-normal calibrated p-values
     skew_normal_side_code: 0 two-sided, 1 right-tailed, -1 left-tailed
-    y01: binary union indicator for the gene
+    test_stat: "ols" (default) or "utest"
+    test_stat_kwargs: kwargs for utest (use, rank_method, rank_dtype)
     Returns:
         CRTGeneResult dataclass with all results for the gene. If calibrate_skew_normal
         is True, pvals contain the skew-normal calibrated values.
     """
+    test_stat = _normalize_test_stat(test_stat)
+
     if null_method == "ntc_empirical":
+        if test_stat != "ols":
+            raise ValueError("ntc_empirical only supports test_stat='ols'.")
         if calibrate_skew_normal:
             raise ValueError("Skew-normal calibration is not supported for ntc_empirical.")
         ntc_res = run_ntc_empirical_null(
@@ -254,16 +276,32 @@ def run_one_gene_union_crt(
         inputs=inputs,
     )
 
-    if calibrate_skew_normal:
-        pvals_sn, beta_obs, skew_params, pvals_raw = _skew_calibrated_crt(
-            inputs, indptr, idx, obs_idx, B, skew_normal_side_code
-        )
-        pvals = pvals_sn
+    if test_stat == "utest":
+        if calibrate_skew_normal:
+            pvals_sn, stat_obs, skew_params, pvals_raw = _utest_skew_calibrated_crt(
+                inputs, indptr, idx, obs_idx, B, skew_normal_side_code, test_stat_kwargs
+            )
+            pvals = pvals_sn
+        else:
+            pvals, stat_obs = _empirical_utest(
+                inputs, indptr, idx, obs_idx, B, test_stat_kwargs
+            )
+            pvals_sn = None
+            skew_params = None
+            pvals_raw = None
+        beta_obs = stat_obs
     else:
-        pvals, beta_obs = _empirical_crt(inputs, indptr, idx, obs_idx, B)
-        pvals_sn = None
-        skew_params = None
-        pvals_raw = None
+        if calibrate_skew_normal:
+            pvals_sn, beta_obs, skew_params, pvals_raw = _skew_calibrated_crt(
+                inputs, indptr, idx, obs_idx, B, skew_normal_side_code
+            )
+            pvals = pvals_sn
+        else:
+            pvals, beta_obs = _empirical_crt(inputs, indptr, idx, obs_idx, B)
+            pvals_sn = None
+            skew_params = None
+            pvals_raw = None
+
     return CRTGeneResult(
         gene=gene,
         pvals=pvals,
@@ -284,6 +322,8 @@ def compute_gene_null_pvals(
     resampling_method: str = "bernoulli_index",
     resampling_kwargs: Optional[Dict[str, Any]] = None,
     side_code: int = 0,
+    test_stat: str = "ols",
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> np.ndarray:
     """
     Compute CRT-null p-values for a single gene by resampling.
@@ -291,6 +331,8 @@ def compute_gene_null_pvals(
     """
     if B <= 0:
         raise ValueError("B must be positive.")
+
+    test_stat = _normalize_test_stat(test_stat)
 
     obs_idx = _gene_obs_idx(inputs, gene)
     if obs_idx.size == 0 or obs_idx.size == inputs.C.shape[0]:
@@ -309,6 +351,18 @@ def compute_gene_null_pvals(
         obs_idx=obs_idx,
         inputs=inputs,
     )
+
+    if test_stat == "utest":
+        _, stat_null = _utest_stats_from_indices(
+            inputs, indptr, idx, obs_idx, B, test_stat_kwargs
+        )
+        if side_code not in (-1, 0, 1):
+            raise ValueError("side_code must be -1, 0, or 1.")
+        if side_code == 0:
+            return crt_null_pvals_from_null_stats_matrix(stat_null, two_sided=True)
+        if side_code == 1:
+            return crt_null_pvals_from_null_stats_matrix(stat_null, two_sided=False)
+        return crt_null_pvals_from_null_stats_matrix(-stat_null, two_sided=False)
 
     _, beta_null = crt_betas_for_gene(
         indptr,
@@ -338,6 +392,8 @@ def compute_guide_set_null_pvals(
     resampling_method: str = "bernoulli_index",
     resampling_kwargs: Optional[Dict[str, Any]] = None,
     side_code: int = 0,
+    test_stat: str = "ols",
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> np.ndarray:
     """
     Compute CRT-null p-values for a guide set by resampling.
@@ -345,6 +401,8 @@ def compute_guide_set_null_pvals(
     """
     if B <= 0:
         raise ValueError("B must be positive.")
+
+    test_stat = _normalize_test_stat(test_stat)
 
     guide_idx = np.asarray(list(guide_idx), dtype=np.int32)
     if guide_idx.size == 0:
@@ -371,6 +429,18 @@ def compute_guide_set_null_pvals(
         obs_idx=obs_idx,
         inputs=inputs,
     )
+
+    if test_stat == "utest":
+        _, stat_null = _utest_stats_from_indices(
+            inputs, indptr, idx, obs_idx, B, test_stat_kwargs
+        )
+        if side_code not in (-1, 0, 1):
+            raise ValueError("side_code must be -1, 0, or 1.")
+        if side_code == 0:
+            return crt_null_pvals_from_null_stats_matrix(stat_null, two_sided=True)
+        if side_code == 1:
+            return crt_null_pvals_from_null_stats_matrix(stat_null, two_sided=False)
+        return crt_null_pvals_from_null_stats_matrix(-stat_null, two_sided=False)
 
     _, beta_null = crt_betas_for_gene(
         indptr,
@@ -409,6 +479,8 @@ def run_all_genes_union_crt(
     return_skew_normal: bool = False,
     return_raw_pvals: bool = False,
     return_format: str = "dict",
+    test_stat: str = "ols",
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> Union[Tuple, Dict[str, Any]]:
     """
     Run union CRT across all genes and return DataFrames for p-values and betas.
@@ -429,6 +501,8 @@ def run_all_genes_union_crt(
     return_skew_normal: if True, return skew-normal pvals and parameters
     return_raw_pvals: if True, return raw CRT p-values when skew calibration is enabled
     return_format: "dict" (default) or "tuple" for backward-compatible ordering
+    test_stat: "ols" (default) or "utest"
+    test_stat_kwargs: kwargs for utest (use, rank_method, rank_dtype)
     Returns:
         dict with keys:
             pvals_df: DataFrame of CRT p-values (genes x programs). If calibrate_skew_normal
@@ -442,10 +516,15 @@ def run_all_genes_union_crt(
     """
     gene_list = sorted(inputs.gene_to_cols.keys()) if genes is None else list(genes)
 
+    test_stat = _normalize_test_stat(test_stat)
+    test_stat_kwargs = dict(test_stat_kwargs or {})
+
     if qq_crossfit and null_method != "ntc_empirical":
         raise ValueError("qq_crossfit is only supported for null_method='ntc_empirical'.")
 
     if null_method == "ntc_empirical":
+        if test_stat != "ols":
+            raise ValueError("ntc_empirical only supports test_stat='ols'.")
         if calibrate_skew_normal or return_skew_normal or return_raw_pvals:
             raise ValueError("Skew-normal outputs are not supported for ntc_empirical.")
         ntc_res = run_ntc_empirical_null(
@@ -481,12 +560,21 @@ def run_all_genes_union_crt(
             "results": results,
             "null_method": "ntc_empirical",
             "ntc_matching_info": ntc_res.matching_info,
+            "stat_name": "beta",
         }
         if qq_crossfit:
             out_dict["ntc_crossfit"] = ntc_res.ntc_crossfit
         if return_format == "tuple":
             return (pvals_df, betas_df, treated_df, results)
         return out_dict
+
+    if test_stat == "utest":
+        _ensure_rank_matrix(
+            inputs,
+            use=test_stat_kwargs.get("use", "clr"),
+            rank_method=test_stat_kwargs.get("rank_method", "average"),
+            rank_dtype=test_stat_kwargs.get("rank_dtype", "float32"),
+        )
 
     results: List[CRTGeneResult] = Parallel(n_jobs=n_jobs, backend=backend)(
         delayed(run_one_gene_union_crt)(
@@ -499,6 +587,8 @@ def run_all_genes_union_crt(
             resampling_kwargs=resampling_kwargs,
             calibrate_skew_normal=calibrate_skew_normal,
             skew_normal_side_code=skew_normal_side_code,
+            test_stat=test_stat,
+            test_stat_kwargs=test_stat_kwargs,
         )
         for gene in gene_list
     )
@@ -538,7 +628,10 @@ def run_all_genes_union_crt(
         "betas_df": betas_df,
         "treated_df": treated_df,
         "results": results,
+        "stat_name": "rank_biserial" if test_stat == "utest" else "beta",
     }
+    if test_stat == "utest":
+        out_dict["stats_df"] = betas_df
     if return_raw_pvals:
         out_dict["pvals_raw_df"] = pvals_raw_df
     if return_skew_normal:
@@ -546,7 +639,6 @@ def run_all_genes_union_crt(
         out_dict["skew_params"] = skew_params
     return out_dict
 
-    return pvals_df, betas_df, treated_df, results
 
 
 def store_results_in_adata(

@@ -71,3 +71,24 @@ NTC empirical null QQ (step 2):
 NTC empirical null QQ (step 3):
 - Added `tests/test_ntc_empirical_qq.py` (QQ utilities + cross-fit calibration under global null).
 - Added README section for NTC empirical-null QQ plots (cross-fit usage and notes).
+
+NTC empirical null pbar matching:
+- Added optional pbar matching (`mean(logit(p_hat))`) in NTC empirical-null binning and cross-fit helpers.
+- Implemented pbar computation per unit (real + NTC, per batch if meta) when `matching.use_pbar=True`.
+
+S-CRT U-test Step 1 complete:
+- Added test_stat/test_stat_kwargs plumbing across pipeline, null-pvals helpers, and NTC group helpers.
+- Added rank caching + U-test stats (rank-biserial) with sparse rank-sum nulls in pipeline_helpers.
+- Extended CRTInputs to store raw usage + rank metadata for utest.
+
+S-CRT U-test Step 2 complete:
+- Added U-test unit tests (rank-biserial vs Mann–Whitney U, sparse rank-sum correctness, OLS compatibility).
+- Added end-to-end stratified-permutation null uniformity test for utest (including NTC groups) and reproducibility checks.
+- Updated README with S-CRT U-test usage snippet and stat output notes.
+
+S-CRT U-test Step 3 complete:
+- Ran full pytest suite via sc_dl env: 97 passed (warnings only: pandas categorical dtype deprecation, sklearn logistic warnings, and a RuntimeWarning for rank-biserial divide-by-zero in a utest reproducibility run).
+
+S-CRT U-test Step 3 update:
+- Re-ran full pytest after masking divide-by-zero in rank-biserial; 97 passed (warnings only: pandas categorical dtype deprecation, sklearn logistic warnings).
+

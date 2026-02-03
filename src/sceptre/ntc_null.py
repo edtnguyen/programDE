@@ -5,13 +5,14 @@ NTC empirical-null p-values for CLR-OLS via matching on (n1, denom d).
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
 from scipy.stats import chi2, norm
 
 from .adata_utils import union_obs_idx_from_cols
+from .propensity import fit_propensity_logistic
 
 
 @dataclass
@@ -175,11 +176,16 @@ def _bin_edges_from_obs(
     d_obs: np.ndarray,
     n_n1_bins: int,
     n_d_bins: int,
+    pbar_obs: Optional[np.ndarray] = None,
+    n_pbar_bins: int = 0,
 ) -> Tuple[np.ndarray, np.ndarray]:
     n1_edges = _make_bin_edges(n1_obs.astype(np.float64), n_n1_bins)
     d_vals = np.log(np.maximum(d_obs.astype(np.float64), 1e-12))
     d_edges = _make_bin_edges(d_vals, n_d_bins)
-    return n1_edges, d_edges
+    pbar_edges = np.array([])
+    if pbar_obs is not None and n_pbar_bins > 1:
+        pbar_edges = _make_bin_edges(pbar_obs.astype(np.float64), n_pbar_bins)
+    return n1_edges, d_edges, pbar_edges
 
 
 def _empirical_pvals_from_edges(
@@ -193,39 +199,48 @@ def _empirical_pvals_from_edges(
     d_edges: np.ndarray,
     min_ntc_per_bin: int,
     two_sided: bool,
+    pbar_obs: Optional[np.ndarray] = None,
+    pbar_ntc: Optional[np.ndarray] = None,
+    pbar_edges: Optional[np.ndarray] = None,
 ) -> Tuple[np.ndarray, Dict[str, Any]]:
     d_vals_obs = np.log(np.maximum(d_obs.astype(np.float64), 1e-12))
     d_vals_ntc = np.log(np.maximum(d_ntc.astype(np.float64), 1e-12))
 
-    obs_bins = np.column_stack(
-        [
-            _assign_bins(n1_obs.astype(np.float64), n1_edges),
-            _assign_bins(d_vals_obs, d_edges),
-        ]
-    )
-    ntc_bins = np.column_stack(
-        [
-            _assign_bins(n1_ntc.astype(np.float64), n1_edges),
-            _assign_bins(d_vals_ntc, d_edges),
-        ]
-    )
+    obs_cols = [
+        _assign_bins(n1_obs.astype(np.float64), n1_edges),
+        _assign_bins(d_vals_obs, d_edges),
+    ]
+    ntc_cols = [
+        _assign_bins(n1_ntc.astype(np.float64), n1_edges),
+        _assign_bins(d_vals_ntc, d_edges),
+    ]
 
-    n_bins_n1_eff = max(1, n1_edges.size - 1)
-    n_bins_d_eff = max(1, d_edges.size - 1)
-    match_map, info = _match_ntc_bins(
+    use_pbar = pbar_obs is not None and pbar_ntc is not None and pbar_edges is not None
+    n_bins = [max(1, n1_edges.size - 1), max(1, d_edges.size - 1)]
+    if use_pbar:
+        obs_cols.append(_assign_bins(pbar_obs.astype(np.float64), pbar_edges))
+        ntc_cols.append(_assign_bins(pbar_ntc.astype(np.float64), pbar_edges))
+        n_bins.append(max(1, pbar_edges.size - 1))
+
+    obs_bins = np.column_stack(obs_cols)
+    ntc_bins = np.column_stack(ntc_cols)
+
+    match_map, info = _match_bins_nd(
         obs_bins,
         ntc_bins,
-        n_bins_n1_eff,
-        n_bins_d_eff,
+        n_bins,
         min_ntc_per_bin,
     )
     info.update(
         {
-            "n_bins_n1": n_bins_n1_eff,
-            "n_bins_d": n_bins_d_eff,
+            "n_bins_n1": n_bins[0],
+            "n_bins_d": n_bins[1],
             "min_ntc_per_bin": int(min_ntc_per_bin),
+            "use_pbar": bool(use_pbar),
         }
     )
+    if use_pbar:
+        info["n_bins_pbar"] = n_bins[2]
 
     G, K = beta_obs.shape
     pvals = np.ones((G, K), dtype=np.float64)
@@ -266,8 +281,16 @@ def empirical_pvals_vs_ntc(
     n_d_bins: int = 10,
     min_ntc_per_bin: int = 50,
     two_sided: bool = True,
+    use_pbar: bool = False,
+    pbar_obs: Optional[np.ndarray] = None,
+    pbar_ntc: Optional[np.ndarray] = None,
+    n_pbar_bins: int = 8,
 ) -> Tuple[np.ndarray, Dict[str, Any]]:
-    n1_edges, d_edges = _bin_edges_from_obs(n1_obs, d_obs, n_n1_bins, n_d_bins)
+    if use_pbar and (pbar_obs is None or pbar_ntc is None):
+        raise ValueError("pbar_obs and pbar_ntc are required when use_pbar=True.")
+    n1_edges, d_edges, pbar_edges = _bin_edges_from_obs(
+        n1_obs, d_obs, n_n1_bins, n_d_bins, pbar_obs, n_pbar_bins
+    )
     return _empirical_pvals_from_edges(
         beta_obs,
         beta_ntc,
@@ -279,7 +302,69 @@ def empirical_pvals_vs_ntc(
         d_edges,
         min_ntc_per_bin,
         two_sided,
+        pbar_obs=pbar_obs if use_pbar else None,
+        pbar_ntc=pbar_ntc if use_pbar else None,
+        pbar_edges=pbar_edges if use_pbar else None,
     )
+
+
+def _match_bins_nd(
+    obs_bins: np.ndarray,
+    ntc_bins: np.ndarray,
+    n_bins: Sequence[int],
+    min_ntc_per_bin: int,
+) -> Tuple[Dict[Tuple[int, ...], np.ndarray], Dict[str, Any]]:
+    info: Dict[str, Any] = {"fallback_counts": 0, "bin_sizes": {}}
+    obs_keys = np.unique(obs_bins, axis=0)
+    match_map: Dict[Tuple[int, ...], np.ndarray] = {}
+    max_radius = max(n_bins) if n_bins else 1
+
+    for key in obs_keys:
+        key_tuple = tuple(int(x) for x in key)
+        mask = np.all(ntc_bins == key, axis=1)
+        idx = np.nonzero(mask)[0]
+        if idx.size >= min_ntc_per_bin:
+            match_map[key_tuple] = idx
+            info["bin_sizes"][key_tuple] = int(idx.size)
+            continue
+        found = False
+        for r in range(1, max_radius + 1):
+            mask = np.sum(np.abs(ntc_bins - key), axis=1) <= r
+            idx = np.nonzero(mask)[0]
+            if idx.size >= min_ntc_per_bin:
+                match_map[key_tuple] = idx
+                info["bin_sizes"][key_tuple] = int(idx.size)
+                info["fallback_counts"] += 1
+                found = True
+                break
+        if not found:
+            match_map[key_tuple] = np.arange(ntc_bins.shape[0], dtype=np.int32)
+            info["bin_sizes"][key_tuple] = int(ntc_bins.shape[0])
+            info["fallback_counts"] += 1
+    return match_map, info
+
+
+def _compute_pbar_values(
+    C: np.ndarray,
+    obs_idx_list: Sequence[np.ndarray],
+    propensity_model: Callable,
+) -> np.ndarray:
+    n_units = len(obs_idx_list)
+    n_cells = C.shape[0]
+    pbar = np.zeros(n_units, dtype=np.float64)
+    for i, obs_idx in enumerate(obs_idx_list):
+        n1 = int(obs_idx.size)
+        if n1 == 0 or n1 == n_cells:
+            pbar[i] = 0.0
+            continue
+        y01 = np.zeros(n_cells, dtype=np.int8)
+        y01[obs_idx] = 1
+        p_hat = propensity_model(C, y01)
+        p_hat = np.asarray(p_hat, dtype=np.float64)
+        p_hat = np.clip(p_hat, 1e-6, 1.0 - 1e-6)
+        logit = np.log(p_hat / (1.0 - p_hat))
+        pbar[i] = float(np.mean(logit))
+    return pbar
 
 
 def compute_ntc_empirical_pvals_crossfit(
@@ -298,6 +383,8 @@ def compute_ntc_empirical_pvals_crossfit(
     n_n1_bins = int(matching_cfg.get("n_n1_bins", 10))
     n_d_bins = int(matching_cfg.get("n_d_bins", 10))
     min_ntc_per_bin = int(matching_cfg.get("min_ntc_per_bin", 50))
+    use_pbar = bool(matching_cfg.get("use_pbar", False))
+    n_pbar_bins = int(matching_cfg.get("n_pbar_bins", 8))
 
     n1_real = sig_real["n1"].to_numpy(dtype=np.float64, copy=False)
     d_real = sig_real["d"].to_numpy(dtype=np.float64, copy=False)
@@ -306,7 +393,17 @@ def compute_ntc_empirical_pvals_crossfit(
     n1_ntcB = sig_ntcB["n1"].to_numpy(dtype=np.float64, copy=False)
     d_ntcB = sig_ntcB["d"].to_numpy(dtype=np.float64, copy=False)
 
-    n1_edges, d_edges = _bin_edges_from_obs(n1_real, d_real, n_n1_bins, n_d_bins)
+    pbar_real = pbar_ntcA = pbar_ntcB = None
+    if use_pbar:
+        if "pbar" not in sig_real or "pbar" not in sig_ntcA or "pbar" not in sig_ntcB:
+            raise ValueError("pbar matching requires pbar in sig_real/sig_ntcA/sig_ntcB.")
+        pbar_real = sig_real["pbar"].to_numpy(dtype=np.float64, copy=False)
+        pbar_ntcA = sig_ntcA["pbar"].to_numpy(dtype=np.float64, copy=False)
+        pbar_ntcB = sig_ntcB["pbar"].to_numpy(dtype=np.float64, copy=False)
+
+    n1_edges, d_edges, pbar_edges = _bin_edges_from_obs(
+        n1_real, d_real, n_n1_bins, n_d_bins, pbar_real, n_pbar_bins
+    )
 
     p_real_vs_A, info_real = _empirical_pvals_from_edges(
         beta_real,
@@ -319,6 +416,9 @@ def compute_ntc_empirical_pvals_crossfit(
         d_edges,
         min_ntc_per_bin,
         two_sided,
+        pbar_obs=pbar_real,
+        pbar_ntc=pbar_ntcA,
+        pbar_edges=pbar_edges if use_pbar else None,
     )
     p_ntcB_vs_A, info_ntcB = _empirical_pvals_from_edges(
         beta_ntcB,
@@ -331,6 +431,9 @@ def compute_ntc_empirical_pvals_crossfit(
         d_edges,
         min_ntc_per_bin,
         two_sided,
+        pbar_obs=pbar_ntcB,
+        pbar_ntc=pbar_ntcA,
+        pbar_edges=pbar_edges if use_pbar else None,
     )
 
     return {
@@ -339,6 +442,7 @@ def compute_ntc_empirical_pvals_crossfit(
         "matching_info": {"real_vs_A": info_real, "ntcB_vs_A": info_ntcB},
         "n1_edges": n1_edges,
         "d_edges": d_edges,
+        "pbar_edges": pbar_edges,
     }
 
 
@@ -352,6 +456,7 @@ def compute_ntc_empirical_pvals_gene_agg_crossfit(
     matching_cfg: Dict[str, Any],
     n1_edges: Optional[np.ndarray] = None,
     d_edges: Optional[np.ndarray] = None,
+    pbar_edges: Optional[np.ndarray] = None,
 ) -> Dict[str, Any]:
     """
     Cross-fit empirical p-values using max-|beta| aggregated per unit.
@@ -359,6 +464,8 @@ def compute_ntc_empirical_pvals_gene_agg_crossfit(
     n_n1_bins = int(matching_cfg.get("n_n1_bins", 10))
     n_d_bins = int(matching_cfg.get("n_d_bins", 10))
     min_ntc_per_bin = int(matching_cfg.get("min_ntc_per_bin", 50))
+    use_pbar = bool(matching_cfg.get("use_pbar", False))
+    n_pbar_bins = int(matching_cfg.get("n_pbar_bins", 8))
 
     n1_real = sig_real["n1"].to_numpy(dtype=np.float64, copy=False)
     d_real = sig_real["d"].to_numpy(dtype=np.float64, copy=False)
@@ -367,10 +474,20 @@ def compute_ntc_empirical_pvals_gene_agg_crossfit(
     n1_ntcB = sig_ntcB["n1"].to_numpy(dtype=np.float64, copy=False)
     d_ntcB = sig_ntcB["d"].to_numpy(dtype=np.float64, copy=False)
 
+    pbar_real = pbar_ntcA = pbar_ntcB = None
+    if use_pbar:
+        if "pbar" not in sig_real or "pbar" not in sig_ntcA or "pbar" not in sig_ntcB:
+            raise ValueError("pbar matching requires pbar in sig_real/sig_ntcA/sig_ntcB.")
+        pbar_real = sig_real["pbar"].to_numpy(dtype=np.float64, copy=False)
+        pbar_ntcA = sig_ntcA["pbar"].to_numpy(dtype=np.float64, copy=False)
+        pbar_ntcB = sig_ntcB["pbar"].to_numpy(dtype=np.float64, copy=False)
+
     if n1_edges is None or d_edges is None:
-        n1_edges, d_edges = _bin_edges_from_obs(
-            n1_real, d_real, n_n1_bins, n_d_bins
+        n1_edges, d_edges, pbar_edges = _bin_edges_from_obs(
+            n1_real, d_real, n_n1_bins, n_d_bins, pbar_real, n_pbar_bins
         )
+    elif use_pbar and pbar_edges is None and pbar_real is not None:
+        pbar_edges = _make_bin_edges(pbar_real.astype(np.float64), n_pbar_bins)
 
     t_real = np.max(np.abs(beta_real), axis=1)[:, None]
     t_ntcA = np.max(np.abs(beta_ntcA), axis=1)[:, None]
@@ -387,6 +504,9 @@ def compute_ntc_empirical_pvals_gene_agg_crossfit(
         d_edges,
         min_ntc_per_bin,
         two_sided=False,
+        pbar_obs=pbar_real,
+        pbar_ntc=pbar_ntcA,
+        pbar_edges=pbar_edges if use_pbar else None,
     )
     p_ntcB_vs_A, info_ntcB = _empirical_pvals_from_edges(
         t_ntcB,
@@ -399,6 +519,9 @@ def compute_ntc_empirical_pvals_gene_agg_crossfit(
         d_edges,
         min_ntc_per_bin,
         two_sided=False,
+        pbar_obs=pbar_ntcB,
+        pbar_ntc=pbar_ntcA,
+        pbar_edges=pbar_edges if use_pbar else None,
     )
 
     return {
@@ -464,8 +587,13 @@ def run_ntc_empirical_null(
     n_n1_bins = int(matching.get("n_n1_bins", 10))
     n_d_bins = int(matching.get("n_d_bins", 10))
     min_ntc_per_bin = int(matching.get("min_ntc_per_bin", 50))
+    use_pbar = bool(matching.get("use_pbar", False))
+    n_pbar_bins = int(matching.get("n_pbar_bins", 8))
     qq_frac_A = float(kwargs.get("qq_crossfit_frac_A", 0.5))
     qq_seed = int(kwargs.get("qq_crossfit_seed", int(base_seed) + 91))
+    propensity_model = kwargs.get("pbar_propensity_model", kwargs.get("propensity_model"))
+    if propensity_model is None:
+        propensity_model = fit_propensity_logistic
 
     if combine_method not in ("fisher", "stouffer"):
         raise ValueError("combine_method must be 'fisher' or 'stouffer'.")
@@ -507,6 +635,13 @@ def run_ntc_empirical_null(
     )
 
     if batch_mode == "pooled":
+        pbar_real = pbar_ntc = None
+        if use_pbar:
+            pbar_real = _compute_pbar_values(
+                inputs.C, obs_idx_real, propensity_model
+            )
+            pbar_ntc = _compute_pbar_values(inputs.C, obs_idx_ntc, propensity_model)
+
         beta_ntc, n1_ntc, d_ntc = _compute_unit_stats(
             inputs.C, inputs.Y, inputs.A, inputs.CTY, obs_idx_ntc
         )
@@ -521,6 +656,10 @@ def run_ntc_empirical_null(
             n_d_bins=n_d_bins,
             min_ntc_per_bin=min_ntc_per_bin,
             two_sided=True,
+            use_pbar=use_pbar,
+            pbar_obs=pbar_real,
+            pbar_ntc=pbar_ntc,
+            n_pbar_bins=n_pbar_bins,
         )
         ntc_crossfit = None
         if qq_crossfit and ntc_A_idx is not None and ntc_B_idx is not None:
@@ -538,6 +677,11 @@ def run_ntc_empirical_null(
             sig_ntcB = pd.DataFrame(
                 {"n1": n1_ntcB, "d": d_ntcB}, index=ntc_B_labels
             )
+            if use_pbar and pbar_real is not None and pbar_ntc is not None:
+                sig_real["pbar"] = pbar_real
+                sig_ntcA["pbar"] = pbar_ntc[ntc_A_idx]
+                sig_ntcB["pbar"] = pbar_ntc[ntc_B_idx]
+
             cross_prog = compute_ntc_empirical_pvals_crossfit(
                 beta_pooled,
                 sig_real,
@@ -558,6 +702,7 @@ def run_ntc_empirical_null(
                 matching,
                 n1_edges=cross_prog["n1_edges"],
                 d_edges=cross_prog["d_edges"],
+                pbar_edges=cross_prog.get("pbar_edges"),
             )
 
             ntc_crossfit = {
@@ -658,9 +803,23 @@ def run_ntc_empirical_null(
         beta_real_b, n1_real_b, d_real_b = _compute_unit_stats(
             Cb, Yb, Ab, CTYb, obs_idx_real_b
         )
+        pbar_real_b = None
+        pbar_ntc_b = None
+        if use_pbar:
+            pbar_real_b = _compute_pbar_values(Cb, obs_idx_real_b, propensity_model)
+
         beta_ntc_b, n1_ntc_b, d_ntc_b = _compute_unit_stats(
             Cb, Yb, Ab, CTYb, [global_to_local[idx][global_to_local[idx] >= 0].astype(np.int32, copy=False) for idx in obs_idx_ntc]
         )
+        if use_pbar:
+            ntc_local_idx = [
+                global_to_local[idx][global_to_local[idx] >= 0].astype(
+                    np.int32, copy=False
+                )
+                for idx in obs_idx_ntc
+            ]
+            pbar_ntc_b = _compute_pbar_values(Cb, ntc_local_idx, propensity_model)
+
         pvals_b, match_info = empirical_pvals_vs_ntc(
             beta_real_b,
             beta_ntc_b,
@@ -672,6 +831,10 @@ def run_ntc_empirical_null(
             n_d_bins=n_d_bins,
             min_ntc_per_bin=min_ntc_per_bin,
             two_sided=True,
+            use_pbar=use_pbar,
+            pbar_obs=pbar_real_b,
+            pbar_ntc=pbar_ntc_b,
+            n_pbar_bins=n_pbar_bins,
         )
         pvals_b[~keep_mask, :] = 1.0
         counts = keep_mask.astype(np.int32)[:, None] * np.ones((1, K), dtype=np.int32)
@@ -694,6 +857,11 @@ def run_ntc_empirical_null(
             sig_ntcB_b = pd.DataFrame(
                 {"n1": n1_ntcB_b, "d": d_ntcB_b}, index=ntc_B_labels
             )
+            if use_pbar and pbar_real_b is not None and pbar_ntc_b is not None:
+                sig_real_b["pbar"] = pbar_real_b
+                sig_ntcA_b["pbar"] = pbar_ntc_b[ntc_A_idx]
+                sig_ntcB_b["pbar"] = pbar_ntc_b[ntc_B_idx]
+
             cross_prog = compute_ntc_empirical_pvals_crossfit(
                 beta_real_b,
                 sig_real_b,
@@ -739,6 +907,7 @@ def run_ntc_empirical_null(
                 matching,
                 n1_edges=cross_prog["n1_edges"],
                 d_edges=cross_prog["d_edges"],
+                pbar_edges=cross_prog.get("pbar_edges"),
             )
             p_real_gene_b = cross_gene["p_real_gene_vs_A"]
             p_ntcB_gene_b = cross_gene["p_ntcB_gene_vs_A"]

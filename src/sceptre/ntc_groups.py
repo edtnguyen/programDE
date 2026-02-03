@@ -12,9 +12,12 @@ import scipy.sparse as sp
 from .adata_utils import build_gene_to_cols, union_obs_idx_from_cols
 from .pipeline_helpers import (
     _empirical_crt,
+    _empirical_utest,
     _fit_propensity,
+    _normalize_test_stat,
     _sample_crt_indices,
     _skew_calibrated_crt,
+    _utest_skew_calibrated_crt,
 )
 from .propensity import fit_propensity_logistic
 
@@ -244,10 +247,15 @@ def crt_pvals_for_guide_set(
     propensity_model=fit_propensity_logistic,
     resampling_method: str = "bernoulli_index",
     resampling_kwargs: Optional[Dict[str, Any]] = None,
+    test_stat: str = "ols",
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> np.ndarray:
     """
     Returns CRT p-values across programs for one guide set.
+    test_stat: "ols" (default) or "utest".
     """
+    test_stat = _normalize_test_stat(test_stat)
+
     obs_idx = union_obs_idx_from_cols(inputs.G, guide_idx)
     if obs_idx.size == 0 or obs_idx.size == inputs.C.shape[0] or B <= 0:
         return np.ones(inputs.Y.shape[1], dtype=np.float64)
@@ -262,7 +270,12 @@ def crt_pvals_for_guide_set(
         obs_idx=obs_idx,
         inputs=inputs,
     )
-    pvals, _ = _empirical_crt(inputs, indptr, idx, obs_idx, B)
+    if test_stat == "utest":
+        pvals, _ = _empirical_utest(
+            inputs, indptr, idx, obs_idx, B, test_stat_kwargs
+        )
+    else:
+        pvals, _ = _empirical_crt(inputs, indptr, idx, obs_idx, B)
     return pvals
 
 
@@ -275,10 +288,15 @@ def crt_pvals_for_guide_set_skew(
     resampling_method: str = "bernoulli_index",
     resampling_kwargs: Optional[Dict[str, Any]] = None,
     side_code: int = 0,
+    test_stat: str = "ols",
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
     Returns skew-calibrated and raw CRT p-values across programs for one guide set.
+    test_stat: "ols" (default) or "utest".
     """
+    test_stat = _normalize_test_stat(test_stat)
+
     obs_idx = union_obs_idx_from_cols(inputs.G, guide_idx)
     if obs_idx.size == 0 or obs_idx.size == inputs.C.shape[0] or B <= 0:
         ones = np.ones(inputs.Y.shape[1], dtype=np.float64)
@@ -294,9 +312,14 @@ def crt_pvals_for_guide_set_skew(
         obs_idx=obs_idx,
         inputs=inputs,
     )
-    pvals_sn, _, _, pvals_raw = _skew_calibrated_crt(
-        inputs, indptr, idx, obs_idx, B, side_code
-    )
+    if test_stat == "utest":
+        pvals_sn, _, _, pvals_raw = _utest_skew_calibrated_crt(
+            inputs, indptr, idx, obs_idx, B, side_code, test_stat_kwargs
+        )
+    else:
+        pvals_sn, _, _, pvals_raw = _skew_calibrated_crt(
+            inputs, indptr, idx, obs_idx, B, side_code
+        )
     return pvals_sn, pvals_raw
 
 
@@ -309,9 +332,12 @@ def crt_pvals_for_ntc_groups_ensemble(
     resampling_method: str = "bernoulli_index",
     resampling_kwargs: Optional[Dict[str, Any]] = None,
     expected_group_size: int = 6,
+    test_stat: str = "ols",
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> Dict[int, pd.DataFrame]:
     """
     Returns mapping e -> DataFrame(rows=group_id, cols=programs).
+    test_stat: "ols" (default) or "utest".
     """
     guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
     out: Dict[int, pd.DataFrame] = {}
@@ -333,6 +359,8 @@ def crt_pvals_for_ntc_groups_ensemble(
                 propensity_model=propensity_model,
                 resampling_method=resampling_method,
                 resampling_kwargs=resampling_kwargs,
+                test_stat=test_stat,
+                test_stat_kwargs=test_stat_kwargs,
             )
             rows.append(pvals)
             group_ids.append(group_id)
@@ -354,9 +382,12 @@ def crt_pvals_for_ntc_groups_ensemble_skew(
     resampling_kwargs: Optional[Dict[str, Any]] = None,
     side_code: int = 0,
     expected_group_size: int = 6,
+    test_stat: str = "ols",
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> Dict[int, pd.DataFrame]:
     """
     Returns mapping e -> DataFrame(rows=group_id, cols=programs) of skew p-values.
+    test_stat: "ols" (default) or "utest".
     """
     guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
     out: Dict[int, pd.DataFrame] = {}
@@ -379,6 +410,8 @@ def crt_pvals_for_ntc_groups_ensemble_skew(
                 resampling_method=resampling_method,
                 resampling_kwargs=resampling_kwargs,
                 side_code=side_code,
+                test_stat=test_stat,
+                test_stat_kwargs=test_stat_kwargs,
             )
             rows.append(pvals_skew)
             group_ids.append(group_id)

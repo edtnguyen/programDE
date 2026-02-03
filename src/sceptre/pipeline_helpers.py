@@ -6,6 +6,8 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
+import scipy.sparse as sp
+from scipy.stats import rankdata
 
 from .adata_utils import union_obs_idx_from_cols
 from .crt import crt_betas_for_gene, crt_pvals_for_gene
@@ -115,6 +117,131 @@ def _sample_crt_indices(
     )
 
 
+def _normalize_test_stat(test_stat: Optional[str]) -> str:
+    if test_stat is None:
+        return "ols"
+    stat = str(test_stat).lower()
+    if stat in ("ols", "beta"):
+        return "ols"
+    if stat in ("utest", "wilcoxon", "mannwhitney", "mannwhitneyu"):
+        return "utest"
+    raise ValueError("test_stat must be 'ols' or 'utest'.")
+
+
+def _usage_for_ranks(U: np.ndarray, eps_quantile: float) -> np.ndarray:
+    U = np.asarray(U, dtype=np.float64)
+    eps = np.quantile(U, eps_quantile)
+    if not np.isfinite(eps) or eps <= 0.0:
+        eps = np.finfo(np.float64).tiny
+    U2 = np.maximum(U, eps)
+    row_sums = U2.sum(axis=1, keepdims=True)
+    row_sums[row_sums == 0.0] = 1.0
+    return U2 / row_sums
+
+
+def _ensure_rank_matrix(
+    inputs: Any,
+    use: str = "clr",
+    rank_method: str = "average",
+    rank_dtype: str = "float32",
+) -> np.ndarray:
+    info = getattr(inputs, "rank_info", None) or {}
+    cached = getattr(inputs, "R", None)
+    if (
+        cached is not None
+        and info.get("use") == use
+        and info.get("rank_method") == rank_method
+        and info.get("rank_dtype") == rank_dtype
+    ):
+        return cached
+
+    if use == "clr":
+        Y = inputs.Y
+    elif use == "usage":
+        U = getattr(inputs, "U", None)
+        if U is None:
+            raise ValueError("inputs.U is required for use='usage' in utest.")
+        eps_q = float(getattr(inputs, "usage_eps_quantile", 1e-4))
+        Y = _usage_for_ranks(U, eps_q)
+    else:
+        raise ValueError("test_stat_kwargs['use'] must be 'clr' or 'usage'.")
+
+    if not np.all(np.isfinite(Y)):
+        raise ValueError("Non-finite values found in outcome matrix for ranking.")
+
+    N, K = Y.shape
+    R = np.empty((N, K), dtype=rank_dtype)
+    for k in range(K):
+        R[:, k] = rankdata(Y[:, k], method=rank_method)
+
+    inputs.R = R
+    inputs.rank_info = {
+        "use": use,
+        "rank_method": rank_method,
+        "rank_dtype": rank_dtype,
+    }
+    return R
+
+
+def _rank_sums_from_indices(
+    indptr: np.ndarray,
+    indices: np.ndarray,
+    R: np.ndarray,
+    N: int,
+    B: int,
+) -> Tuple[np.ndarray, np.ndarray]:
+    data = np.ones(indices.shape[0], dtype=np.float64)
+    X = sp.csc_matrix((data, indices, indptr), shape=(N, B))
+    rank_sum_null = (X.T @ R).astype(np.float64)
+    n1b = (indptr[1:] - indptr[:-1]).astype(np.int32)
+    return rank_sum_null, n1b
+
+
+def _rank_biserial_from_rank_sum(
+    rank_sum: np.ndarray,
+    n1: np.ndarray,
+    N: int,
+) -> np.ndarray:
+    n1_arr = np.asarray(n1, dtype=np.float64)
+    if rank_sum.ndim == 2 and n1_arr.ndim == 1:
+        n1_arr = n1_arr[:, None]
+    n0_arr = N - n1_arr
+    denom = n1_arr * n0_arr
+    U = rank_sum - n1_arr * (n1_arr + 1.0) / 2.0
+    rbc = np.full_like(U, np.nan, dtype=np.float64)
+    np.divide(2.0 * U, denom, out=rbc, where=denom > 0.0)
+    rbc = rbc - 1.0
+    return rbc
+
+
+def _utest_stats_from_indices(
+    inputs: Any,
+    indptr: np.ndarray,
+    indices: np.ndarray,
+    obs_idx: np.ndarray,
+    B: int,
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
+) -> Tuple[np.ndarray, np.ndarray]:
+    kwargs = dict(test_stat_kwargs or {})
+    use = kwargs.get("use", "clr")
+    rank_method = kwargs.get("rank_method", "average")
+    rank_dtype = kwargs.get("rank_dtype", "float32")
+
+    R = _ensure_rank_matrix(inputs, use=use, rank_method=rank_method, rank_dtype=rank_dtype)
+    N = R.shape[0]
+
+    n1_obs = obs_idx.size
+    if n1_obs > 0:
+        rank_sum_obs = np.asarray(R[obs_idx].sum(axis=0), dtype=np.float64)
+    else:
+        rank_sum_obs = np.zeros(R.shape[1], dtype=np.float64)
+    rbc_obs = _rank_biserial_from_rank_sum(rank_sum_obs, n1_obs, N)
+
+    rank_sum_null, n1b = _rank_sums_from_indices(indptr, indices, R, N, B)
+    rbc_null = _rank_biserial_from_rank_sum(rank_sum_null, n1b, N)
+    return rbc_obs, rbc_null
+
+
 def _empirical_crt(
     inputs: Any,
     indptr: np.ndarray,
@@ -132,6 +259,42 @@ def _empirical_crt(
         obs_idx.astype(np.int32),
         B,
     )
+
+
+def _empirical_utest(
+    inputs: Any,
+    indptr: np.ndarray,
+    idx: np.ndarray,
+    obs_idx: np.ndarray,
+    B: int,
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
+) -> Tuple[np.ndarray, np.ndarray]:
+    rbc_obs, rbc_null = _utest_stats_from_indices(
+        inputs, indptr, idx, obs_idx, B, test_stat_kwargs
+    )
+    if not np.all(np.isfinite(rbc_obs)):
+        return np.ones(rbc_obs.shape[0], dtype=np.float64), rbc_obs
+    pvals = _raw_pvals_from_stats(rbc_obs, rbc_null)
+    return pvals, rbc_obs
+
+
+def _utest_skew_calibrated_crt(
+    inputs: Any,
+    indptr: np.ndarray,
+    idx: np.ndarray,
+    obs_idx: np.ndarray,
+    B: int,
+    side_code: int,
+    test_stat_kwargs: Optional[Dict[str, Any]] = None,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    rbc_obs, rbc_null = _utest_stats_from_indices(
+        inputs, indptr, idx, obs_idx, B, test_stat_kwargs
+    )
+    pvals_sn, skew_params = _compute_skew_normal_pvals(
+        rbc_obs, rbc_null, side_code
+    )
+    pvals_raw = _raw_pvals_from_stats(rbc_obs, rbc_null)
+    return pvals_sn, rbc_obs, skew_params, pvals_raw
 
 
 def _compute_skew_normal_pvals(
@@ -174,11 +337,15 @@ def _compute_skew_normal_pvals(
     return pvals_sn, params
 
 
-def _raw_pvals_from_betas(beta_obs: np.ndarray, beta_null: np.ndarray) -> np.ndarray:
-    abs_obs = np.abs(beta_obs)
-    ge = np.sum(np.abs(beta_null) >= abs_obs, axis=0)
-    B = beta_null.shape[0]
+def _raw_pvals_from_stats(stat_obs: np.ndarray, stat_null: np.ndarray) -> np.ndarray:
+    abs_obs = np.abs(stat_obs)
+    ge = np.sum(np.abs(stat_null) >= abs_obs, axis=0)
+    B = stat_null.shape[0]
     return (1.0 + ge) / (B + 1.0)
+
+
+def _raw_pvals_from_betas(beta_obs: np.ndarray, beta_null: np.ndarray) -> np.ndarray:
+    return _raw_pvals_from_stats(beta_obs, beta_null)
 
 
 def _skew_calibrated_crt(
@@ -200,7 +367,7 @@ def _skew_calibrated_crt(
         B,
     )
     pvals_sn, skew_params = _compute_skew_normal_pvals(beta_obs, beta_null, side_code)
-    pvals_raw = _raw_pvals_from_betas(beta_obs, beta_null)
+    pvals_raw = _raw_pvals_from_stats(beta_obs, beta_null)
     return pvals_sn, beta_obs, skew_params, pvals_raw
 
 

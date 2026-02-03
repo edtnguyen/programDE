@@ -326,6 +326,31 @@ out = run_all_genes_union_crt(
 )
 ```
 
+Rank-based U-test statistic (S-CRT U-test):
+
+```python
+out = run_all_genes_union_crt(
+    inputs=inputs,
+    B=1023,
+    n_jobs=16,
+    resampling_method="stratified_perm",
+    resampling_kwargs=dict(
+        n_bins=20,
+        stratify_by_batch=True,
+        batch_key="batch",
+        min_stratum_size=2,
+    ),
+    test_stat="utest",
+    test_stat_kwargs=dict(use="clr", rank_method="average"),
+    calibrate_skew_normal=False,
+)
+
+# Rank-biserial effect sizes live in out["betas_df"];
+# out["stats_df"] is provided as an explicit alias when test_stat="utest".
+# To rank raw usage instead of CLR, use test_stat_kwargs={"use": "usage"}.
+# This uses the same eps_quantile flooring/renormalization from prepare_crt_inputs.
+```
+
 Batch stratification uses the raw covariate DataFrame (before one-hot encoding). If your covariates were provided as an `ndarray`, `stratify_by_batch` is ignored.
 
 #### NTC empirical null (CLR-OLS)
@@ -366,7 +391,13 @@ out = run_all_genes_union_crt(
         n_ntc_units=5000,
         batch_mode="meta",          # per-batch pvals + Fisher combine
         combine_method="fisher",
-        matching=dict(n_n1_bins=10, n_d_bins=10, min_ntc_per_bin=50),
+        matching=dict(
+            n_n1_bins=10,
+            n_d_bins=10,
+            min_ntc_per_bin=50,
+            use_pbar=True,           # optional: add pbar matching
+            n_pbar_bins=8,
+        ),
         min_treated=10,
         min_control=10,
     ),
@@ -418,10 +449,36 @@ make_ntc_empirical_qq_plots(
 )
 ```
 
+Step-by-step workflow (including what to do after plotting):
+
+1. **Prepare inputs**: `adata.obsm["covar"]` must be a DataFrame with a `batch` column, then run `prepare_crt_inputs(...)`.
+2. **Run NTC empirical-null with cross-fit**: set `null_method="ntc_empirical"` and `qq_crossfit=True` so `out["ntc_crossfit"]` is produced.
+3. **Generate QQ plots**: call `make_ntc_empirical_qq_plots(...)` as shown above.
+4. **Inspect outputs on disk** (the function saves PNGs; it does not display them):
+
+```python
+from pathlib import Path
+print(sorted(Path("results/qq_ntc").glob("**/*.png")))
+```
+
+Expected files:
+- Meta (combined across batches):
+  - `results/qq_ntc/qq_ntc_empirical_genelevel_meta.png`
+  - `results/qq_ntc/qq_ntc_empirical_program_<program>_meta.png`
+- Per-batch (if `make_per_batch=True`):
+  - `results/qq_ntc/per_batch/<batch>/qq_ntc_empirical_genelevel.png`
+  - `results/qq_ntc/per_batch/<batch>/qq_ntc_empirical_program_<program>.png`
+
+If no images appear, verify:
+- `qq_crossfit=True` and `null_method="ntc_empirical"`
+- `out["ntc_crossfit"]` is present (it’s required by the plotting function)
+- `programs_to_plot` matches program names in `out["betas_df"].columns`
+
 Notes:
 - The holdout calibration curve is **NTC_B vs NTC_A** (with a bootstrap band).
 - The “Real genes vs A” curve should be interpreted relative to that holdout band.
 - Program-level QQ uses a subset of programs (default: top variance in `betas_df`).
+- Enabling `use_pbar` adds a propensity-fit per unit, so it increases runtime.
 
 #### S-CRT workflow (stratified-permutation)
 
@@ -522,6 +579,9 @@ ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
     seed0=23,
     resampling_method="stratified_perm",
     resampling_kwargs=resampling_kwargs,
+    # If you ran the main CRT with test_stat="utest", pass the same here.
+    # test_stat="utest",
+    # test_stat_kwargs={"use": "clr", "rank_method": "average"},
 )
 ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
     inputs=inputs,
@@ -541,6 +601,9 @@ null_pvals = compute_ntc_group_null_pvals_parallel(
     backend="threading",
     resampling_method="stratified_perm",
     resampling_kwargs=resampling_kwargs,
+    # Keep test_stat/test_stat_kwargs in sync with your main run if needed.
+    # test_stat="utest",
+    # test_stat_kwargs={"use": "clr", "rank_method": "average"},
 )
 
 # 8) QQ plot
@@ -722,6 +785,9 @@ ntc_group_pvals_ens = crt_pvals_for_ntc_groups_ensemble(
     seed0=23,
     resampling_method="stratified_perm",
     resampling_kwargs=resampling_kwargs,
+    # If you ran the main CRT with test_stat="utest", pass the same here.
+    # test_stat="utest",
+    # test_stat_kwargs={"use": "clr", "rank_method": "average"},
 )
 ntc_group_pvals_skew_ens = crt_pvals_for_ntc_groups_ensemble_skew(
     inputs=inputs,
@@ -739,6 +805,9 @@ null_pvals = compute_ntc_group_null_pvals_parallel(
     backend="threading",
     resampling_method="stratified_perm",
     resampling_kwargs=resampling_kwargs,
+    # Keep test_stat/test_stat_kwargs in sync with your main run if needed.
+    # test_stat="utest",
+    # test_stat_kwargs={"use": "clr", "rank_method": "average"},
 )
 ```
 
