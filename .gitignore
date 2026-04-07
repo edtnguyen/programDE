@@ -93,3 +93,22 @@ target/
 *.mtx
 *.mtx
 *.csv
+
+# notebook outputs / artifacts
+notebooks/results/
+notebooks/tony_results/
+
+# common heavy files
+*.h5ad
+*.h5mu
+*.loom
+*.pt
+*.pth
+*.ckpt
+*.pkl
+*.joblib
+*.npy
+*.npz
+*.parquet
+*.pdf
+*.png
