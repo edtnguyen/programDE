@@ -1,0 +1,9 @@
+{
+  "n_all_cells": 121616,
+  "n_primary_program_state_cells": 69453,
+  "n_targets_with_assignments": 298,
+  "n_target_program_state_tests": 4752,
+  "n_classes_displayed": 10,
+  "state_definition": "global dominant cNMF program; primary curated program list; expected-day match",
+  "target_to_program_differential_effects_used": false
+}

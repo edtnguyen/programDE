@@ -1,0 +1,56 @@
+{
+  "output_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/figure4a_like_knockdown_export",
+  "bundle_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/figure4a_like_knockdown_export/fig4a_like_knockdown_plot_input_bundle.zip",
+  "scale_factor": 10000,
+  "guide_threshold": 5,
+  "min_carrier_cells": 10,
+  "min_control_cells": 20,
+  "cell_id_normalization": "auto_basic",
+  "strict_ntc_no_target_guides": false,
+  "ntc_regex": "(?i)(^|[_\\-\\.])(ntc|non.?target|non.?targeting|neg|negative|safe|scramble|control)([_\\-\\.]|$)",
+  "samples": [
+    {
+      "sample_id": "teloHAEC_circular_capture",
+      "dataset_id": "dataset_2_teloHAEC_capture_comparison",
+      "method": "Circular capture",
+      "cell_type": "teloHAEC",
+      "guide_threshold": 5,
+      "gex_format": "h5ad",
+      "guide_format": "h5ad",
+      "gex_h5ad": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/tony_results/GEX2.h5ad",
+      "guide_h5ad": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/tony_results/GUIDE1.h5ad",
+      "guide_mapping_tables": []
+    },
+    {
+      "sample_id": "teloHAEC_CROP_seq",
+      "dataset_id": "dataset_2_teloHAEC_capture_comparison",
+      "method": "CROP-seq",
+      "cell_type": "teloHAEC",
+      "guide_threshold": 5,
+      "gex_format": "h5ad",
+      "guide_format": "h5ad",
+      "gex_h5ad": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/tony_results/CROP_GEX1.h5ad",
+      "guide_h5ad": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/tony_results/CROP_GUIDE1.h5ad",
+      "guide_mapping_tables": []
+    },
+    {
+      "sample_id": "hiPSC_10gene_pilot",
+      "dataset_id": "dataset_3_hiPSC_10gene_pilot",
+      "method": "Circular capture",
+      "cell_type": "hiPSC pilot",
+      "guide_threshold": 5,
+      "gex_format": "parse_mtx",
+      "guide_format": "parse_mtx",
+      "gex_matrix_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/231210_eTN3_iPSC_Pilot/WT_combined/MOI8/DGE_filtered/count_matrix.mtx",
+      "gex_feature_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/231210_eTN3_iPSC_Pilot/WT_combined/MOI8/DGE_filtered/all_genes.csv",
+      "gex_cell_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/231210_eTN3_iPSC_Pilot/WT_combined/MOI8/DGE_filtered/cell_metadata.csv",
+      "guide_matrix_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/231210_eTN3_iPSC_Pilot/crispr_combined/MOI8/guide_RNAs_filtered/count_matrix.mtx",
+      "guide_feature_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/231210_eTN3_iPSC_Pilot/crispr_combined/MOI8/guide_RNAs_filtered/all_guides.csv",
+      "guide_cell_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/231210_eTN3_iPSC_Pilot/crispr_combined/MOI8/guide_RNAs_filtered/cell_metadata.csv",
+      "guide_mapping_tables": [
+        "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/figure_1/eTN3_gRNA_group_table.csv",
+        "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/figure_1/eTN3_gRNA_group_pairs.csv"
+      ]
+    }
+  ]
+}

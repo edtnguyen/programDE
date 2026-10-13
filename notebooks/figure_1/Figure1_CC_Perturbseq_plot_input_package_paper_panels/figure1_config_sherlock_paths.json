@@ -1,0 +1,166 @@
+{
+  "out_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/figure1_cc_capture",
+  "qc_filter_parse": {
+    "min_genes": 300,
+    "max_genes": 10000,
+    "max_counts": 100000,
+    "max_pct_mt": 10
+  },
+  "qc_filter_h5ad": {
+    "min_genes": 100,
+    "max_genes": null,
+    "max_counts": null,
+    "max_pct_mt": 25
+  },
+  "datasets": {
+    "ipsc_single_cc": {
+      "enabled": true,
+      "type": "parse_embedded_guides",
+      "matrix_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230820_eTN2_iPSC_mixed/panmg/BS3/DGE_filtered",
+      "guide_feature_regex": "sg_",
+      "dataset_id": "ipsc_single_guide",
+      "sample_id": "hiPSC_circular_capture",
+      "method": "Circular capture",
+      "cell_type": "hiPSC",
+      "guide_threshold": 5,
+      "assignment_mode": "single_guide"
+    },
+    "ipsc_single_crop": {
+      "enabled": true,
+      "type": "parse_embedded_guides",
+      "matrix_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230621_Tri_guide_iPSCs/iPSC/iPSC_guide/DGE_filtered",
+      "guide_feature_regex": "b08|sg_",
+      "dataset_id": "ipsc_single_guide",
+      "sample_id": "hiPSC_CROP_seq",
+      "method": "CROP-seq",
+      "cell_type": "hiPSC",
+      "guide_threshold": 5,
+      "assignment_mode": "single_guide"
+    },
+    "telohaec_cc": {
+      "enabled": true,
+      "type": "h5ad_pair",
+      "root_dir": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/tony_results",
+      "gex_h5ad": "GEX2.h5ad",
+      "guide_h5ad": "GUIDE1.h5ad",
+      "dataset_id": "telohaec_capture_comparison",
+      "sample_id": "teloHAEC_circular_capture",
+      "method": "Circular capture",
+      "cell_type": "teloHAEC",
+      "guide_threshold": 5,
+      "assignment_mode": "high_moi",
+      "gex_layers_to_sum": [
+        "ambiguous",
+        "mature",
+        "nascent"
+      ]
+    },
+    "telohaec_crop": {
+      "enabled": true,
+      "type": "h5ad_pair",
+      "root_dir": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/tony_results",
+      "gex_h5ad": "CROP_GEX1.h5ad",
+      "guide_h5ad": "CROP_GUIDE1.h5ad",
+      "dataset_id": "telohaec_capture_comparison",
+      "sample_id": "teloHAEC_CROP_seq",
+      "method": "CROP-seq",
+      "cell_type": "teloHAEC",
+      "guide_threshold": 3,
+      "assignment_mode": "high_moi",
+      "gex_layers_to_sum": [
+        "ambiguous",
+        "mature",
+        "nascent"
+      ]
+    },
+    "ipsc_pilot_cc": {
+      "enabled": true,
+      "type": "parse_separate_gex_guides",
+      "gex_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/231210_eTN3_iPSC_Pilot/WT_combined/MOI8",
+      "guide_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/231210_eTN3_iPSC_Pilot/crispr_combined/MOI8",
+      "dataset_id": "ipsc_10gene_pilot",
+      "sample_id": "hiPSC_10gene_pilot",
+      "method": "Circular capture",
+      "cell_type": "hiPSC pilot",
+      "guide_threshold": 5,
+      "assignment_mode": "high_moi",
+      "guide_target_table": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/figure_1/eTN3_gRNA_group_table.csv",
+      "guide_group_pairs": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/figure_1/eTN3_gRNA_group_pairs.csv",
+      "guide_id_col": "grna_id",
+      "target_col": "grna_target"
+    }
+  },
+  "saturation": {
+    "enabled": true,
+    "read_counts": [
+      1000000,
+      3000000,
+      10000000,
+      30000000
+    ],
+    "curves": [
+      {
+        "dataset_id": "telohaec_capture_comparison",
+        "sample_id": "teloHAEC_circular_capture_guide_saturation",
+        "method": "Circular capture",
+        "cell_type": "teloHAEC",
+        "modality": "guide",
+        "pattern": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/tony_results/GUIDE_S1.{reads}_kb_kite/counts_unfiltered_modified/adata.h5ad",
+        "cells_from_sample_id": "teloHAEC_circular_capture"
+      },
+      {
+        "dataset_id": "telohaec_capture_comparison",
+        "sample_id": "teloHAEC_CROP_seq_guide_saturation",
+        "method": "CROP-seq",
+        "cell_type": "teloHAEC",
+        "modality": "guide",
+        "pattern": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/tony_results/CROP_GUIDE1_S4.{reads}_kb_kite/counts_unfiltered_modified/adata.h5ad",
+        "cells_from_sample_id": "teloHAEC_CROP_seq"
+      }
+    ],
+    "transcriptome_saturation_note": "True hiPSC GEX/transcriptome saturation inputs are still needed for manuscript panel 1d saturation. The pipeline exports a transcriptome UMI/QC fallback until those paths are added."
+  },
+  "upload_bundle": {
+    "max_cells_per_sample": 50000,
+    "include_full_cell_metrics": false,
+    "histogram_bins": 80
+  },
+  "guide_annotations": {
+    "ipsc_pilot": {
+      "guide_target_table": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/figure_1/eTN3_gRNA_group_table.csv",
+      "guide_group_pairs": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/figure_1/eTN3_gRNA_group_pairs.csv"
+    }
+  },
+  "handoff": {
+    "enabled": true,
+    "out_dir": null,
+    "max_cells_per_group": 20000,
+    "random_seed": 1729,
+    "include_full_cell_metrics": false
+  },
+  "optional_panels": {
+    "primer_optimization_tables": [],
+    "read_origin_tables": [],
+    "replicate_count_tables": [],
+    "bulk_guide_count_tables": [],
+    "target_knockdown": [
+      {
+        "enabled": false,
+        "gex_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/231210_eTN3_iPSC_Pilot/WT_combined/MOI8",
+        "guide_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/231210_eTN3_iPSC_Pilot/crispr_combined/MOI8",
+        "guide_target_table": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/figure_1/eTN3_gRNA_group_table.csv",
+        "dataset_id": "ipsc_10gene_pilot",
+        "sample_id": "hiPSC_10gene_pilot",
+        "method": "Circular capture",
+        "cell_type": "hiPSC pilot",
+        "guide_threshold": 5,
+        "assignment_mode": "high_moi",
+        "guide_id_col": "grna_id",
+        "target_col": "grna_target"
+      }
+    ]
+  },
+  "notes": {
+    "telohaec_root_dir_interpretation": "The user supplied /oak/.../tony_results/CROP_GEX1.h5ad. The config uses the parent directory /oak/.../tony_results as root_dir for all four h5ad files and kb_kite folders."
+  }
+}

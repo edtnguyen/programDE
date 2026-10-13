@@ -1,0 +1,25 @@
+program_number	program_id	expected_day	program_name	representative_genes	use_in_primary	use_in_expanded_sensitivity	curation_status	curation_note	plot_order
+7	P7	D0	Pluripotency	L1TD1;DPPA4;TERF1;SOX2	True	True	curated	Included in first-table curated set	1
+22	P22	D0	Pluripotency	POU5F1;TDGF1;DNMT3B	True	True	curated	Included in first-table curated set	2
+29	P29	D0	Pluripotency	ESRG;DPPA4;NANOG	True	True	curated	Included in first-table curated set	3
+28	P28	D1	Primitive streak	MIXL1;TBXT;SP5	True	True	curated	Included in first-table curated set	4
+13	P13	D1	Posterior primitive streak	NKD1;CDX2;MSX1	True	True	curated	Included in first-table curated set	5
+30	P30	D1	Primitive streak, BMP-repressed 1	DKK1;NKD1;TBXT	True	True	curated	Included in first-table curated set	6
+48	P48	D1	Primitive streak, BMP-repressed 2	NKD1;TBXT;WLS	True	True	curated	Included in first-table curated set	7
+15	P15	D2	Vascular progenitor	TAL1;FLI1;SOX7	True	True	reviewed named	Named in first table and retained for primary analysis	8
+14	P14	D2	Lateral mesoderm	HAND1;HAND2	True	True	reviewed named	Named in first table and retained for primary analysis	9
+17	P17	D2	Lateral mesoderm, YAP/TAZ-induced	KRT8;KRT18;ANKRD1	True	True	reviewed named	Named in first table and retained for primary analysis	10
+33	P33	D3	Anterior-like mesoderm	CER1;LHX1;OTX2;CYP26A1	True	True	curated	Included in first-table curated set	11
+34	P34	D3	Mesenchyme, YAP/TAZ-induced	ANKRD1;KRT8;KRT18	True	True	curated	Included in first-table curated set	12
+2	P2	D3	Artery endothelium 1	MECOM;NRP1;EFNB2	True	True	curated	Included in first-table curated set	13
+3	P3	D3	Endothelial function 1	ESM1;ESAM;CDH5	True	True	curated	Included in first-table curated set	14
+8	P8	D3	Artery endothelium 2	NOTCH1;SOX17;UNC5B;SEMA3G	True	True	curated	Included in first-table curated set	15
+11	P11	D3	Endothelial function 2	EDN1;ANGPT2;PDGFB	True	True	curated	Included in first-table curated set	16
+23	P23	D2	Vascular lateral mesoderm	KDR;ETV2	False	True	flagged	First table recommends removal from Fig. 2G because selected knockdowns weakly affect it	17
+19	P19	D2	Unknown mesoderm	WNT8A;WNT5A;PTCH1	False	True	provisional	First table suggests possible removal	18
+27	P27	D3	Unresolved alternative mesoderm	GATA4;RSPO2;SLIT3;NRP2;COL3A1;COL1A1;FN1	False	True	unresolved	First table requests further review	19
+24	P24	D3	Unresolved HOX/mesenchymal program	HOXD10;LEFTY2;TGFBI;HOTAIR;HMGA2;MLLT3	False	True	unresolved	Identity unresolved in first table	20
+6	P6		Eliminated		False	False	eliminate	Marked to eliminate in first table	90
+21	P21		Eliminated		False	False	eliminate	Marked to eliminate in first table	91
+35	P35		Eliminated		False	False	eliminate	Marked to eliminate in first table	92
+42	P42		Eliminated		False	False	eliminate	Marked to eliminate in first table	93

@@ -1,0 +1,6 @@
+sceptre_version=0.10.3
+sceptre_path=/oak/stanford/groups/engreitz/Users/tri/envs/sceptre_env/lib/R/library/sceptre
+result_source=fresh_sceptre_rerun
+q_threshold=0.05
+n_pairs=281
+n_qc_passing=243

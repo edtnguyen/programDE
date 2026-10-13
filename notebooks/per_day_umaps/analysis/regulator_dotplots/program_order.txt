@@ -1,0 +1,29 @@
+# Program order for regulator dotplots
+# One program number per line. Lines starting with # are comments.
+# Blank lines separate day groups (for visual spacing in the plot).
+# Updated to remove programs marked "to eliminate" in Program annotation notes.
+# P19 assigned to Day 2 only; P33 assigned to Day 3 only.
+
+# Day 0 programs
+22
+29
+7
+
+# Day 1 programs
+28
+30
+13
+48
+
+# Day 2 programs
+15
+17
+14
+
+# Day 3 programs
+2
+3
+8
+11
+33
+34

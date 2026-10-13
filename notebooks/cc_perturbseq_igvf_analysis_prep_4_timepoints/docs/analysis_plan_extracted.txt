@@ -1,0 +1,298 @@
+IGVF DACC Analysis Plan for CC-Perturb-Seq Data
+CC-Perturb-seq current run + future IGVF CRISPR_Pipeline run + PerturbNMF gene program analysis
+Contents
+1. Purpose and scope
+2. Main recommendation
+3. DACC terms used in this plan
+4. Overall workflow
+5. Current run and future run
+6. Input files to prepare
+7. Step-by-step analysis plan
+8. Output files to submit or keep for review
+9. Software and version records
+10. QC and documentation
+11. DACC submission checklist
+12. Questions for DACC
+Appendix A. Suggested GitHub repository layout
+Appendix B. Source documents and URLs
+1. Purpose and scope
+This document explains how to describe the analysis of CC-Perturb-seq data for an IGVF DACC submission. It covers the current analysis, which uses CC-Perturb-seq for FASTQ preprocessing, matrix generation, and differential gene expression analysis, and PerturbNMF for cNMF gene program analysis. It also explains how to organize files so the submission can line up with the IGVF CRISPR_Pipeline later.
+The goal is to make the submission clear, reviewable, and easy to update after a future rerun with the IGVF CRISPR_Pipeline. The plan keeps a clear record of which software made each file.
+The current plan covers four main parts: FASTQ preprocessing and matrix generation; differential or cis/trans analysis; PerturbNMF gene program analysis; and final summary tables, plots, and reports.
+2. Main recommendation
+This keeps the current submission close to what we already have while still making it easy to move to the IGVF CRISPR_Pipeline structure later.
+3. DACC terms used in this plan
+Some DACC object names are technical and should stay in the document because they are portal terms. The table below gives a simple meaning for each term.
+4. Overall workflow
+The workflow should be described as one overall analysis with four main steps. Step 2 and Step 3 both start from the processed cell x gene/guide matrix. Step 4 summarizes the PerturbNMF results.
+5. Current run and future run
+The current analysis and the future IGVF CRISPR_Pipeline rerun should be connected, but they should not be mixed together. The table below shows how to describe each step now and how to update it later.
+6. Input files to prepare
+The main change from the earlier draft is to make a standard set of input files that resembles the IGVF CRISPR_Pipeline input structure. These files can be generated from the current CC-Perturb-seq metadata and kept with the current submission.
+This does not mean the current data were run with CRISPR_Pipeline. It only means the current metadata are organized in a way that will make a future rerun easier to compare.
+6.1 Standard input file set
+6.2 Samplesheet column crosswalk
+6.3 Current CC-Perturb-seq inputs mapped to the future pipeline format
+7. Step-by-step analysis plan
+7.1 Step 1 - Process FASTQs, assign guides, and create the main matrix
+Minimum QC for Step 1: total reads per library, mapped reads/percentage, UMI saturation, cell calling method and threshold, number of called cells, genes/UMIs per cell, mitochondrial percentage, guide UMI distribution, cells with one/multiple/no guide, guide diversity, batch/plate/well representation, barcode recovery behavior, and final matrix dimensions.
+7.2 Step 2 - Make differential results and cis/trans tables when supported
+Minimum QC for Step 2: model formula, covariates, normalization method, guide filtering threshold, cells per guide/target, control guide set, guide-to-target grouping rule, cis distance or predefined-pair rule if used, multiple testing correction, effect size units, p-value/q-value definitions, and a column dictionary for each TSV.
+7.3 Step 3 - Run PerturbNMF gene program analysis
+Minimum QC for Step 3: input matrix layer and dimensions, filters before cNMF, K grid, selected K, threshold, random seeds, CPU/GPU path, reconstruction error, explained variance, stability, program count, enrichment results, perturbation sensitivity method, calibration method, and non-targeting guide behavior.
+7.4 Step 4 - Prepare final summaries and reports
+Minimum QC for Step 4: final selected K, retained and excluded program counts, exclusion reasons, program label rules, annotation evidence, external data sources, manual review status of any LLM-generated annotations, and final list of tables/figures to release.
+8. Output files to submit or keep for review
+This section lists the current files, the future CRISPR_Pipeline-style files, and the likely DACC object or content_type. The current submission should include files that actually exist, plus only conversions that were generated with documented code.
+8.1 Minimal current-run submission package
+Native CC-Perturb-seq MatrixFile: annotated cell x gene/guide h5ad, or matrix tar/MTX plus cell/gene/guide annotations.
+Generated metadata files: original_samplesheet.tsv, guide_metadata.tsv, barcode/sample/well maps, reference_manifest.tsv, run_parameters.tsv, software_versions.yml or TSV.
+Current differential output tables, using generic DACC content_type labels unless the current outputs are truly cis/trans.
+PerturbNMF program outputs: cNMF h5mu if accepted, plus flattened gene program and regulator TSVs.
+QC tables and column dictionaries for every submitted TSV/CSV.
+8.2 Future CRISPR_Pipeline rerun package
+Use the same samplesheet and resource files, updated with the exact CRISPR_Pipeline run settings.
+Submit CRISPR_Pipeline outputs: inference_mudata.h5mu, cis_per_guide_output.tsv.gz, cis_per_element_output.tsv.gz, trans_per_guide_output.tsv.gz, trans_per_element_output.tsv.gz, and catalog_per_element_output.tsv.gz if DACC accepts it.
+Create new AnalysisStepVersion records for Step 1 and Step 2 rather than changing the current CC-Perturb-seq records.
+Run or relink PerturbNMF Step 3 using the CRISPR_Pipeline h5mu/RNA modality as input. Reuse current PerturbNMF links only if the actual input matrix is unchanged.
+9. Software and version records
+DACC will need Software and SoftwareVersion records for each main tool used in an AnalysisStepVersion. Use exact tags when possible. If a tag is not available, ask DACC whether an exact commit SHA and archive URL are acceptable.
+10. QC and documentation
+Each submitted table should have enough information for DACC and later users to understand how it was made. At minimum, include run parameters, software versions, QC metrics, and a column dictionary.
+10.1 Column dictionary
+Create a column dictionary for each submitted TSV/CSV, or one combined dictionary if easier. This helps DACC review the files and makes the tables easier to reuse.
+11. DACC submission checklist
+Create the combined workflow GitHub repository and tag it, for example v0.1.0-dacc-draft or v1.0.0 when finalized.
+Tag the exact CC-Perturb-seq and PerturbNMF code versions used, or document exact commit SHAs and archive URLs accepted by DACC.
+Check whether Software and SoftwareVersion records already exist in the portal; create missing ones with DACC.
+Finalize the four AnalysisStep records, including step_label, title, parent step, analysis_step_types, input_content_types, and output_content_types.
+Create AnalysisStepVersion records and link each one to the correct SoftwareVersion records.
+Generate the standard input files: original_samplesheet.tsv, seqspec files, guide_metadata.tsv, barcode files, reference_manifest.tsv, run_parameters file, and software_versions file.
+Generate a file manifest with submitted_file_name, md5sum, file_format, content_type, reference_files, derived_from, file_set or analysis_set, controlled_access, and analysis_step_version for each submitted output.
+Create column dictionaries for every TSV/CSV output.
+Run DACC validation/checkfiles on TSV/CSV outputs where applicable and revise files as needed.
+Prepare a short README for reviewers that explains the current CC-Perturb-seq run and the future CRISPR_Pipeline rerun plan.
+12. Questions for DACC
+1. Should Step 4 reporting be a separate AnalysisStep, or should it be merged into Step 3 because it mostly summarizes PerturbNMF outputs?
+3. For the current matrix, should native h5ad remain primary, or should we also provide a converted h5mu?
+4. Which content_type should be used for catalog_per_element_output.tsv.gz?
+5. For current differential outputs, should we use generic differential content types unless the outputs are explicitly cis/trans?
+6. Should HTML/PDF/Excel reports and plots be submitted to the portal, or kept as QC/supporting review files?
+7. Which software dependencies should be separate SoftwareVersion records versus recorded only in the environment or software_versions file?
+8. Which Software objects already exist in the portal, and which custom records need DACC creation before file submission?
+Appendix A. Suggested GitHub repository layout
+DACC will likely ask for a source_url for the Workflow. A small GitHub repository can hold the workflow description, file lists, and exact commands used for the submission.
+Appendix B. Source documents and URLs
+
+[TABLE 1]
+Core recommendation | Use one IGVF Workflow with four AnalysisStep objects. For the current analysis, link Step 1 and any current differential analysis to the software that was actually used. After a future rerun with IGVF CRISPR_Pipeline, create new AnalysisStepVersion records for the rerun instead of changing the current records.
+
+[TABLE 2]
+Topic	Decision
+Overall workflow	Create one Workflow object for the whole CC-Perturb-seq plus PerturbNMF analysis.
+Main steps	Use four AnalysisStep objects: preprocessing/matrix generation; differential or cis/trans results; PerturbNMF gene programs; final interpretation/reporting.
+Current files	CC-Perturb-seq made the current preprocessing outputs. If differential results were made by custom scripts, list those scripts or the custom analysis repository.
+Future files	After rerunning with IGVF CRISPR_Pipeline, make new AnalysisStepVersion records for the rerun. Do not overwrite the current records.
+Input/output matching	Prepare the current metadata in a format that looks like the CRISPR_Pipeline samplesheet and resource files whenever possible.
+PerturbNMF	Keep PerturbNMF as a downstream analysis step that starts from the cell x gene count matrix.
+
+[TABLE 3]
+Important rule | Do not say that IGVF CRISPR_Pipeline made current files unless the data are actually rerun with that pipeline. For the current submission, CRISPR_Pipeline should be described as the target structure for a future rerun.
+
+[TABLE 4]
+DACC term	Simple meaning	How we use it here
+Workflow	The full analysis from input files to final outputs.	One Workflow for the whole CC-Perturb-seq/PerturbNMF analysis.
+Software	A tool or pipeline used in the analysis.	CC-Perturb-seq, IGVF CRISPR_Pipeline, PerturbNMF, and possibly major helper tools.
+SoftwareVersion	The exact version of a tool.	Use a tag, release, or exact commit SHA accepted by DACC.
+AnalysisStep	One major stage of the workflow.	Four steps: preprocessing, differential/cis-trans results, PerturbNMF, reporting.
+AnalysisStepVersion	A record of how one step was run.	One record for the current CC-Perturb-seq run; new records after a future CRISPR_Pipeline rerun.
+MatrixFile	A matrix-style file such as h5ad, h5mu, or MTX.	Use for cell x gene/guide matrices and possibly program score/loading matrices.
+TabularFile	A table such as TSV or CSV.	Use for guide counts, gene counts, differential results, gene programs, QC, and parameter tables.
+content_type	DACC label for what a file contains.	Choose labels such as guide quantifications, gene programs, or cis differential expression quantifications per guide.
+
+[TABLE 5]
+Raw FASTQs + sample metadata + reference files |   -> Step 1: process FASTQs, count genes/guides, assign guides, create matrix |        -> annotated cell x gene/guide matrix + guide/gene counts + QC |  |   -> Step 2: make guide/gene/element differential results; add cis/trans results if valid |        -> guide-level and element/gene-level result tables |  |   -> Step 3: run PerturbNMF cNMF gene program analysis |        -> gene program matrix, program tables, scores, and metrics |  |   -> Step 4: make final summary tables, plots, and reports |        -> program annotations, regulator summaries, figures/reports if DACC wants them
+
+[TABLE 6]
+Workflow node	What happens	Main output used later
+Inputs	Start with raw sequencing files and metadata.	GEX/scRNA FASTQs, gRNA FASTQs, optional hash FASTQs, samplesheet, seqspecs, guide metadata, barcode list, and reference files.
+Step 1	Process FASTQs, count RNA and guide features, assign guides to cells, filter cells/features, and make the main matrix.	Annotated h5ad/h5mu or MTX matrix; guide/gene count tables; cell annotations; sample/well maps; QC tables.
+Step 2	Make perturbation result tables at guide, gene, and/or element level. Add cis/trans tables only when the analysis supports those labels.	Differential guide, gene, and element tables; local/cis and global/trans tables if applicable.
+Step 3	Use PerturbNMF to find gene programs from the count matrix and evaluate them.	cNMF h5mu, gene program tables, program scores/loadings, quality metrics, perturbation-program association tables.
+Step 4	Make final interpretation outputs for review and possible submission.	Selected K/threshold summary, program annotations, regulator tables, plots, and reports if DACC accepts them.
+
+[TABLE 7]
+Step	Current record to create	Future record after IGVF CRISPR_Pipeline rerun
+Step 1: preprocessing, guide assignment, matrix generation	SoftwareVersion: CC-Perturb-seq vTBD or exact commit SHA. Outputs: current annotated h5ad/MTX, guide counts, QC tables, and optional h5mu conversion if created by documented code.	SoftwareVersion: IGVF CRISPR_Pipeline vTBD/tag. Outputs: inference_mudata.h5mu or equivalent post-guide-assignment MuData, plus pipeline metadata and QC files.
+Step 2: differential or cis/trans results	SoftwareVersion: current CC-Perturb-seq downstream scripts or custom analysis repository. Use generic DACC labels unless the current output is clearly cis or trans.	SoftwareVersion: IGVF CRISPR_Pipeline. Outputs: cis_per_guide, cis_per_element, trans_per_guide, trans_per_element, and catalog_per_element files.
+Step 3: PerturbNMF gene programs	SoftwareVersion: PerturbNMF vTBD or exact commit SHA. Input: current cell x gene matrix from h5ad or h5mu.	Usually the same PerturbNMF software. Input: RNA modality counts from CRISPR_Pipeline h5mu or exported h5ad.
+Step 4: interpretation and reporting	SoftwareVersion: PerturbNMF or reporting code. Submit summary tables if DACC accepts them. Keep reports as review files if DACC does not want them in the portal.	Same step. Update only if the report code or final outputs change.
+
+[TABLE 8]
+File or resource	Why it is needed	How to make it for the current run
+original_samplesheet.tsv	Lists each FASTQ pair, modality, lane, run, and related sample information.	Generate from sample_info.xlsx, plate_map.xlsx, and the FASTQ file manifest. Use one row per FASTQ pair/modality/lane as needed.
+rna_seqspec.yml	Describes the RNA read structure, including barcode and UMI layout.	Create from the assay chemistry and the current CC-Perturb-seq/Parse settings.
+guide_seqspec.yml	Describes the guide read structure and how guides are found.	Create from the guide library and assay design. Note any tag replacement or barcode recovery rules.
+hash_seqspec.yml	Describes hashing reads, if hashing was used.	Include only if hashing or multiplexing libraries exist.
+barcode_onlist.txt	Lists valid cell barcodes.	Use the Parse, 10x, or assay-specific barcode list used for the current run.
+guide_metadata.tsv	Lists guides and their target genes/elements.	Generate from guides.txt, guides_qc_reference.txt, and guide design annotations.
+hash_metadata.tsv and barcode_hashtag_map.tsv	Maps hashtags to samples, if hashing was used.	Generate from current hashing/sample metadata if available.
+reference_manifest.tsv	Lists genome, transcriptome, GTF, guide reference, and barcode reference files.	Create a table with file names, versions, source URLs, checksums if available, and which step used each file.
+run_parameters.tsv or run_parameters.yml	Records key settings used for the run.	Export from the CC-Perturb-seq config YAML and any custom script parameters.
+software_versions.yml or software_versions.tsv	Records exact software versions or commits.	Use tags or commit SHAs for CC-Perturb-seq, PerturbNMF, and major dependencies if DACC wants them.
+column_dictionary.tsv	Explains every column in every TSV/CSV output.	Create one dictionary for submitted tables or one dictionary per output group.
+
+[TABLE 9]
+CRISPR_Pipeline-like column	Meaning	Current source
+R1_path	Read 1 FASTQ file.	FASTQ manifest and sample_info.xlsx.
+R2_path	Read 2 FASTQ file.	FASTQ manifest and sample_info.xlsx.
+file_modality	Library type such as scRNA, gRNA, or hash.	Map current GEX to scRNA; guide libraries to gRNA; hash libraries to hash.
+measurement_sets	IGVF measurement set or analysis grouping.	Use IGVF identifiers once assigned; use TBD placeholders in draft files.
+sequencing_run	Sequencing run identifier.	Sequencing metadata or sample naming convention.
+lane	Sequencing lane.	FASTQ name or sequencing metadata.
+seqspec	YAML file describing read structure.	rna_seqspec.yml, guide_seqspec.yml, or hash_seqspec.yml.
+barcode_onlist	Cell barcode list.	barcode_onlist.txt.
+guide_design	Guide design table.	guide_metadata.tsv.
+barcode_hashtag_map	Hash/sample map if hashing was used.	barcode_hashtag_map.tsv.
+
+[TABLE 10]
+Current CC-Perturb-seq item	Future-friendly file or table	Note
+sample_info.xlsx	original_samplesheet.tsv and run_parameters.tsv	Keep the original Excel file, but generate TSV files for DACC review and future rerun planning.
+plate_map.xlsx	barcode-to-well mapping, barcode-to-sample mapping, and cell annotations	Keep sample, replicate, plate, well, and batch information.
+GEX FASTQs	samplesheet rows with file_modality = scRNA	Use exact portal file accessions or paths, sequencing run, lane, and RNA seqspec.
+Guide FASTQs	samplesheet rows with file_modality = gRNA	Use guide seqspec and guide_metadata.tsv.
+Hash FASTQs, if present	samplesheet rows with file_modality = hash	Include hash seqspec and barcode_hashtag_map.tsv.
+guides.txt and guides_qc_reference.txt	guide_metadata.tsv	Include guide ID, guide sequence, target gene/element, genomic coordinates if available, and control status.
+config YAML	run_parameters.yml or run_parameters.tsv	Include only parameters needed to reproduce the run or explain the outputs.
+barcode whitelist or barcode replacement resources	barcode_onlist.txt and barcode_replacement.tsv if used	Describe barcode correction or replacement behavior clearly.
+transcriptome/reference resources	reference_manifest.tsv	Record genome build, transcriptome index, GTF, and source/checksum where available.
+CC-Perturb-seq output h5ad/MTX	current primary matrix; optional h5mu conversion	Native h5ad can remain the primary current-run matrix. Convert to h5mu only if code is documented.
+
+[TABLE 11]
+Field	Draft value
+Draft step_label	perturbseq-preprocessing-guide-assignment-matrix-step
+Title	Perturb-seq preprocessing, guide assignment, and matrix generation
+Parent step	None
+Purpose	Turn raw FASTQs and assay metadata into cell x gene/guide matrices, guide assignments, cell annotations, and QC tables.
+Current AnalysisStepVersion	CC-Perturb-seq vTBD or exact commit SHA. Use for the present analysis.
+Future AnalysisStepVersion	IGVF CRISPR_Pipeline vTBD/tag after rerun.
+Inputs	GEX/scRNA FASTQs, guide FASTQs, optional hash FASTQs, samplesheet, seqspecs, guide metadata, barcode list, plate/sample/well maps, config, and reference files.
+Main current outputs	Annotated h5ad and/or MTX matrix, guide assignments/counts, cell calling outputs, gene annotations, sample/well maps, read statistics, QC metrics, saturation outputs, and run settings.
+DACC file objects	MatrixFile for h5ad/h5mu/MTX outputs. TabularFile for guide counts, gene counts, cell annotations, barcode maps, read counts, and parameter tables.
+
+[TABLE 12]
+Current output	Future CRISPR_Pipeline-style target	DACC handling
+Annotated h5ad and/or MTX matrix from CC-Perturb-seq	inference_mudata.h5mu or equivalent MuData after future rerun; optional current h5mu conversion	MatrixFile. Current native h5ad can remain primary. If h5mu conversion is created, include the conversion code and links back to the source matrix.
+Guide assignment/count tables	Guide tables in h5mu plus exported guide_quantifications.tsv.gz	TabularFile: guide quantifications; possibly cell annotations for per-cell guide assignment.
+Cell calling and filtering outputs	Cell annotation and QC fields in h5mu/AnnData obs plus exported cell_annotations.tsv.gz	TabularFile: cell annotations; MatrixFile if stored inside the matrix.
+Sample and well maps	barcode_to_sample_mapping.tsv.gz and barcode_to_well_mapping.tsv.gz	TabularFile: barcode to sample mapping; barcode to well mapping.
+Read statistics and QC outputs	pipeline_qc_metrics.tsv.gz, read_count_qc.tsv.gz, pipeline_dashboard.tar.gz if accepted	TabularFile for TSV summaries. Ask DACC whether dashboard/report archives should be submitted.
+
+[TABLE 13]
+Field	Draft value
+Draft step_label	perturbseq-cis-trans-differential-quantification-step
+Title	Perturb-seq differential results and cis/trans analysis
+Parent step	perturbseq-preprocessing-guide-assignment-matrix-step
+Purpose	Generate guide-level, gene-level, element-level, local/cis, and/or global/trans result tables.
+Current AnalysisStepVersion	Use the current CC-Perturb-seq downstream scripts or custom analysis repository. Record the exact script, commit, model settings, and input files.
+Future AnalysisStepVersion	Use IGVF CRISPR_Pipeline after rerun.
+Inputs	Annotated cell x gene/guide matrix, guide-to-target annotations, cell/sample metadata, batch or replicate covariates, control guides, and analysis parameters.
+Current output labels	Use generic differential content types unless the current results really meet cis/trans definitions.
+Future output labels	Use CRISPR_Pipeline output files and the DACC cis/trans content types if accepted by DACC.
+
+[TABLE 14]
+Future CRISPR_Pipeline file	Simple meaning	Candidate DACC content_type
+cis_per_guide_output.tsv.gz	Guide-level nearby/cis differential expression results.	cis differential expression quantifications per guide
+cis_per_element_output.tsv.gz	Element-level nearby/cis results combined across guides for each element.	cis differential expression quantifications per element
+trans_per_guide_output.tsv.gz	Guide-level global/trans differential expression results.	trans differential expression quantifications per guide
+trans_per_element_output.tsv.gz	Element-level global/trans results combined across guides for each element.	trans differential expression quantifications per element
+catalog_per_element_output.tsv.gz	Per-element table meant for catalog-style review or release.	Ask DACC which content_type to use.
+
+[TABLE 15]
+Rule for current Step 2 labels | Use cis/trans-specific DACC labels only if the current output was actually made as local/cis or global/trans differential expression. Otherwise use generic labels such as differential guide quantifications, differential element quantifications, or differential gene expression quantifications.
+
+[TABLE 16]
+Field	Draft value
+Draft step_label	perturbnmf-gene-program-inference-step
+Title	PerturbNMF cNMF gene program analysis and evaluation
+Parent step	perturbseq-preprocessing-guide-assignment-matrix-step; also Step 2 if differential results are used as inputs.
+Purpose	Find groups of genes that vary together and test how perturbations relate to those gene programs.
+AnalysisStepVersion	PerturbNMF vTBD/tag or exact commit SHA.
+Inputs	counts.h5ad cell x gene matrix or RNA counts exported from h5mu; guide annotation table; optional normalized counts; K grid; threshold; random seeds; optional GTF, motif, GWAS, or OpenTargets resources.
+Main outputs	cNMF_{K}_{thresh}.h5mu, gene program loading tables, program score tables, perturbation-program association tables, evaluation metrics, calibration outputs, annotation/regulator tables.
+DACC file objects	MatrixFile for h5mu/h5ad if accepted. TabularFile for gene programs, gene program regulators, program metrics, calibration tables, and parameter tables.
+
+[TABLE 17]
+PerturbNMF output	DACC handling	Notes
+cNMF_{K}_{thresh}.h5mu	MatrixFile if DACC accepts h5mu as a matrix-like gene program output; otherwise keep as an analysis artifact and submit flattened TSV tables.	Link back to the h5ad/h5mu input matrix.
+program_gene_loadings.tsv.gz	TabularFile: gene programs.	Include program ID, gene ID/symbol, loading/score, rank, selected K, threshold, and run metadata.
+cell_program_scores.tsv.gz or perturbation_program_scores.tsv.gz	Ask DACC which content_type to use.	May be large. Submit only if DACC wants score matrices or flattened score tables.
+program_regulators.tsv.gz	TabularFile: gene program regulators.	Include evidence/source columns and ranking/statistics.
+program_metrics.tsv.gz and calibration tables	TabularFile if DACC accepts them; otherwise keep in the QC package.	If no specific metric content_type exists, ask DACC before upload.
+
+[TABLE 18]
+Field	Draft value
+Draft step_label	perturbnmf-program-interpretation-reporting-step
+Title	PerturbNMF program interpretation, summaries, and reporting
+Parent step	perturbnmf-gene-program-inference-step
+Purpose	Finalize selected gene programs, add program names/annotations, summarize regulators/enrichments, and make review plots or reports.
+AnalysisStepVersion	PerturbNMF vTBD plus reporting packages if DACC wants those tracked.
+Inputs	PerturbNMF h5mu, evaluation CSVs, calibration results, selected K/threshold, guide/gene annotations, and any external annotation sources.
+Main outputs	K-selection summary, program summary tables, regulator tables, annotation tables, Excel summary, HTML/PDF report, and plots.
+DACC handling	Submit table outputs if accepted. Ask DACC whether report files and plots should be uploaded or kept as QC/supporting review files.
+
+[TABLE 19]
+Output group	Current-run file pattern	Future-friendly pattern and likely DACC label
+Input metadata	sample_info.xlsx, plate_map.xlsx, config YAML, generated original_samplesheet.tsv, reference_manifest.tsv	original_samplesheet.tsv, rna_seqspec.yml, guide_seqspec.yml, barcode_onlist.txt, guide_metadata.tsv. TabularFile: pipeline parameters, barcode maps, guide references where applicable.
+Preprocessing matrices	*.h5ad; *.mtx or matrix tar from CC-Perturb-seq	inference_mudata.h5mu after future rerun; optional exported h5ad. MatrixFile: annotated cell by gene and guide matrix; cell by gene and guide matrix; cell by gene matrix; cell by guide matrix.
+Preprocessing annotations and QC	cell annotations, guide assignments, read statistics, cell calling summaries, QC metrics, saturation outputs	pipeline_qc_metrics.tsv.gz, read_count_qc.tsv.gz, cell_annotations.tsv.gz. TabularFile: cell annotations, guide quantifications, gene quantifications, read count, pipeline parameters.
+Differential or cis/trans outputs	current guide-level, gene-level, or element-level differential results	cis_per_guide, cis_per_element, trans_per_guide, trans_per_element, catalog_per_element. Use cis/trans DACC labels only when applicable; otherwise use generic differential labels.
+PerturbNMF matrices	cNMF_{K}_{thresh}.h5mu; optional normalized counts h5ad	Same. MatrixFile if h5mu/h5ad is accepted; otherwise submit flattened program tables.
+PerturbNMF tables	gene loading table, program scores, perturbation-program associations, evaluation metrics, calibration tables, regulator/annotation tables	TabularFile: gene programs, gene program regulators, pipeline parameters, or DACC-confirmed metric table type.
+Reports and figures	HTML report, PDF report, Excel summary, K-selection plots, program plots, perturbation plots	Ask DACC whether these should be portal files. If not, keep them as QC/supporting review files and submit the key results as TSV/CSV tables.
+
+[TABLE 20]
+Software or workflow item	DACC action	Draft metadata and notes
+Combined workflow GitHub repository	Create a new repository and tag it.	Use as the Workflow source_url. Include README, workflow diagram, step list, input/output file list, run commands, config templates, environment files, and links to component software. Suggested name: cc-perturbseq-perturbnmf-igvf-analysis.
+CC-Perturb-seq	Create Software if absent; create SoftwareVersion for the exact current code.	Name: cc-perturb-seq. Source URL: https://github.com/edtnguyen/CC-Perturb-seq. Create a DACC-friendly tag such as v0.1.0, or use an exact commit/archive if DACC accepts that.
+		
+PerturbNMF	Create Software if absent; create SoftwareVersion for the exact current code.	Name: perturbnmf. Source URL: https://github.com/edtnguyen/PerturbNMF. Create a DACC-friendly tag or exact commit/archive URL.
+		
+		
+
+[TABLE 21]
+Versioning action item | Before DACC submission, make stable tags or acceptable archive links for CC-Perturb-seq and PerturbNMF. For IGVF CRISPR_Pipeline, confirm the exact tag/version DACC wants for future reruns.
+
+[TABLE 22]
+Stage	QC or documentation to include
+Step 1 preprocessing	Total reads per library; mapping rate; duplication/UMI statistics; saturation; cell calling method; called cells; genes/UMIs per cell; mitochondrial percent; fraction with guides; guides per cell; guide diversity; batch/plate/well representation; barcode recovery behavior; final matrix size.
+Step 2 differential/cis-trans analysis	Model formula; covariates; normalization; guide filtering; guide/control set; cells/guides per target; guide-to-target grouping rule; cis pairing rule or trans gene set; effect size units; test statistic; p/q-value definitions; multiple-testing method; output column dictionary.
+Step 3 PerturbNMF	Input matrix layer and dimensions; filters before cNMF; K grid; final K; threshold; seeds; CPU/GPU path; reconstruction error; explained variance; stability; program count; enrichment outputs; perturbation sensitivity method; calibration method.
+Step 4 interpretation	Program naming rules; annotation evidence; external data sources; manual review status; excluded programs and reasons; final table/figure list.
+DACC validation	Create schema-aligned TSV/CSV files with column dictionaries. Run DACC checkfiles where applicable before final upload. Convert essential JSON/report information to TSV if the portal does not accept the report file directly.
+Reproducibility package	Include scripts, configs, sample/resource manifests, environment files, software versions, checksums where available, and exact commands in the workflow GitHub repository.
+
+[TABLE 23]
+Column dictionary field	Example content
+column_name	sceptre_log2_fc, perturbo_q_value, program_id, gene_id, loading
+data_type	string, integer, float, boolean, categorical
+units_or_scale	log2 fold-change, probability, FDR/q-value, normalized loading, rank
+required	yes or no
+missing_value	NA, blank, 0, not applicable; define explicitly
+description	Meaning of the column
+allowed_values	For categorical fields, list the allowed values
+source_step	Step 1, Step 2, Step 3, or Step 4
+
+[TABLE 24]
+cc-perturbseq-perturbnmf-igvf-analysis/ |   README.md |   workflow_diagram/ |     workflow_overview.png |     workflow_steps.tsv |   manifests/ |     original_samplesheet.tsv |     guide_metadata.tsv |     reference_manifest.tsv |     output_file_manifest.tsv |     column_dictionary.tsv |   configs/ |     cc_perturbseq_config.yml |     run_parameters.tsv |     rna_seqspec.yml |     guide_seqspec.yml |     hash_seqspec.yml  # only if hashing was used |   software_versions/ |     software_versions.yml |     conda_environment.yml |     container_manifest.tsv |   scripts/ |     make_samplesheet.py |     convert_h5ad_to_h5mu.py  # only if used |     make_output_manifest.py |     flatten_perturbnmf_outputs.py |   docs/ |     dacc_analysis_plan.md |     step1_preprocessing.md |     step2_differential_results.md |     step3_perturbnmf.md |     qc_summary.md
+
+[TABLE 25]
+Source	Use in this plan
+Uploaded workflow model: CC-perturb-seq workflow model.pptx	DACC object types and expectation that each step has software, software version, analysis step version, and output files.
+Uploaded draft plan: cc_perturbseq_igvf_dacc_analysis_plan_draft.docx	Original four-step workflow, output groups, QC categories, and DACC questions.
+https://github.com/edtnguyen/CC-Perturb-seq	Current FASTQ preprocessing software and native input files such as sample_info.xlsx, plate_map.xlsx, guide files, and config YAML.
+https://github.com/edtnguyen/PerturbNMF	cNMF gene program analysis, evaluation, calibration, plotting, reports, and gene program outputs.
+https://github.com/pinellolab/CRISPR_Pipeline/tree/dev	Target IGVF perturb-seq pipeline structure, input resources, Nextflow/Singularity execution, and final result files.
+IGVF MatrixFile schema	Supported matrix formats and possible matrix content_type values such as h5ad, h5mu, annotated cell by gene and guide matrix, and cell by gene/guide matrix.
+IGVF TabularFile schema	Candidate table content_type values such as guide quantifications, gene quantifications, differential quantifications, gene programs, and gene program regulators.
+IGVF Workflow, Software, and SoftwareVersion schemas	Required portal fields for workflow, software, software version, and step records.

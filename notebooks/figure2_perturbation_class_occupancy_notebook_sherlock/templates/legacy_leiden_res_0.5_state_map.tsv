@@ -1,0 +1,10 @@
+source_cluster	assigned_state	state_order	state_label	mapping_source
+0	artEC	6	Arterial EC	ipsc-ec.Hippo.figure.ipynb
+1	iPSC	0	hiPSC	ipsc-ec.Hippo.figure.ipynb
+2	Neuro-iPSC	1	Neuroectoderm-like iPSC	ipsc-ec.Hippo.figure.ipynb
+3	PrimStreak	2	Primitive streak	ipsc-ec.Hippo.figure.ipynb
+4	Lat-Meso	3	Lateral mesoderm	ipsc-ec.Hippo.figure.ipynb
+5	Fibro-Mesen	7	Fibro-mesenchymal alternative	ipsc-ec.Hippo.figure.ipynb
+6	Pre-EC	4	Pre-EC / vascular progenitor	ipsc-ec.Hippo.figure.ipynb
+7	Neu-Mesen	5	Neural-mesenchymal	ipsc-ec.Hippo.figure.ipynb
+8	Others	8	Other / unresolved	ipsc-ec.Hippo.figure.ipynb

@@ -1,0 +1,1 @@
+Across 121,616 post-QC cells, libraries contained an average of 2,472 transcriptome UMIs per cell, [READ METRICS REQUIRED] transcriptome reads per cell, and 41.5 guide UMIs per assigned guide-cell pair.

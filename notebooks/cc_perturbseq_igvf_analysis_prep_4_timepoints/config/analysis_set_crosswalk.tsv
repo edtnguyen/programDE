@@ -1,0 +1,6 @@
+day	active_analysis_set	read_only_example_analysis_set	status	note
+D0	IGVFDS5257JGQO	IGVFDS0463XTUH	AUTHORITATIVE_TIMEPOINT_SET	Assign every new D0 MatrixFile/TabularFile to IGVFDS5257JGQO. The supplied set is only a read-only example of prior uploads.
+D1	IGVFDS3530HHEU	IGVFDS0991DBQZ	AUTHORITATIVE_TIMEPOINT_SET	Assign every new D1 MatrixFile/TabularFile to IGVFDS3530HHEU. The supplied set is only a read-only example of prior uploads.
+D2	IGVFDS7380DUFB	IGVFDS4402ZGWJ	AUTHORITATIVE_TIMEPOINT_SET	Assign every new D2 MatrixFile/TabularFile to IGVFDS7380DUFB. The supplied set is only a read-only example of prior uploads.
+D3	IGVFDS6826YKCZ	IGVFDS2307REVJ	AUTHORITATIVE_TIMEPOINT_SET	Assign every new D3 MatrixFile/TabularFile to IGVFDS6826YKCZ. The supplied set is only a read-only example of prior uploads.
+combined_D0_D3		IGVFDS9440URJB	READ_ONLY_EXAMPLE_NOT_ACTIVE	Contains already-uploaded gene-program/gene-universe examples. It is not a fifth active AnalysisSet for new files.

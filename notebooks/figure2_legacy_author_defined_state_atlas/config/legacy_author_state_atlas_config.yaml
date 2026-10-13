@@ -1,0 +1,41 @@
+query_h5ad: /oak/stanford/groups/engreitz/Users/opushkar/cc_perturb/2.preprocessing_tonys_pipeline/3.integrated_days/3.all_days_concat_pc30_all_genes_sceptre_guides.h5ad
+guide_metadata_tsv: inputs/300genes_guide_metadata_v43.tsv
+legacy_cluster_state_map_tsv: templates/legacy_leiden_res_0.5_state_map.tsv
+state_color_map_tsv: templates/state_color_map.tsv
+day_color_map_tsv: templates/day_color_map.tsv
+output_dir: legacy_author_defined_state_atlas_results
+
+query_day_col: day
+query_replicate_col: biological_sample
+query_cluster_col: leiden_res_0.5
+query_umap_key: X_umap
+query_guide_assignment_obsm: guide_assignment
+query_guide_names_uns: guide_names
+query_gene_symbol_col: gene_symbol
+marker_expression_layer: X
+
+selected_main_candidate: all_cells
+state_order:
+  - iPSC
+  - Neuro-iPSC
+  - PrimStreak
+  - Lat-Meso
+  - Pre-EC
+  - artEC
+  - Fibro-Mesen
+  - Neu-Mesen
+  - Others
+
+max_points_display: 120000
+point_size_controls: 3.0
+point_size_all_cells: 1.8
+point_alpha_controls: 0.78
+point_alpha_all_cells: 0.55
+rasterize_points: true
+random_seed: 20260727
+figure_width_inches: 8.4
+figure_height_inches: 6.2
+
+compute_top_markers: true
+top_markers_per_state: 25
+max_cells_per_state_for_marker_summary: 12000

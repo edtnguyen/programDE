@@ -1,0 +1,5 @@
+day	n_all_cells	n_has_program_usage	n_primary_curated_dominant	n_primary_program_state	n_expanded_program_state	n_pure_controls	n_mixed_control_target	fraction_with_program_usage	fraction_in_primary_program_state
+D0	38609	38609	16360	16350	16350	202	6573	1.0	0.42347639151493177
+D1	16925	16925	10022	9977	9977	75	3209	1.0	0.5894830132939439
+D2	21980	21980	11614	11594	18010	93	4213	1.0	0.5274795268425841
+D3	44102	44102	31953	31532	38002	378	6928	1.0	0.7149789125209741

@@ -1,0 +1,10 @@
+scope	analysis_set_accession	portal_url	stated_contents	use
+active D0 target	IGVFDS5257JGQO	https://data.igvf.org/analysis-sets/IGVFDS5257JGQO/	existing D0 AnalysisSet from metadata workbook	verify existence and input_file_sets; use as file_set for all new D0 files
+active D1 target	IGVFDS3530HHEU	https://data.igvf.org/analysis-sets/IGVFDS3530HHEU/	existing D1 AnalysisSet from metadata workbook	verify existence and input_file_sets; use as file_set for all new D1 files
+active D2 target	IGVFDS7380DUFB	https://data.igvf.org/analysis-sets/IGVFDS7380DUFB/	existing D2 AnalysisSet from metadata workbook	verify existence and input_file_sets; use as file_set for all new D2 files
+active D3 target	IGVFDS6826YKCZ	https://data.igvf.org/analysis-sets/IGVFDS6826YKCZ/	existing D3 AnalysisSet from metadata workbook	verify existence and input_file_sets; use as file_set for all new D3 files
+prior-upload example D0	IGVFDS0463XTUH	https://data.igvf.org/analysis-sets/IGVFDS0463XTUH/	already-uploaded regulator/program and correlation files	read-only schema/warning example; never use as file_set for new files
+prior-upload example D1	IGVFDS0991DBQZ	https://data.igvf.org/analysis-sets/IGVFDS0991DBQZ/	already-uploaded regulator/program and correlation files	read-only schema/warning example; never use as file_set for new files
+prior-upload example D2	IGVFDS4402ZGWJ	https://data.igvf.org/analysis-sets/IGVFDS4402ZGWJ/	already-uploaded regulator/program and correlation files	read-only schema/warning example; never use as file_set for new files
+prior-upload example D3	IGVFDS2307REVJ	https://data.igvf.org/analysis-sets/IGVFDS2307REVJ/	already-uploaded regulator/program and correlation files	read-only schema/warning example; never use as file_set for new files
+prior-upload combined example	IGVFDS9440URJB	https://data.igvf.org/analysis-sets/IGVFDS9440URJB/	already-uploaded gene-program and gene-universe files	read-only schema/warning example; not an active fifth AnalysisSet

@@ -239,6 +239,43 @@ def _validate_group_sizes(
     return stats
 
 
+def _resolve_expected_group_size(
+    ntc_groups_ens: Sequence[Mapping[str, Sequence[str]]],
+    expected_group_size: Optional[int],
+) -> int:
+    """Resolve and validate the NTC pseudo-target guide count.
+
+    If ``expected_group_size`` is ``None``, infer it from the first non-empty
+    pseudo-target and require every pseudo-target in every ensemble to have the
+    same size.  Passing an explicit positive integer remains supported and is
+    useful for an additional assertion at the API boundary.
+    """
+    if expected_group_size is not None:
+        expected = int(expected_group_size)
+        if expected <= 0:
+            raise ValueError("expected_group_size must be a positive integer or None.")
+        return expected
+
+    inferred: Optional[int] = None
+    for groups in ntc_groups_ens:
+        for guides in groups.values():
+            size = len(guides)
+            if size <= 0:
+                raise ValueError("NTC pseudo-targets must contain at least one guide.")
+            if inferred is None:
+                inferred = size
+            elif size != inferred:
+                raise ValueError(
+                    "Cannot infer one NTC group size because pseudo-target sizes differ: "
+                    f"first size={inferred}, encountered size={size}. "
+                    "Pass expected_group_size explicitly only after fixing the groups."
+                )
+
+    if inferred is None:
+        raise ValueError("Cannot infer NTC group size from empty ensembles.")
+    return inferred
+
+
 def crt_pvals_for_guide_set(
     inputs,
     guide_idx: np.ndarray,
@@ -331,19 +368,24 @@ def crt_pvals_for_ntc_groups_ensemble(
     propensity_model=fit_propensity_logistic,
     resampling_method: str = "bernoulli_index",
     resampling_kwargs: Optional[Dict[str, Any]] = None,
-    expected_group_size: int = 6,
+    expected_group_size: Optional[int] = None,
     test_stat: str = "ols",
     test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> Dict[int, pd.DataFrame]:
     """
     Returns mapping e -> DataFrame(rows=group_id, cols=programs).
+    expected_group_size: optional positive guide count. If None, infer the
+        common group size from ``ntc_groups_ens`` (for example, 15).
     test_stat: "ols" (default) or "utest".
     """
     guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
     out: Dict[int, pd.DataFrame] = {}
+    resolved_group_size = _resolve_expected_group_size(
+        ntc_groups_ens, expected_group_size
+    )
 
     for e, groups in enumerate(ntc_groups_ens):
-        _validate_group_sizes(groups, expected_group_size)
+        _validate_group_sizes(groups, resolved_group_size)
         rows: List[np.ndarray] = []
         group_ids: List[str] = []
         for group_id, guides in groups.items():
@@ -381,19 +423,24 @@ def crt_pvals_for_ntc_groups_ensemble_skew(
     resampling_method: str = "bernoulli_index",
     resampling_kwargs: Optional[Dict[str, Any]] = None,
     side_code: int = 0,
-    expected_group_size: int = 6,
+    expected_group_size: Optional[int] = None,
     test_stat: str = "ols",
     test_stat_kwargs: Optional[Dict[str, Any]] = None,
 ) -> Dict[int, pd.DataFrame]:
     """
     Returns mapping e -> DataFrame(rows=group_id, cols=programs) of skew p-values.
+    expected_group_size: optional positive guide count. If None, infer the
+        common group size from ``ntc_groups_ens`` (for example, 15).
     test_stat: "ols" (default) or "utest".
     """
     guide_to_col = {g: i for i, g in enumerate(inputs.guide_names)}
     out: Dict[int, pd.DataFrame] = {}
+    resolved_group_size = _resolve_expected_group_size(
+        ntc_groups_ens, expected_group_size
+    )
 
     for e, groups in enumerate(ntc_groups_ens):
-        _validate_group_sizes(groups, expected_group_size)
+        _validate_group_sizes(groups, resolved_group_size)
         rows: List[np.ndarray] = []
         group_ids: List[str] = []
         for group_id, guides in groups.items():

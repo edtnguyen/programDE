@@ -1,0 +1,18 @@
+name: igvf-analysis-prep
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pandas
+  - numpy
+  - scipy
+  - anndata
+  - mudata
+  - h5py
+  - python-calamine
+  - pyyaml
+  - requests
+  - jupyterlab
+  - nbconvert
+  - ipykernel
+  - pytest

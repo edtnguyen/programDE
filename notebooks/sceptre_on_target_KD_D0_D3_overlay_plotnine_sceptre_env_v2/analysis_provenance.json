@@ -1,0 +1,116 @@
+{
+  "created_utc": "2026-09-23T04:44:33.763161+00:00",
+  "analysis_source": "ipsc_ec_sceptre.ipynb",
+  "environment_strategy": "sc-dl Jupyter kernel plus direct sceptre_env/bin/Rscript subprocess",
+  "sc_dl_env": "/oak/stanford/groups/engreitz/Users/tri/envs/sc-dl",
+  "sc_dl_python": "/oak/stanford/groups/engreitz/Users/tri/envs/sc-dl/bin/python",
+  "sceptre_env": "/oak/stanford/groups/engreitz/Users/tri/envs/sceptre_env",
+  "sceptre_rscript": "/oak/stanford/groups/engreitz/Users/tri/envs/sceptre_env/bin/Rscript",
+  "sceptre_private_r_library": "/oak/stanford/groups/engreitz/Users/tri/Rlibs/sceptre_0.10.3",
+  "sceptre_required_version": "0.10.3",
+  "sceptre_github_ref": "v0.10.3",
+  "install_command": [
+    "/oak/stanford/groups/engreitz/Users/tri/envs/sceptre_env/bin/Rscript",
+    "--vanilla",
+    "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/sceptre_on_target_KD_D0_D3_overlay_plotnine_sceptre_env_v2/ensure_sceptre_0.10.3_private.R"
+  ],
+  "analysis_r_command": [
+    "/oak/stanford/groups/engreitz/Users/tri/envs/sceptre_env/bin/Rscript",
+    "--vanilla",
+    "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/sceptre_on_target_KD_D0_D3_overlay_plotnine_sceptre_env_v2/run_sceptre_with_official_se.R"
+  ],
+  "install_script": {
+    "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/sceptre_on_target_KD_D0_D3_overlay_plotnine_sceptre_env_v2/ensure_sceptre_0.10.3_private.R",
+    "size_bytes": 4017,
+    "mtime_ns": 1790136033000000000
+  },
+  "install_log": {
+    "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/sceptre_on_target_KD_D0_D3_overlay_plotnine_sceptre_env_v2/ensure_sceptre_0.10.3_private.log",
+    "size_bytes": 799,
+    "mtime_ns": 1790136033000000000
+  },
+  "sceptre_preflight": {
+    "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/sceptre_on_target_KD_D0_D3_overlay_plotnine_sceptre_env_v2/sceptre_private_library_preflight.txt",
+    "size_bytes": 231,
+    "mtime_ns": 1790136033000000000
+  },
+  "analysis_r_script": {
+    "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/sceptre_on_target_KD_D0_D3_overlay_plotnine_sceptre_env_v2/run_sceptre_with_official_se.R",
+    "size_bytes": 10144,
+    "mtime_ns": 1790136033000000000
+  },
+  "analysis_r_log": {
+    "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/sceptre_on_target_KD_D0_D3_overlay_plotnine_sceptre_env_v2/run_sceptre_with_official_se.log",
+    "size_bytes": 182813,
+    "mtime_ns": 1790138660000000000
+  },
+  "sceptre_result_files": {
+    "d0": {
+      "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/d0_sceptre_transfer/TargetKD_v0.10.3_with_SE.csv",
+      "size_bytes": 41346,
+      "mtime_ns": 1790136893000000000
+    },
+    "d1": {
+      "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/d1_sceptre_transfer/TargetKD_v0.10.3_with_SE.csv",
+      "size_bytes": 39466,
+      "mtime_ns": 1790137263000000000
+    },
+    "d2": {
+      "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/d2_sceptre_transfer/TargetKD_v0.10.3_with_SE.csv",
+      "size_bytes": 37894,
+      "mtime_ns": 1790137725000000000
+    },
+    "d3": {
+      "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/d3_sceptre_transfer/TargetKD_v0.10.3_with_SE.csv",
+      "size_bytes": 39636,
+      "mtime_ns": 1790138660000000000
+    }
+  },
+  "targets": [
+    "NF2",
+    "LATS2",
+    "AMOTL2",
+    "TAOK1"
+  ],
+  "days": [
+    "d0",
+    "d1",
+    "d2",
+    "d3"
+  ],
+  "q_threshold": 0.05,
+  "q_family": "all QC-passing on-target discovery pairs separately within each day",
+  "ci_level": 0.95,
+  "ci_method": "delta-method Wald interval on log2(fold_change), using official SCEPTRE v0.10.3 se_log2 = se_fold_change / (fold_change * ln(2))",
+  "control_reference": 1.0,
+  "plotting_library": "plotnine",
+  "plotnine_version": "0.15.4",
+  "python_packages": {
+    "numpy": "2.3.5",
+    "pandas": "2.3.3",
+    "scipy": "1.16.3",
+    "muon": "0.1.7",
+    "matplotlib": "3.10.8",
+    "plotnine": "0.15.4",
+    "mizani": "0.14.4"
+  },
+  "font": "DejaVu Sans",
+  "figure_files": [
+    {
+      "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/sceptre_on_target_KD_D0_D3_overlay_plotnine_sceptre_env_v2/sceptre_on_target_KD_D0_D3_overlay.pdf",
+      "size_bytes": 28012,
+      "mtime_ns": 1790138672000000000
+    },
+    {
+      "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/sceptre_on_target_KD_D0_D3_overlay_plotnine_sceptre_env_v2/sceptre_on_target_KD_D0_D3_overlay.svg",
+      "size_bytes": 37044,
+      "mtime_ns": 1790138672000000000
+    },
+    {
+      "path": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/sceptre_on_target_KD_D0_D3_overlay_plotnine_sceptre_env_v2/sceptre_on_target_KD_D0_D3_overlay.png",
+      "size_bytes": 274147,
+      "mtime_ns": 1790138673000000000
+    }
+  ],
+  "original_combined_result_present": true
+}

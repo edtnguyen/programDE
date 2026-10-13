@@ -1,0 +1,110 @@
+{
+  "B": 10000,
+  "analysis": "iPSC-EC two-stage CLR floor sensitivity",
+  "audit_combinations": [
+    [
+      1.0,
+      0.0001
+    ],
+    [
+      0.1,
+      0.0
+    ],
+    [
+      0.1,
+      1e-05
+    ],
+    [
+      0.1,
+      0.0001
+    ],
+    [
+      0.1,
+      0.001
+    ],
+    [
+      1.0,
+      0.0
+    ],
+    [
+      1.0,
+      1e-05
+    ],
+    [
+      1.0,
+      0.001
+    ],
+    [
+      10.0,
+      0.0
+    ],
+    [
+      10.0,
+      1e-05
+    ],
+    [
+      10.0,
+      0.0001
+    ],
+    [
+      10.0,
+      0.001
+    ]
+  ],
+  "covariate_model": "six-source-covariate full-day model",
+  "crt_combinations": [
+    [
+      1.0,
+      0.0001
+    ],
+    [
+      1.0,
+      0.0
+    ],
+    [
+      1.0,
+      1e-05
+    ],
+    [
+      1.0,
+      0.001
+    ],
+    [
+      0.1,
+      0.0001
+    ],
+    [
+      10.0,
+      0.0001
+    ]
+  ],
+  "crt_grid_mode": "primary",
+  "days": [
+    "d0",
+    "d1",
+    "d2",
+    "d3"
+  ],
+  "initial_floor_factors": [
+    0.1,
+    1.0,
+    10.0
+  ],
+  "internal_eps_quantiles": [
+    0.0,
+    1e-05,
+    0.0001,
+    0.001
+  ],
+  "local_programde_default_eps_quantile": 0.0001,
+  "n_jobs": 16,
+  "programde_git_commit": null,
+  "programde_prepare_crt_inputs_signature": "(adata: Any, usage_key: str = 'cnmf_usage', covar_key: str = 'covar', guide_assignment_key: str = 'guide_assignment', guide_names_key: str = 'guide_names', guide2gene_key: str = 'guide2gene', eps_quantile: float = 0.0001, add_intercept: bool = True, standardize: bool = True, numeric_as_category_threshold: Optional[int] = 20, batch_key: str = 'batch', clamp_threads: bool = True) -> src.sceptre.pipeline.CRTInputs",
+  "programde_prepare_crt_inputs_source": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/src/sceptre/pipeline.py",
+  "programde_root": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE",
+  "reference_initial_floor_factor": 1.0,
+  "reference_internal_eps_quantile": 0.0001,
+  "resampling_method": "bernoulli_index",
+  "skew_normal_calibration": false,
+  "stratified_resampling": false
+}

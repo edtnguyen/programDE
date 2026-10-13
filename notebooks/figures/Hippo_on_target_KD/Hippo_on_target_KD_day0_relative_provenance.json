@@ -1,0 +1,51 @@
+{
+  "created_utc": "2026-09-22T20:16:27.958364+00:00",
+  "source_csv": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/combined_TargetKD.csv",
+  "source_sha256": "923508778f91dc732e80d8e8886df8424ce063a4ff0a21387c2ec82f7d21d9a3",
+  "input_rows": 1128,
+  "input_columns": [
+    "response_id",
+    "grna_target",
+    "n_nonzero_trt",
+    "n_nonzero_cntrl",
+    "pass_qc",
+    "p_value",
+    "log_2_fold_change",
+    "significant",
+    "day"
+  ],
+  "day": "0",
+  "genes_in_plot_order": [
+    "NF2",
+    "LATS2",
+    "AMOTL2",
+    "TAOK1"
+  ],
+  "plot_mode": "relative",
+  "day0_hiPSC_assumption": "Day 0 used as requested hiPSC stage; no pilot identifier in input.",
+  "q_threshold": 0.05,
+  "q_description": "BH adjustment across all 261 QC-passing, finite-p-value tests at day 0 in the supplied CSV",
+  "fdr_scope": "within_day",
+  "eligible_tests_in_configured_family": 261,
+  "qvalue_column": null,
+  "auxiliary_csv": null,
+  "auxiliary_sha256": null,
+  "ci_description": null,
+  "any_intervals": false,
+  "all_genes_have_intervals": false,
+  "require_intervals": false,
+  "ylabel": "Estimated target-gene expression\n(relative to control)",
+  "font": "DejaVu Sans",
+  "python_version": "3.11.14",
+  "numpy_version": "2.3.5",
+  "matplotlib_version": "3.10.8",
+  "limitations": [
+    "The original control-group definition and original multiple-testing family are not in this CSV.",
+    "The supplied CSV has no absolute expression means, standard errors or interval bounds.",
+    "Nonzero-cell counts are not total group sizes or expression means."
+  ],
+  "documentation": [
+    "https://katsevich-lab.github.io/sceptre/articles/sceptre.html",
+    "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/p.adjust.html"
+  ]
+}

@@ -1,0 +1,7 @@
+pandas
+numpy
+matplotlib
+scipy
+openpyxl
+adjustText
+scanpy  # only needed for notebook 03

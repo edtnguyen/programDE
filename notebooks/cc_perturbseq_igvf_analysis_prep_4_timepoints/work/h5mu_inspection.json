@@ -1,0 +1,168 @@
+{
+  "path": "/oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50/adata/cNMF_50_0_2.h5mu",
+  "exists": true,
+  "status": "PASS",
+  "modalities": {
+    "rna": {
+      "n_obs": 121616,
+      "n_vars": 17538,
+      "obs_columns": [
+        "guides_per_cell",
+        "guide_umi_counts",
+        "pct_counts_ribo",
+        "n_genes_by_counts",
+        "total_counts",
+        "total_counts_mt",
+        "pct_counts_mt",
+        "pool",
+        "sample_id",
+        "round1",
+        "well",
+        "biological_sample",
+        "plate",
+        "bci",
+        "stype",
+        "day",
+        "cell_pool",
+        "log1p_n_genes_by_counts",
+        "log1p_total_counts",
+        "pct_counts_in_top_50_genes",
+        "pct_counts_in_top_100_genes",
+        "pct_counts_in_top_200_genes",
+        "pct_counts_in_top_500_genes",
+        "log1p_total_counts_mt",
+        "total_counts_ribo",
+        "log1p_total_counts_ribo",
+        "S_score",
+        "G2M_score",
+        "phase",
+        "outlier",
+        "size_factors",
+        "leiden_res_0.1",
+        "leiden_res_0.2",
+        "leiden_res_0.3",
+        "leiden_res_0.4",
+        "leiden_res_0.5",
+        "leiden_res_0.6",
+        "leiden_res_0.7",
+        "leiden_res_0.8",
+        "leiden_res_0.9",
+        "leiden_res_1.0",
+        "batch"
+      ],
+      "var_columns": [
+        "symbol",
+        "gene_id",
+        "gene_names",
+        "var_names"
+      ],
+      "obsm_keys": [
+        "X_pca",
+        "X_umap",
+        "guide_assignment"
+      ],
+      "varm_keys": [],
+      "layers": [],
+      "uns_keys": [
+        "guide_names",
+        "guide_targets"
+      ]
+    },
+    "cNMF": {
+      "n_obs": 121616,
+      "n_vars": 50,
+      "obs_columns": [
+        "guides_per_cell",
+        "guide_umi_counts",
+        "pct_counts_ribo",
+        "n_genes_by_counts",
+        "total_counts",
+        "total_counts_mt",
+        "pct_counts_mt",
+        "pool",
+        "sample_id",
+        "round1",
+        "well",
+        "biological_sample",
+        "plate",
+        "bci",
+        "stype",
+        "day",
+        "cell_pool",
+        "log1p_n_genes_by_counts",
+        "log1p_total_counts",
+        "pct_counts_in_top_50_genes",
+        "pct_counts_in_top_100_genes",
+        "pct_counts_in_top_200_genes",
+        "pct_counts_in_top_500_genes",
+        "log1p_total_counts_mt",
+        "total_counts_ribo",
+        "log1p_total_counts_ribo",
+        "S_score",
+        "G2M_score",
+        "phase",
+        "outlier",
+        "size_factors",
+        "leiden_res_0.1",
+        "leiden_res_0.2",
+        "leiden_res_0.3",
+        "leiden_res_0.4",
+        "leiden_res_0.5",
+        "leiden_res_0.6",
+        "leiden_res_0.7",
+        "leiden_res_0.8",
+        "leiden_res_0.9",
+        "leiden_res_1.0",
+        "batch"
+      ],
+      "var_columns": [],
+      "obsm_keys": [
+        "X_pca",
+        "X_umap",
+        "guide_assignment"
+      ],
+      "varm_keys": [
+        "loadings"
+      ],
+      "layers": [],
+      "uns_keys": [
+        "guide_names",
+        "guide_targets",
+        "var_names"
+      ]
+    }
+  },
+  "day_locations": [
+    {
+      "location": "mod[rna].obs",
+      "column": "day",
+      "values": [
+        "D0",
+        "D1",
+        "D2",
+        "D3"
+      ],
+      "unmapped": 0
+    },
+    {
+      "location": "mod[cNMF].obs",
+      "column": "day",
+      "values": [
+        "D0",
+        "D1",
+        "D2",
+        "D3"
+      ],
+      "unmapped": 0
+    }
+  ],
+  "distinct_days": [
+    "D0",
+    "D1",
+    "D2",
+    "D3"
+  ],
+  "combined_across_days": true,
+  "size_bytes": 1491701396,
+  "md5sum": "833be2954a5c4dee5b2072791a3e8664"
+}

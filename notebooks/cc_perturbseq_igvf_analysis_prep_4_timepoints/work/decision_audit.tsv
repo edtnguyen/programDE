@@ -1,0 +1,7 @@
+decision	status	detail
+AnalysisSet design	SELECTED_FOUR_TIMEPOINT_SETS	"{""D0"": ""IGVFDS5257JGQO"", ""D1"": ""IGVFDS3530HHEU"", ""D2"": ""IGVFDS7380DUFB"", ""D3"": ""IGVFDS6826YKCZ""}"
+Timepoint isolation	ENFORCED	Each new file_set is mapped from day only; D0-D3 use four distinct AnalysisSets and no combined fifth set is active.
+PerturbNMF h5mu representation	BLOCK_UNTIL_DACC_DECISION	/oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50/adata/cNMF_50_0_2.h5mu
+Local/global content types	PENDING_DACC_CONFIRMATION	Do not assume local=cis or global=trans without the actual analysis definitions.
+Already uploaded PerturbNMF tables	SKIP_NEW_UPLOAD	Use supplied Portal sets only as read-only examples; do not assign new files to them.
+AnalysisStep count	FOLLOW_WORKBOOK_3_STEPS	The detailed plan describes four conceptual steps, but the current workbook/prompt intentionally folds reporting into Step 3.

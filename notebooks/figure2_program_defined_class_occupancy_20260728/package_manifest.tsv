@@ -1,0 +1,13 @@
+path	description
+README.md	Run instructions and methodological summary
+PROGRAM_SELECTION_NOTES.md	Curated program list derived from the first Hunter/Kyle table
+requirements.txt	Python requirements
+config/program_defined_class_occupancy_config.yaml	Prefilled real-data configuration
+notebooks/01_program_defined_perturbation_class_occupancy.ipynb	Interactive Sherlock notebook
+scripts/00_export_program_defined_occupancy_inputs.py	Derive dominant-program states and target-union assignments
+scripts/01_fit_program_defined_occupancy_and_plot.py	Fit adjusted occupancy models and generate figures
+scripts/run_full_program_defined_occupancy_pipeline.sbatch	One-step Slurm runner
+templates/curated_program_states.tsv	Primary, sensitivity, and excluded programs with names/markers
+templates/300genes_guide_metadata_v43.tsv	Guide-to-intended-target metadata
+templates/class_membership_reviewed_screen_hits.tsv	Reviewed regulator-class membership
+expected_outputs/README.md	Expected result files

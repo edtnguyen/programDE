@@ -1,0 +1,31 @@
+Day-metadata finding from the attached notebook
+================================================
+
+Source inspected:
+  iPSC_EC_QQ_full_covariates_with_replicate_correlation.ipynb
+
+Relevant code in the attached notebook:
+
+1. The notebook declares the four days explicitly:
+
+   DAYS = ["d0", "d1", "d2", "d3"]
+
+2. Its backend resolves a separate H5MU file by filename for each day:
+
+   def h5mu_path_for_day(data_dir: Path, day: str) -> Path:
+       return data_dir / f"{day}_normalized_gex_and_guide.h5mu"
+
+3. Later loops call h5mu_path_for_day(...) once for each value in DAYS.
+
+Conclusion
+----------
+The attached notebook encodes day through the per-day filename and loop variable.
+It does not show an internal day column for the combined PerturbNMF file
+cNMF_50_0_2.h5mu.
+
+The upload-ready builder therefore:
+  - reads the combined integrated h5ad;
+  - prefers h5ad.obs["day"] and validates D0-D3 values;
+  - aligns h5ad cells to the combined h5mu cNMF modality by exact obs_names;
+  - checks any day column already present in the h5mu for exact agreement;
+  - creates true day-specific MuData subsets and aborts on any mismatch.

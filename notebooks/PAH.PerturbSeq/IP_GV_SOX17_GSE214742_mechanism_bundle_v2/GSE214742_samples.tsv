@@ -1,0 +1,43 @@
+gsm	sample_number	title	condition	mode	experiment_batch	replicate	pair_id	expected_sox17_direction
+GSM6615206	1	BFP control-Repression [2-KR-BF-1_S1]	BFP_control_Repression	CRISPRi_control	2	1	2_1	0
+GSM6615207	2	Promoter-Repression [2-KR-14-1_S2]	Promoter_Repression	CRISPRi_promoter	2	1	2_1	-1
+GSM6615208	3	BFP control-Activation [2-SA-BF-1_S3]	BFP_control_Activation	CRISPRa_control	2	1	2_1	0
+GSM6615209	4	Promoter-Activation [2-SA-17-1_S4]	Promoter_Activation	CRISPRa_promoter	2	1	2_1	1
+GSM6615210	5	BFP control-Repression [2-KR-BF-2_S5]	BFP_control_Repression	CRISPRi_control	2	2	2_2	0
+GSM6615211	6	Promoter-Repression [2-KR-14-2_S6]	Promoter_Repression	CRISPRi_promoter	2	2	2_2	-1
+GSM6615212	7	BFP control-Activation [2-SA-BF-2_S7]	BFP_control_Activation	CRISPRa_control	2	2	2_2	0
+GSM6615213	8	Promoter-Activation [2-SA-17-2_S8]	Promoter_Activation	CRISPRa_promoter	2	2	2_2	1
+GSM6615214	9	BFP control-Repression [2-KR-BF-4_S9]	BFP_control_Repression	CRISPRi_control	2	4	2_4	0
+GSM6615215	10	Promoter-Repression [2-KR-14-4_S10]	Promoter_Repression	CRISPRi_promoter	2	4	2_4	-1
+GSM6615216	11	BFP control-Activation [2-SA-BF-4_S11]	BFP_control_Activation	CRISPRa_control	2	4	2_4	0
+GSM6615217	12	Promoter-Activation [2-SA-17-4_S12]	Promoter_Activation	CRISPRa_promoter	2	4	2_4	1
+GSM6615218	13	BFP control-Repression [3-KR-BF-2_S13]	BFP_control_Repression	CRISPRi_control	3	2	3_2	0
+GSM6615219	14	Promoter-Repression [3-KR-14-2_S14]	Promoter_Repression	CRISPRi_promoter	3	2	3_2	-1
+GSM6615220	15	BFP control-Activation [3-SA-BF-2_S15]	BFP_control_Activation	CRISPRa_control	3	2	3_2	0
+GSM6615221	16	Promoter-Activation [3-SA-17-2_S16]	Promoter_Activation	CRISPRa_promoter	3	2	3_2	1
+GSM6615222	17	Signal 1-Repression [3-KR-43-2_S17]	Signal1_Repression	CRISPRi_enhancer_signal1	3	2	3_2	-1
+GSM6615223	18	Control cells-Control [3-WT-2_S18]	Control_cells	untreated_control	3	2	3_2	0
+GSM6615224	19	BFP control-Repression [3-KR-BF-3_S19]	BFP_control_Repression	CRISPRi_control	3	3	3_3	0
+GSM6615225	20	Promoter-Repression [3-KR-14-3_S20]	Promoter_Repression	CRISPRi_promoter	3	3	3_3	-1
+GSM6615226	21	BFP control-Activation [3-SA-BF-3_S21]	BFP_control_Activation	CRISPRa_control	3	3	3_3	0
+GSM6615227	22	Promoter-Activation [3-SA-17-3_S22]	Promoter_Activation	CRISPRa_promoter	3	3	3_3	1
+GSM6615228	23	Signal 1-Repression [3-KR-43-3_S23]	Signal1_Repression	CRISPRi_enhancer_signal1	3	3	3_3	-1
+GSM6615229	24	Control cells-Control [3-WT-3_S24]	Control_cells	untreated_control	3	3	3_3	0
+GSM6615230	25	BFP control-Repression [3-KR-BF-4_S25]	BFP_control_Repression	CRISPRi_control	3	4	3_4	0
+GSM6615231	26	Promoter-Repression [3-KR-14-4_S26]	Promoter_Repression	CRISPRi_promoter	3	4	3_4	-1
+GSM6615232	27	BFP control-Activation [3-SA-BF-4_S27]	BFP_control_Activation	CRISPRa_control	3	4	3_4	0
+GSM6615233	28	Promoter-Activation [3-SA-17-4_S28]	Promoter_Activation	CRISPRa_promoter	3	4	3_4	1
+GSM6615234	29	Signal 1-Repression [3-KR-43-4_S29]	Signal1_Repression	CRISPRi_enhancer_signal1	3	4	3_4	-1
+GSM6615235	30	Control cells-Control [3-WT-4_S30]	Control_cells	untreated_control	3	4	3_4	0
+GSM6615236	49	siSOX17 [si-16-17_S49]	siSOX17	siRNA_SOX17	siRNA	16	si_16	-1
+GSM6615237	50	siSOX17 [si-14-17_S50]	siSOX17	siRNA_SOX17	siRNA	14	si_14	-1
+GSM6615238	51	siSOX17 [si-03-17_S51]	siSOX17	siRNA_SOX17	siRNA	03	si_03	-1
+GSM6615239	52	siSOX17 [si-12-17_S52]	siSOX17	siRNA_SOX17	siRNA	12	si_12	-1
+GSM6615240	61	negativeSIRNA [si-16-n_S61]	negativeSIRNA	siRNA_control	siRNA	16	si_16	0
+GSM6615241	62	negativeSIRNA [si-14-n_S62]	negativeSIRNA	siRNA_control	siRNA	14	si_14	0
+GSM6615242	63	negativeSIRNA [si-03-n_S63]	negativeSIRNA	siRNA_control	siRNA	03	si_03	0
+GSM6615243	64	negativeSIRNA [si-12-n_S64]	negativeSIRNA	siRNA_control	siRNA	12	si_12	0
+GSM6615244	65	siGAPDH [si-16-p_S65]	siGAPDH	siRNA_GAPDH_control	siRNA	16	si_16	0
+GSM6615245	66	siGAPDH [si-14-p_S66]	siGAPDH	siRNA_GAPDH_control	siRNA	14	si_14	0
+GSM6615246	67	siGAPDH [si-12-p_S67]	siGAPDH	siRNA_GAPDH_control	siRNA	12	si_12	0
+GSM6615247	68	siGAPDH [si-03-p_S68]	siGAPDH	siRNA_GAPDH_control	siRNA	03	si_03	0

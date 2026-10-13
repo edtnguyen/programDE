@@ -1,0 +1,44 @@
+{
+  "day": "d1",
+  "biological_sample": "d1_rep2",
+  "n_cells": 11069,
+  "B_REP": 127,
+  "usage_path": "/oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/012726_100k_cells_20iter_allHVG_torch_halsvar_batch_e7/012726_100k_cells_20iter_allHVG_torch_halsvar_batch_e7_all/012726_100k_cells_20iter_allHVG_torch_halsvar_batch_e7_all.usages.k_50.dt_0_2.consensus.txt",
+  "matched_usage_cells": 16925,
+  "h5mu_path": "/oak/stanford/groups/engreitz/Users/opushkar/cc_perturb/2.preprocessing_tonys_pipeline/2.normalized_data/normalized_data/d1_normalized_gex_and_guide.h5mu",
+  "guide_csv": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/d1_sceptre_transfer/d1_grna_assignments_long.csv",
+  "n_guides": 1926,
+  "n_targets": 300,
+  "n_programs": 50,
+  "covariate_columns": [
+    "pct_counts_mt",
+    "log1p_total_counts",
+    "log1p_guides_per_cell",
+    "log1p_guide_umi_counts",
+    "log1p_n_genes_by_counts"
+  ],
+  "covariate_sources": {
+    "pct_counts_mt": {
+      "obs_key": "pct_counts_mt",
+      "transform": "identity"
+    },
+    "log1p_total_counts": {
+      "obs_key": "total_counts",
+      "transform": "log1p"
+    },
+    "log1p_guides_per_cell": {
+      "obs_key": "guides_per_cell",
+      "transform": "log1p"
+    },
+    "log1p_guide_umi_counts": {
+      "obs_key": "guide_umi_counts",
+      "transform": "log1p"
+    },
+    "log1p_n_genes_by_counts": {
+      "obs_key": "n_genes_by_counts",
+      "transform": "log1p"
+    }
+  },
+  "runtime_seconds": 51.94,
+  "beta_path": "results/ipsc_ec_qq_exports_full_covariates/k_50.dt_0_2/biological_replicate_effects/betas_by_replicate/d1/d1__d1_rep2__target_betas_wide.tsv"
+}

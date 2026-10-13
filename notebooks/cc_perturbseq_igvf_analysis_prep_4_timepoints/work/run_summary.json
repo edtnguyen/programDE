@@ -1,0 +1,22 @@
+{
+  "expected_rows": 52,
+  "validation_counts": {
+    "MISSING": 28,
+    "ALREADY_UPLOADED_SKIP": 20,
+    "BLOCKED_DECISION": 4
+  },
+  "portal_analysis_sets_found": 0,
+  "portal_files_found": 0,
+  "portal_audit_messages": 0,
+  "active_analysis_set_mapping": "workbook_current",
+  "active_analysis_sets": {
+    "D0": "IGVFDS5257JGQO",
+    "D1": "IGVFDS3530HHEU",
+    "D2": "IGVFDS7380DUFB",
+    "D3": "IGVFDS6826YKCZ"
+  },
+  "write_staged_files": false,
+  "metadata_tsvs_created": {
+    "eligible_upload_manifest": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/cc_perturbseq_igvf_analysis_prep_4_timepoints/work/metadata/eligible_upload_manifest.tsv"
+  }
+}

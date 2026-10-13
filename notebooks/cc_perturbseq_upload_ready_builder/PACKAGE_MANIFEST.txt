@@ -1,0 +1,7 @@
+README.md
+docs/DAY_METADATA_FINDING.txt
+environment.yml
+inputs/sequence_file_accessions.csv
+logs/.keep
+notebooks/01_make_igvf_upload_ready_files.ipynb
+scripts/run_notebook.sbatch

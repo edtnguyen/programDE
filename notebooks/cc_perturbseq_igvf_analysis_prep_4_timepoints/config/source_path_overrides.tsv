@@ -1,0 +1,17 @@
+day	expected_file_role	source_path_override	source_sheet	notes
+D0	cis differential expression quantifications per guide			Required: exact existing Sherlock source path.
+D0	cis differential expression quantifications per element			Required: exact existing Sherlock source path.
+D0	trans differential expression quantifications per guide			Required: exact existing Sherlock source path.
+D0	trans differential expression quantifications per element			Required: exact existing Sherlock source path.
+D1	cis differential expression quantifications per guide			Required: exact existing Sherlock source path.
+D1	cis differential expression quantifications per element			Required: exact existing Sherlock source path.
+D1	trans differential expression quantifications per guide			Required: exact existing Sherlock source path.
+D1	trans differential expression quantifications per element			Required: exact existing Sherlock source path.
+D2	cis differential expression quantifications per guide			Required: exact existing Sherlock source path.
+D2	cis differential expression quantifications per element			Required: exact existing Sherlock source path.
+D2	trans differential expression quantifications per guide			Required: exact existing Sherlock source path.
+D2	trans differential expression quantifications per element			Required: exact existing Sherlock source path.
+D3	cis differential expression quantifications per guide			Required: exact existing Sherlock source path.
+D3	cis differential expression quantifications per element			Required: exact existing Sherlock source path.
+D3	trans differential expression quantifications per guide			Required: exact existing Sherlock source path.
+D3	trans differential expression quantifications per element			Required: exact existing Sherlock source path.

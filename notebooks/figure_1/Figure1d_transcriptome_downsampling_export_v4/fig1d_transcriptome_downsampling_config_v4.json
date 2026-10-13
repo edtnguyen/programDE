@@ -1,0 +1,60 @@
+{
+  "output_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/figure1_transcriptome_downsampling_v4",
+  "barcode_data_csv": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230621_Tri_guide_iPSCs/iPSC/process/barcode_data.csv",
+  "downsample_fractions": [
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    1.0
+  ],
+  "n_replicates": 5,
+  "seed": 230820,
+  "chunk_size": 1000000,
+  "bc1_cell_barcode_position": 1,
+  "bc1_bc_wells_position": 1,
+  "filter_mode": "bc_wells",
+  "exclude_gene_name_regex": "^(?:sg_|gRNA|guide$|b08$)",
+  "exclude_gene_id_regex": "^(?:gene_id_|id_b08$)",
+  "strict_called_cells": false,
+  "include_per_cell_downsampling": true,
+  "samples": [
+    {
+      "sample_id": "hiPSC_circular_capture_BS3",
+      "method": "Circular capture",
+      "tscp_assignment_csv": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230820_eTN2_iPSC_mixed/panmg/process/tscp_assignment.csv",
+      "wells": "A7:A9",
+      "called_cells_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230820_eTN2_iPSC_mixed/panmg/BS3/report/cluster_assignment.csv",
+      "called_cells_candidates": [
+        "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230820_eTN2_iPSC_mixed/panmg/BS3/DGE_filtered/cell_metadata.csv",
+        "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230820_eTN2_iPSC_mixed/panmg/BS3/report/cluster_umap.csv",
+        "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230820_eTN2_iPSC_mixed/panmg/BS3/report/species_tscp_counts.csv"
+      ],
+      "cell_identity_column": "bc_wells",
+      "cell_identity_transform": "identity_numeric"
+    },
+    {
+      "sample_id": "hiPSC_CROP_seq",
+      "method": "CROP-seq",
+      "tscp_assignment_csv": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230621_Tri_guide_iPSCs/iPSC/process/tscp_assignment.csv",
+      "wells": "B1:B12",
+      "called_cells_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230621_Tri_guide_iPSCs/iPSC/report/cluster_assignment.csv",
+      "called_cells_candidates": [
+        "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230621_Tri_guide_iPSCs/iPSC/DGE_filtered/cell_metadata.csv",
+        "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230621_Tri_guide_iPSCs/iPSC/iPSC_guide/DGE_filtered/cell_metadata.csv",
+        "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230621_Tri_guide_iPSCs/iPSC/report/cluster_umap.csv",
+        "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230621_Tri_guide_iPSCs/iPSC/report/species_tscp_counts.csv"
+      ],
+      "cell_identity_column": "bc_wells",
+      "cell_identity_transform": "identity_numeric"
+    }
+  ]
+}

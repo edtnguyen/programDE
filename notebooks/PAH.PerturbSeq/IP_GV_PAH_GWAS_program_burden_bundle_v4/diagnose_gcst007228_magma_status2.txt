@@ -1,0 +1,68 @@
+============================================================
+MAGMA status-2 diagnostic
+Root: /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228
+============================================================
+
+=== 1. GWAS manifest ===
+source_url: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST007001-GCST008000/GCST007228/harmonised/GCST007228.h.tsv.gz
+genome_build: GRCh38
+sample_size: 11744
+formatted_file: /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/gwas/GCST007228.MAGMA.formatted.tsv.gz
+formatted_rows: 11112067
+rsid_fraction: 0.9999980201703248
+selected_columns: {'SNP': 'rsid', 'CHR': 'chromosome', 'BP': 'base_pair_location', 'P': 'p_value', 'BETA': None, 'OR': 'OR'}
+
+=== 2. Existing MAGMA logs ===
+
+----- /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/direct_magma/GCST007228.MAGMA.formatted.35UP.10DOWN.log -----
+Welcome to MAGMA v1.10 (linux)
+Using flags:
+	--bfile /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/g1000_eur/g1000_eur synonym-dup=skip
+	--pval /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/GCST007228.MAGMA.formatted.tsv ncol=N duplicate=drop
+	--gene-annot /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/direct_magma/GCST007228.MAGMA.formatted.35UP.10DOWN.genes.annot
+	--out /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/direct_magma/GCST007228.MAGMA.formatted.35UP.10DOWN
+
+Start time is 22:08:19, Saturday 20 Jun 2026
+
+Loading PLINK-format data...
+Reading file /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/g1000_eur/g1000_eur.fam... 503 individuals read
+Reading file /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/g1000_eur/g1000_eur.bim... 22665064 SNPs read
+Preparing file /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/g1000_eur/g1000_eur.bed... 
+
+Reading SNP synonyms from file /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/g1000_eur/g1000_eur.synonyms (auto-detected)
+	read 6016767 mapped synonyms from file, mapping to 3921040 SNPs in the data
+	WARNING: detected 133 synonymous SNP pairs in the data
+	         skipped all synonym entries involved, synonymous SNPs are kept in analysis
+	         writing list of detected synonyms in data to supplementary log file
+Reading SNP p-values from file /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/GCST007228.MAGMA.formatted.tsv... 
+	detected 7 variables in file
+	using variable: SNP (SNP id)
+	using variable: P (p-value)
+	using variable: N (sample size; discarding SNPs with N < 50)
+
+ERROR - reading p-value file: too few values on line 5908 (found 6, expecting at least 7):
+	line: rs184258449	1	2370745	0.147801	11744	1.4473425766525319	
+
+Terminating program.
+
+=== 3. Locate formatted GWAS and 1000G BIM ===
+Formatted GWAS: /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/gwas/GCST007228.MAGMA.formatted.tsv.gz
+1000G BIM:      /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/g1000_eur/g1000_eur.bim
+
+=== 4. Lightweight SNP-ID and position overlap check ===
+GWAS rows sampled: 250,000
+Unique GWAS SNP IDs sampled: 250,000
+Sampled IDs matching ^rs[0-9]+$: 100.000%
+1000G BIM rows scanned: 22,665,064
+Exact SNP-ID overlap in sample: 229,557/250,000 (91.823%)
+CHR:BP overlap in sample: 2,065/250,000 (0.826%)
+
+DIAGNOSIS_FLAG=SNP_ID_OVERLAP_APPEARS_USABLE
+Inspect the MAGMA log above for a different failure.
+
+=== 5. Direct-MAGMA output inventory ===
+2026-06-20 22:08:19.0000000000     88036658 /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/direct_magma/GCST007228.MAGMA.formatted.35UP.10DOWN.genes.annot
+2026-06-20 22:08:50.0000000000         3545 /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/direct_magma/GCST007228.MAGMA.formatted.35UP.10DOWN.log
+2026-06-20 22:08:50.0000000000         3943 /oak/stanford/groups/engreitz/Users/tri/10xPerturbSeq/analysis/250507_ePAH1_NovaSeq/CRISPR_count/IP_GV_unified_sceptre_cnmf_no_celltype/PerturbNMF/results/IP_GV_skcnmf_K30_dt2_0_n100/Interpretation/PAH_GWAS_program_burden/GCST007228/magma_gene/cache/direct_magma/GCST007228.MAGMA.formatted.35UP.10DOWN.log.suppl
+
+DIAGNOSTIC COMPLETE

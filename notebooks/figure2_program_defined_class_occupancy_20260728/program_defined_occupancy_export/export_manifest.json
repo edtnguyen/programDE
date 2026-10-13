@@ -1,0 +1,14 @@
+{
+  "query_h5ad": "/oak/stanford/groups/engreitz/Users/opushkar/cc_perturb/2.preprocessing_tonys_pipeline/3.integrated_days/3.all_days_concat_pc30_all_genes_sceptre_guides.h5ad",
+  "n_cells": 121616,
+  "n_genes": 17538,
+  "program_usage_source": "external file: /oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50.usages.k_50.dt_0_2.consensus.txt",
+  "n_cells_with_program_usage": 121616,
+  "fraction_cells_with_program_usage": 1.0,
+  "state_assignment_rule": "global_argmax_then_primary_curated_expected_day",
+  "n_primary_curated_programs": 16,
+  "n_expanded_curated_programs": 20,
+  "n_primary_program_state_cells": 69453,
+  "n_target_names": 298,
+  "control_definition": "at least one safe/non-targeting guide and zero targeting guides"
+}

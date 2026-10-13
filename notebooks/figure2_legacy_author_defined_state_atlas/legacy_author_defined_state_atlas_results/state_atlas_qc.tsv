@@ -1,0 +1,3 @@
+population	n_cells	n_states	state_definition_source	state_mapping_source	review_bypassed_by_user_request
+all_CC-Perturb-seq_cells	121616	9	legacy leiden_res_0.5 all-cell clustering	ipsc-ec.Hippo.figure.ipynb	True
+pure_controls	748	8	legacy leiden_res_0.5 all-cell clustering	ipsc-ec.Hippo.figure.ipynb	True

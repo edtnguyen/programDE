@@ -1,0 +1,1 @@
+Soft assignment sensitivity not run: the legacy author-defined atlas supplies hard states/one-hot probabilities only.

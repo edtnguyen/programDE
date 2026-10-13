@@ -1,0 +1,6 @@
+role	path	source	confidence	action
+combined annotated h5ad	/oak/stanford/groups/engreitz/Users/opushkar/cc_perturb/2.preprocessing_tonys_pipeline/3.integrated_days/3.all_days_concat_pc30_all_genes_sceptre_guides.h5ad	fig3 and jesse_umap notebooks	high	inspect on Sherlock; split by day only after day-column validation
+combined PerturbNMF h5mu	/oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50/adata/cNMF_50_0_2.h5mu	jesse_umap notebook	high	inspect; do not create four copies
+cNMF usage matrix	/oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50.usages.k_50.dt_0_2.consensus.txt	fig3 notebook	high	supporting input/example; not automatically a portal file
+program metadata/annotations	/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/per_day_umaps/data/program_activity_long_v4.csv	jesse_umap notebook repository convention	medium	supporting metadata; confirm actual path exists
+guide metadata v43	TBD_ABSOLUTE_PATH/300genes_guide_metadata_v43.tsv	prompt says already uploaded	missing	provide absolute Sherlock path if needed for conversion validation

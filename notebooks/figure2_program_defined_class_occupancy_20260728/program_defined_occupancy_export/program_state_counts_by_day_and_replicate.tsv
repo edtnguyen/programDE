@@ -1,0 +1,33 @@
+day	biological_replicate	assigned_state	assigned_program_name	n_cells	median_dominant_fraction
+D0	d0_rep1	P22	Pluripotency	208	0.15756627172231674
+D0	d0_rep1	P29	Pluripotency	213	0.16966688632965088
+D0	d0_rep1	P7	Pluripotency	8746	0.21144288033246994
+D0	d0_rep2	P22	Pluripotency	3743	0.1811138242483139
+D0	d0_rep2	P29	Pluripotency	1049	0.15868397057056427
+D0	d0_rep2	P7	Pluripotency	2391	0.2133706957101822
+D1	d1_rep1	P13	Posterior primitive streak	1650	0.2042892873287201
+D1	d1_rep1	P28	Primitive streak	2376	0.1942829191684723
+D1	d1_rep1	P30	Primitive streak, BMP-repressed 1	667	0.2014157921075821
+D1	d1_rep1	P48	Primitive streak, BMP-repressed 2	69	0.1992001086473465
+D1	d1_rep2	P13	Posterior primitive streak	2648	0.22801899164915085
+D1	d1_rep2	P28	Primitive streak	1239	0.18153536319732666
+D1	d1_rep2	P30	Primitive streak, BMP-repressed 1	1121	0.2227407991886139
+D1	d1_rep2	P48	Primitive streak, BMP-repressed 2	207	0.23035526275634766
+D2	d2_rep1	P14	Lateral mesoderm	1656	0.23397064208984375
+D2	d2_rep1	P15	Vascular progenitor	1836	0.30038249492645264
+D2	d2_rep1	P17	Lateral mesoderm, YAP/TAZ-induced	2014	0.25952407717704773
+D2	d2_rep2	P14	Lateral mesoderm	2468	0.27181369066238403
+D2	d2_rep2	P15	Vascular progenitor	1740	0.3253318965435028
+D2	d2_rep2	P17	Lateral mesoderm, YAP/TAZ-induced	1880	0.28522709012031555
+D3	d3_rep1	P11	Endothelial function 2	1047	0.24487632513046265
+D3	d3_rep1	P2	Artery endothelium 1	3833	0.26991620659828186
+D3	d3_rep1	P3	Endothelial function 1	6760	0.2632184326648712
+D3	d3_rep1	P33	Anterior-like mesoderm	1284	0.3183334469795227
+D3	d3_rep1	P34	Mesenchyme, YAP/TAZ-induced	595	0.23261678218841553
+D3	d3_rep1	P8	Artery endothelium 2	1441	0.25704285502433777
+D3	d3_rep2	P11	Endothelial function 2	1025	0.25821974873542786
+D3	d3_rep2	P2	Artery endothelium 1	4666	0.2934273034334183
+D3	d3_rep2	P3	Endothelial function 1	5233	0.26879510283470154
+D3	d3_rep2	P33	Anterior-like mesoderm	1404	0.3214957118034363
+D3	d3_rep2	P34	Mesenchyme, YAP/TAZ-induced	591	0.23165766894817352
+D3	d3_rep2	P8	Artery endothelium 2	3653	0.27352818846702576

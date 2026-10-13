@@ -1,0 +1,35 @@
+{
+  "out_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/figure1_cc_capture_b08_only",
+  "detection_threshold": 5,
+  "skip_plots": false,
+  "qc_filter_parse": {
+    "min_genes": 300,
+    "max_genes": 10000,
+    "max_counts": 100000,
+    "max_pct_mt": 10
+  },
+  "datasets": {
+    "ipsc_single_cc_b08": {
+      "enabled": true,
+      "matrix_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230820_eTN2_iPSC_mixed/panmg/BS3/DGE_filtered",
+      "dataset_id": "ipsc_single_guide_b08_only",
+      "sample_id": "hiPSC_circular_capture_b08",
+      "method": "Circular capture",
+      "cell_type": "hiPSC",
+      "expected_feature": "sg_b08",
+      "expected_feature_regex": "^sg_b08$",
+      "guide_exclusion_regex": "sg_"
+    },
+    "ipsc_single_crop_b08": {
+      "enabled": true,
+      "matrix_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/230621_Tri_guide_iPSCs/iPSC/iPSC_guide/DGE_filtered",
+      "dataset_id": "ipsc_single_guide_b08_only",
+      "sample_id": "hiPSC_CROP_seq_b08",
+      "method": "CROP-seq",
+      "cell_type": "hiPSC",
+      "expected_feature": "b08",
+      "expected_feature_regex": "^b08$",
+      "guide_exclusion_regex": "^(b08)$|sg_"
+    }
+  }
+}

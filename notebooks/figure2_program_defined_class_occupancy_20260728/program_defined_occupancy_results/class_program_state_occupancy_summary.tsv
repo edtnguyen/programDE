@@ -1,0 +1,160 @@
+analysis_population	regulator_class	day	state	n_evaluable_targets	median_log_odds_ratio	fraction_significant_in_displayed_direction	n_significant_in_displayed_direction	displayed_direction
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D0	P22	19	-0.08624948273752749	0.0	0	depleted
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D0	P29	19	0.028385569204953626	0.0	0	enriched
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D0	P7	19	0.06747541165019645	0.0	0	enriched
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D1	P13	19	0.09402025438333592	0.0	0	enriched
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D1	P28	19	-0.09922316041855951	0.0	0	depleted
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D1	P30	19	-0.0714364534277452	0.0	0	depleted
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D1	P48	18	0.3029315889798083	0.0	0	enriched
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D2	P14	19	0.007263376902344151	0.0	0	enriched
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D2	P15	19	-0.04601642922239085	0.10526315789473684	2	depleted
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D2	P17	19	-0.0533696649915164	0.0	0	depleted
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D3	P11	19	0.037785152968510524	0.0	0	enriched
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D3	P2	19	-0.035413089772307685	0.0	0	depleted
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D3	P3	19	-0.08817157401155763	0.05263157894736842	1	depleted
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D3	P33	19	-0.05194318678177631	0.0	0	depleted
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D3	P34	19	-0.13159857228552133	0.0	0	depleted
+primary_curated_dominant_expected_day	Apoptosis / cell cycle / stress	D3	P8	19	0.056797381385481974	0.0	0	enriched
+primary_curated_dominant_expected_day	Chromatin regulation	D0	P22	31	-0.044809829454326496	0.0	0	depleted
+primary_curated_dominant_expected_day	Chromatin regulation	D0	P29	31	-0.20891138807484136	0.0	0	depleted
+primary_curated_dominant_expected_day	Chromatin regulation	D0	P7	31	0.10678856592620904	0.0	0	enriched
+primary_curated_dominant_expected_day	Chromatin regulation	D1	P13	31	0.015516209699957925	0.0	0	enriched
+primary_curated_dominant_expected_day	Chromatin regulation	D1	P28	31	0.02288017119430469	0.0	0	enriched
+primary_curated_dominant_expected_day	Chromatin regulation	D1	P30	31	-0.18741812509914915	0.0	0	depleted
+primary_curated_dominant_expected_day	Chromatin regulation	D1	P48	28	0.11749890228803815	0.0	0	enriched
+primary_curated_dominant_expected_day	Chromatin regulation	D2	P14	31	-0.012104750562275243	0.03225806451612903	1	depleted
+primary_curated_dominant_expected_day	Chromatin regulation	D2	P15	31	-0.18771831583521698	0.12903225806451613	4	depleted
+primary_curated_dominant_expected_day	Chromatin regulation	D2	P17	31	0.013393318866133062	0.16129032258064516	5	enriched
+primary_curated_dominant_expected_day	Chromatin regulation	D3	P11	31	-0.07038510884495744	0.0	0	depleted
+primary_curated_dominant_expected_day	Chromatin regulation	D3	P2	31	-0.02699098539593537	0.0	0	depleted
+primary_curated_dominant_expected_day	Chromatin regulation	D3	P3	31	-0.061571168638446194	0.0	0	depleted
+primary_curated_dominant_expected_day	Chromatin regulation	D3	P33	31	-0.18547150568370252	0.06451612903225806	2	depleted
+primary_curated_dominant_expected_day	Chromatin regulation	D3	P34	31	0.06523736909887666	0.0967741935483871	3	enriched
+primary_curated_dominant_expected_day	Chromatin regulation	D3	P8	31	-0.05591155124045344	0.03225806451612903	1	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D0	P22	6	-0.019297990290806095	0.0	0	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D0	P29	6	0.001307856239816857	0.0	0	enriched
+primary_curated_dominant_expected_day	Hippo / YAP	D0	P7	6	0.09872906064187374	0.0	0	enriched
+primary_curated_dominant_expected_day	Hippo / YAP	D1	P13	6	0.261803641972269	0.0	0	enriched
+primary_curated_dominant_expected_day	Hippo / YAP	D1	P28	6	-0.17288885998691494	0.0	0	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D1	P30	6	-0.33383048566172213	0.0	0	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D1	P48	5	-0.10118271016987182	0.0	0	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D2	P14	6	-0.38228056286344425	0.5	3	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D2	P15	6	-0.6503221306796432	0.5	3	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D2	P17	6	0.6625248265242507	0.8333333333333334	5	enriched
+primary_curated_dominant_expected_day	Hippo / YAP	D3	P11	6	-0.00835995698749806	0.0	0	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D3	P2	6	-0.4883435488628181	0.5	3	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D3	P3	6	-0.27283422577679883	0.5	3	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D3	P33	6	-0.194696522703696	0.16666666666666666	1	depleted
+primary_curated_dominant_expected_day	Hippo / YAP	D3	P34	6	1.3091318873547437	0.8333333333333334	5	enriched
+primary_curated_dominant_expected_day	Hippo / YAP	D3	P8	6	-0.4141046472504668	0.3333333333333333	2	depleted
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D0	P22	41	-0.03562541127717623	0.0	0	depleted
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D0	P29	41	-0.040022305058493614	0.0	0	depleted
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D0	P7	41	0.08603987005278466	0.0	0	enriched
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D1	P13	41	-0.05497176012474605	0.0	0	depleted
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D1	P28	41	0.04373888929579643	0.0	0	enriched
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D1	P30	41	0.015673810843264496	0.0	0	enriched
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D1	P48	35	0.2504249636356946	0.0	0	enriched
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D2	P14	41	-0.00326351379559096	0.024390243902439025	1	depleted
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D2	P15	41	-0.10104818953912234	0.04878048780487805	2	depleted
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D2	P17	41	0.0031832858138535797	0.04878048780487805	2	enriched
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D3	P11	41	-0.04992883910578837	0.0	0	depleted
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D3	P2	41	0.02062449892540112	0.024390243902439025	1	enriched
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D3	P3	41	-0.020726983392967375	0.04878048780487805	2	depleted
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D3	P33	41	-0.08625856943782237	0.0	0	depleted
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D3	P34	40	-0.0791837774912399	0.0	0	depleted
+primary_curated_dominant_expected_day	Metabolism / trafficking / adhesion	D3	P8	41	-0.03601586569655499	0.0	0	depleted
+primary_curated_dominant_expected_day	Other reviewed regulators	D0	P22	18	0.00795884336409127	0.0	0	enriched
+primary_curated_dominant_expected_day	Other reviewed regulators	D0	P29	18	-0.0034326679131342144	0.0	0	depleted
+primary_curated_dominant_expected_day	Other reviewed regulators	D0	P7	18	-0.022772462542920167	0.0	0	depleted
+primary_curated_dominant_expected_day	Other reviewed regulators	D1	P13	18	0.06375967417060915	0.0	0	enriched
+primary_curated_dominant_expected_day	Other reviewed regulators	D1	P28	18	-0.11118374879846905	0.0	0	depleted
+primary_curated_dominant_expected_day	Other reviewed regulators	D1	P30	18	-0.007016443078005461	0.0	0	depleted
+primary_curated_dominant_expected_day	Other reviewed regulators	D1	P48	17	0.12322810346614693	0.0	0	enriched
+primary_curated_dominant_expected_day	Other reviewed regulators	D2	P14	18	0.033257513431652626	0.0	0	enriched
+primary_curated_dominant_expected_day	Other reviewed regulators	D2	P15	18	-0.2725091067257736	0.16666666666666666	3	depleted
+primary_curated_dominant_expected_day	Other reviewed regulators	D2	P17	18	0.11481150170943213	0.0	0	enriched
+primary_curated_dominant_expected_day	Other reviewed regulators	D3	P11	18	-0.0060637003461014895	0.0	0	depleted
+primary_curated_dominant_expected_day	Other reviewed regulators	D3	P2	18	-0.09431638899087769	0.0	0	depleted
+primary_curated_dominant_expected_day	Other reviewed regulators	D3	P3	18	-0.0577492061954402	0.16666666666666666	3	depleted
+primary_curated_dominant_expected_day	Other reviewed regulators	D3	P33	18	-0.08174001721103172	0.0	0	depleted
+primary_curated_dominant_expected_day	Other reviewed regulators	D3	P34	18	0.009345165475395007	0.1111111111111111	2	enriched
+primary_curated_dominant_expected_day	Other reviewed regulators	D3	P8	18	-0.04075123630520476	0.0	0	depleted
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D0	P22	9	-0.04599365657271361	0.0	0	depleted
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D0	P29	9	0.034012921978452425	0.0	0	enriched
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D0	P7	9	0.03777670175590377	0.0	0	enriched
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D1	P13	9	-0.5689413148866297	0.4444444444444444	4	depleted
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D1	P28	9	0.22762174672992966	0.3333333333333333	3	enriched
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D1	P30	9	0.14160934076407003	0.1111111111111111	1	enriched
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D1	P48	7	0.33378725508501916	0.0	0	enriched
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D2	P14	9	-0.09563978682940728	0.2222222222222222	2	depleted
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D2	P15	9	-0.22848639734473766	0.1111111111111111	1	depleted
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D2	P17	9	0.21656191548997816	0.2222222222222222	2	enriched
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D3	P11	9	-0.5987971553809941	0.3333333333333333	3	depleted
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D3	P2	9	-0.5435410388396434	0.5555555555555556	5	depleted
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D3	P3	9	-0.6203248030290065	0.5555555555555556	5	depleted
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D3	P33	9	1.4988813031849741	0.5555555555555556	5	enriched
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D3	P34	9	0.10277486755971395	0.2222222222222222	2	enriched
+primary_curated_dominant_expected_day	TGF/BMP/Activin	D3	P8	9	-0.43620935809775896	0.5555555555555556	5	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D0	P22	68	-0.03182615752248663	0.0	0	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D0	P29	68	-0.15680739865469123	0.0	0	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D0	P7	68	0.08233379866838944	0.0	0	enriched
+primary_curated_dominant_expected_day	Transcription / RNA processing	D1	P13	68	0.055228073204321146	0.014705882352941176	1	enriched
+primary_curated_dominant_expected_day	Transcription / RNA processing	D1	P28	68	-0.021382791417198663	0.014705882352941176	1	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D1	P30	68	-0.06907657864177437	0.0	0	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D1	P48	61	0.03957121901587297	0.0	0	enriched
+primary_curated_dominant_expected_day	Transcription / RNA processing	D2	P14	68	0.038686097191068546	0.029411764705882353	2	enriched
+primary_curated_dominant_expected_day	Transcription / RNA processing	D2	P15	68	-0.21698336595826673	0.11764705882352941	8	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D2	P17	68	0.041725233751867256	0.07352941176470588	5	enriched
+primary_curated_dominant_expected_day	Transcription / RNA processing	D3	P11	68	-0.072683046905227	0.0	0	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D3	P2	68	-0.04872984912788578	0.058823529411764705	4	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D3	P3	68	-0.020375968255034054	0.07352941176470588	5	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D3	P33	68	-0.04240703785615742	0.0	0	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D3	P34	68	-0.06699771376823929	0.029411764705882353	2	depleted
+primary_curated_dominant_expected_day	Transcription / RNA processing	D3	P8	68	0.008780231719914199	0.014705882352941176	1	enriched
+primary_curated_dominant_expected_day	Translation / proteostasis	D0	P22	41	-0.06554120550159041	0.0	0	depleted
+primary_curated_dominant_expected_day	Translation / proteostasis	D0	P29	41	0.08289653691310998	0.024390243902439025	1	enriched
+primary_curated_dominant_expected_day	Translation / proteostasis	D0	P7	41	0.0018654464112490294	0.0	0	enriched
+primary_curated_dominant_expected_day	Translation / proteostasis	D1	P13	41	0.043325863758859724	0.0	0	enriched
+primary_curated_dominant_expected_day	Translation / proteostasis	D1	P28	41	-0.09554021521917444	0.0	0	depleted
+primary_curated_dominant_expected_day	Translation / proteostasis	D1	P30	41	-0.10759942153635402	0.0	0	depleted
+primary_curated_dominant_expected_day	Translation / proteostasis	D1	P48	36	0.18899988287645036	0.0	0	enriched
+primary_curated_dominant_expected_day	Translation / proteostasis	D2	P14	41	-0.06578097649203096	0.07317073170731707	3	depleted
+primary_curated_dominant_expected_day	Translation / proteostasis	D2	P15	41	-0.18451753994037923	0.024390243902439025	1	depleted
+primary_curated_dominant_expected_day	Translation / proteostasis	D2	P17	41	0.1149703519678538	0.0975609756097561	4	enriched
+primary_curated_dominant_expected_day	Translation / proteostasis	D3	P11	40	-0.023166134779393433	0.0	0	depleted
+primary_curated_dominant_expected_day	Translation / proteostasis	D3	P2	41	-0.0676804280086949	0.0	0	depleted
+primary_curated_dominant_expected_day	Translation / proteostasis	D3	P3	41	-0.05614810813106375	0.024390243902439025	1	depleted
+primary_curated_dominant_expected_day	Translation / proteostasis	D3	P33	41	-0.1227633450907765	0.07317073170731707	3	depleted
+primary_curated_dominant_expected_day	Translation / proteostasis	D3	P34	41	0.057642006584763705	0.12195121951219512	5	enriched
+primary_curated_dominant_expected_day	Translation / proteostasis	D3	P8	41	-0.06790111308860904	0.07317073170731707	3	depleted
+primary_curated_dominant_expected_day	VEGF / EC specification	D0	P22	4	0.15450054524953732	0.0	0	enriched
+primary_curated_dominant_expected_day	VEGF / EC specification	D0	P29	4	-0.20895285519797402	0.0	0	depleted
+primary_curated_dominant_expected_day	VEGF / EC specification	D0	P7	4	0.02165606175675279	0.0	0	enriched
+primary_curated_dominant_expected_day	VEGF / EC specification	D1	P13	4	0.002179890643474791	0.25	1	enriched
+primary_curated_dominant_expected_day	VEGF / EC specification	D1	P28	4	-0.05540375379056968	0.0	0	depleted
+primary_curated_dominant_expected_day	VEGF / EC specification	D1	P30	4	0.04746022304139276	0.0	0	enriched
+primary_curated_dominant_expected_day	VEGF / EC specification	D2	P14	4	0.13997874082826697	0.25	1	enriched
+primary_curated_dominant_expected_day	VEGF / EC specification	D2	P15	4	-1.4433471620301679	0.75	3	depleted
+primary_curated_dominant_expected_day	VEGF / EC specification	D2	P17	4	0.15295826000260646	0.25	1	enriched
+primary_curated_dominant_expected_day	VEGF / EC specification	D3	P11	4	-0.42935467036548397	0.0	0	depleted
+primary_curated_dominant_expected_day	VEGF / EC specification	D3	P2	4	-0.5559940589308248	0.25	1	depleted
+primary_curated_dominant_expected_day	VEGF / EC specification	D3	P3	4	-0.4942545519831618	0.75	3	depleted
+primary_curated_dominant_expected_day	VEGF / EC specification	D3	P33	4	0.7158614161507022	0.75	3	enriched
+primary_curated_dominant_expected_day	VEGF / EC specification	D3	P34	4	0.7226010422461246	0.75	3	enriched
+primary_curated_dominant_expected_day	VEGF / EC specification	D3	P8	4	-0.4005722519449194	0.25	1	depleted
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D0	P22	6	0.044041016302918706	0.0	0	enriched
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D0	P29	6	-0.12677979157349833	0.0	0	depleted
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D0	P7	6	0.033941082725715346	0.0	0	enriched
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D1	P13	6	0.2960332213489081	0.3333333333333333	2	enriched
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D1	P28	6	-0.39558830614769736	0.3333333333333333	2	depleted
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D1	P30	6	-0.2604615622252483	0.3333333333333333	2	depleted
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D1	P48	5	-0.12695562373677222	0.0	0	depleted
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D2	P14	6	-0.24762072248646538	0.16666666666666666	1	depleted
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D2	P15	6	-0.6942386422911545	0.5	3	depleted
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D2	P17	6	0.6383305918647311	0.6666666666666666	4	enriched
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D3	P11	6	-0.14758967312673665	0.16666666666666666	1	depleted
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D3	P2	6	-0.2933787227509445	0.3333333333333333	2	depleted
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D3	P3	6	-0.07078462262414975	0.16666666666666666	1	depleted
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D3	P33	6	0.00025571303484968333	0.3333333333333333	2	enriched
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D3	P34	6	0.2916082988529663	0.16666666666666666	1	enriched
+primary_curated_dominant_expected_day	WNT / mesoderm regulators	D3	P8	6	-0.1894830183688136	0.0	0	depleted

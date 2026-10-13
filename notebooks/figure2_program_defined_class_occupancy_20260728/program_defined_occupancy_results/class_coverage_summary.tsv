@@ -1,0 +1,11 @@
+regulator_class	minimum_evaluable_targets	maximum_evaluable_targets	n_day_program_combinations
+Apoptosis / cell cycle / stress	18	19	16
+Chromatin regulation	28	31	16
+Hippo / YAP	5	6	16
+Metabolism / trafficking / adhesion	35	41	16
+Other reviewed regulators	17	18	16
+TGF/BMP/Activin	7	9	16
+Transcription / RNA processing	61	68	16
+Translation / proteostasis	36	41	16
+VEGF / EC specification	4	4	15
+WNT / mesoderm regulators	5	6	16

@@ -1,0 +1,20 @@
+Exact-zero cNMF usages were first replaced using a day-specific floor,
+ε0,d = max[1e-8, 0.1 × Q0.01(Uraw,d | Uraw,d > 0)], and each cell's usage
+vector was renormalized. The current analysis then applied the programDE
+lower-tail floor at quantile q=1e-04 before a second row
+renormalization and CLR transformation. Sensitivity analyses independently
+varied the initial floor over [0.1, 1.0, 10.0]× and the internal
+quantile over [0.0, 1e-05, 0.0001, 0.001], including q=0 as a stage-1-only
+condition. The full 3×4 grid was evaluated at the transformed-response level.
+Empirical Bernoulli CRT inference used B=10,000 resamples for the axis-isolating
+'primary' grid, while cells, six-source covariates, guide assignments,
+NTC pseudo-target groups, and random seeds were held fixed.
+
+Interpretation guide:
+- Stage-2 positive-entry modification quantifies whether the internal floor
+  truncates genuinely positive cNMF usages rather than only zero-derived values.
+- CLR and beta correlations assess numerical and inferential stability.
+- Discovery Jaccard assesses stability of q-value conclusions.
+- NTC nominal rates, QQ RMSE, tail RMSE, and KS distance assess calibration.
+- Correlation of beta changes with raw-zero burden or stage-2 truncation helps
+  identify whether sensitivity scales with the amount of flooring applied.

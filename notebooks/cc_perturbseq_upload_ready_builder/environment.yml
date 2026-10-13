@@ -1,0 +1,17 @@
+name: igvf-upload-ready
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - anndata>=0.10.8,<0.12
+  - mudata>=0.3,<0.4
+  - muon>=0.1.6,<0.2
+  - scanpy>=1.10,<1.12
+  - pandas>=2,<3
+  - numpy>=1.26,<3
+  - scipy>=1.11
+  - h5py>=3.10
+  - jupyterlab
+  - ipykernel
+  - nbconvert

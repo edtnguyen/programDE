@@ -1,0 +1,13 @@
+{
+  "output_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/cc_perturbseq_supplementary_panels",
+  "bundle_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/cc_perturbseq_supplementary_panels/cc_perturbseq_supplementary_panels_bundle.zip",
+  "knockdown_sample_id": "hiPSC_10gene_pilot",
+  "inputs": {
+    "figure1_bundle": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/figure1_cc_capture/figure1_plot_input_bundle.zip",
+    "b08_bundle": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/figure1_cc_capture_b08_only/figure1_b08_plot_input_bundle.zip",
+    "fig1d_downsampling_bundle": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/figure1_transcriptome_downsampling_A4_A6/fig1d_transcriptome_downsampling_plot_input_bundle.zip",
+    "k562_parsev3_bundle": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/250730_eTN10_Parsev3_mixediPSC_K562/figure_panel_export_v2_lowmem/k562_parsev3_figure_panel_plot_input_bundle.zip",
+    "knockdown_per_gene_bundle": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/figure4a_like_knockdown_per_gene_export_v2/fig4a_like_knockdown_per_gene_plot_input_bundle.zip",
+    "knockdown_per_guide_bundle": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/figure4a_like_knockdown_export_v2/fig4a_like_knockdown_plot_input_bundle.zip"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "CONSENSUS_PATH": "/oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50.spectra.k_50.dt_0_2.consensus.txt",
+  "PROGRAM_ANNOT_PATH": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/per_day_umaps/data/Programs_annotations.xlsx",
+  "CNMF_WORKBOOK_PATH": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/per_day_umaps/data/cNMF_50_0_2_032526_6co.xlsx",
+  "ENHANCER_ENRICHMENT_PATH": "/oak/stanford/groups/engreitz/Users/opushkar/multiome_ipsc_ec_v0/analysis/2.tf_enrichment_in_programs/enhancer_enrichment_results.tsv",
+  "CLUSTER_MAP_PATH": "/oak/stanford/groups/engreitz/Users/opushkar/multiome_ipsc_ec_v0/analysis/0.0.motif_id_annotation/tables/cluster_to_tf_motif_id_mapping.tsv",
+  "MODISCO_H5_PATH": "/oak/stanford/groups/engreitz/Users/opushkar/multiome_ipsc_ec_v0/archive/_results/compendium/modisco_compiled/modisco_compiled.h5",
+  "PROGRAM_OFFSET": "auto",
+  "consensus_offset_chosen": 1,
+  "N_TOP_REGULATORS": 3,
+  "N_TOP_MOTIFS": 3,
+  "DAYS_TO_PLOT": [
+    "D2",
+    "D3"
+  ],
+  "PROGRAMS_BY_DAY": {
+    "D2": [
+      17
+    ],
+    "D3": [
+      27
+    ]
+  },
+  "FOCUSED_FIGURE_TITLE": "Focused program annotation: D2 P17 and D3 P27",
+  "D2_N_ADDITIONAL_TOP_LOADING_GENES": 3,
+  "D3_N_CURATED_MARKERS_TO_KEEP": 3,
+  "D2_CURATED_GENES_FIRST": true,
+  "REGULATOR_FDR_THRESHOLD": 0.05,
+  "MOTIF_QVAL_THRESHOLD": 0.05,
+  "VECTOR_LOGOS": true,
+  "ROTATE_MOTIF_LOGOS_DEGREES": 90,
+  "MAKE_PER_DAY_PANELS": true,
+  "MAKE_COMBINED_ALL_DAYS_FIGURE": true,
+  "shared_color_scales": {
+    "regulator_vmin": -5.441590145141315,
+    "regulator_vmax": 5.441590145141315,
+    "marker_vmin": 0.0,
+    "marker_vmax": 0.0027474042,
+    "motif_vmin": 0.0,
+    "motif_vmax": 20.18868113064896
+  }
+}

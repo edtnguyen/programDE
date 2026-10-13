@@ -1,0 +1,10 @@
+state	color	source
+iPSC	#6E6E6E	package state_color_map.tsv
+Neuro-iPSC	#9A9A9A	package state_color_map.tsv
+PrimStreak	#4C9A5B	package state_color_map.tsv
+Lat-Meso	#8A63B8	package state_color_map.tsv
+Pre-EC	#D78B35	package state_color_map.tsv
+artEC	#C94949	package state_color_map.tsv
+Fibro-Mesen	#3F78B5	package state_color_map.tsv
+Neu-Mesen	#70A6C9	package state_color_map.tsv
+Others	#BDBDBD	package state_color_map.tsv

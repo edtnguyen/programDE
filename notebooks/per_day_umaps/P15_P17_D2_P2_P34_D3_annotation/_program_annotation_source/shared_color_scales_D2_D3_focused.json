@@ -1,0 +1,12 @@
+{
+  "regulator_vmin": -5.784221937211233,
+  "regulator_vmax": 5.784221937211233,
+  "marker_vmin": 0.0,
+  "marker_vmax": 0.0036654263,
+  "motif_vmin": 0.0,
+  "motif_vmax": 42.609907641367634,
+  "motif_raw_vmax": 57.71760431894134,
+  "motif_clipping_applied": true,
+  "motif_clip_method": "percentile",
+  "motif_clip_percentile": 95.0
+}

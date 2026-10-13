@@ -1,0 +1,59 @@
+project:
+  name: WTC11-EC 300-gene CC-Perturb-seq analysis submission
+  portal_mode: prod
+  portal_api: https://api.data.igvf.org
+  award: /awards/HG011972/
+  lab: /labs/jesse-engreitz/
+  staging_base: /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission
+  metadata_workbook: inputs/metadata_workbook_original.xlsx
+  sequence_accession_manifest: config/sequence_file_accessions.csv
+analysis_set_mappings:
+  workbook_current:
+    D0: IGVFDS5257JGQO
+    D1: IGVFDS3530HHEU
+    D2: IGVFDS7380DUFB
+    D3: IGVFDS6826YKCZ
+  provided_existing_examples:
+    D0: IGVFDS0463XTUH
+    D1: IGVFDS0991DBQZ
+    D2: IGVFDS4402ZGWJ
+    D3: IGVFDS2307REVJ
+  active_mapping: workbook_current
+  note: Use exactly four existing AnalysisSets, one per timepoint. workbook_current
+    is authoritative for all new D0-D3 files. The supplied Portal AnalysisSets are
+    read-only examples of files already uploaded and must not be used as file_set
+    values for new files.
+  combined_program_gene_universe_example: IGVFDS9440URJB
+source_paths:
+  combined_h5ad: /oak/stanford/groups/engreitz/Users/opushkar/cc_perturb/2.preprocessing_tonys_pipeline/3.integrated_days/3.all_days_concat_pc30_all_genes_sceptre_guides.h5ad
+  combined_h5mu: /oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50/adata/cNMF_50_0_2.h5mu
+  cnmf_usage: /oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50.usages.k_50.dt_0_2.consensus.txt
+  program_metadata: /oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/per_day_umaps/data/program_activity_long_v4.csv
+  guide_metadata_v43: ''
+  source_path_overrides: config/source_path_overrides.tsv
+portal_examples:
+- IGVFDS5257JGQO
+- IGVFDS3530HHEU
+- IGVFDS7380DUFB
+- IGVFDS6826YKCZ
+- IGVFDS0463XTUH
+- IGVFDS0991DBQZ
+- IGVFDS4402ZGWJ
+- IGVFDS2307REVJ
+- IGVFDS9440URJB
+options:
+  run_portal_audit: true
+  write_staged_files: false
+  overwrite_staged_files: false
+  split_h5ad_by_day: true
+  perturbnmf_matrix_strategy: BLOCK_UNTIL_DACC_DECISION
+  skip_already_uploaded_perturbnmf_tables: true
+  rename_tabular_columns: false
+  day_column_candidates:
+  - day
+  - timepoint
+  - Day
+  require_exactly_four_timepoint_analysis_sets: true
+tools:
+  igvf_python: /oak/stanford/groups/engreitz/Users/tri/envs/igvf_utils/bin/python
+  iu_register: /oak/stanford/groups/engreitz/Users/tri/envs/igvf_utils/igvf_utils/igvf_utils/MetaDataRegistration/iu_register.py

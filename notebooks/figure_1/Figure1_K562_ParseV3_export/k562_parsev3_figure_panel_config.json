@@ -1,0 +1,59 @@
+{
+  "output_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/250730_eTN10_Parsev3_mixediPSC_K562/figure_panel_export",
+  "bundle_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/250730_eTN10_Parsev3_mixediPSC_K562/figure_panel_export/k562_parsev3_figure_panel_plot_input_bundle.zip",
+
+  "dge_filtered_dir": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/250730_eTN10_Parsev3_mixediPSC_K562/splitpipe_out/WT/sub1/all-sample/DGE_filtered/",
+  "guide_data_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/250730_eTN10_Parsev3_mixediPSC_K562/splitpipe_out/CRISPR_combined/grnaxcell_count.tsv",
+  "all_guides_path": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/250730_eTN10_Parsev3_mixediPSC_K562/splitpipe_out/CRISPR/sub1/all-sample/guide_RNAs_unfiltered/all_guides.csv",
+
+  "gene_name_column": "gene_name",
+  "cell_id_column": "bc_wells",
+  "mito_prefix": "MT-",
+
+  "gex_qc": {
+    "max_genes_by_counts": 5000,
+    "max_total_counts": 5000,
+    "max_pct_counts_mt": 40
+  },
+
+  "cell_type_assignment": {
+    "method": "scanpy_leiden_marker_label",
+    "leiden_resolution": 0.2,
+    "k562_markers": ["GATA1", "KLF1", "HBB", "HBA1", "HBA2"],
+    "hipsc_markers": ["SOX2", "NANOG", "POU5F1", "LIN28A"]
+  },
+
+  "sample_order": ["CS1", "DC1", "Dual", "no_guide"],
+  "primer_samples": ["CS1", "DC1", "Dual"],
+  "guide_threshold": 5,
+  "guide_detection_thresholds": [1, 3, 5, 10, 20, 50],
+  "guide_chunksize": 1000000,
+
+  "primer_test_metrics": [
+    "total_gRNA",
+    "expected_species_total_gRNA",
+    "top_guide_umis",
+    "guide_umis_per_detected_guide"
+  ],
+
+  "summary_metrics": [
+    "total_gRNA",
+    "top_guide_umis",
+    "iPSC_total",
+    "K562_total",
+    "expected_species_total_gRNA",
+    "off_species_total_gRNA",
+    "correct_species_guide_fraction",
+    "guide_umis_per_detected_guide",
+    "total_counts",
+    "n_genes_by_counts",
+    "pct_counts_mt"
+  ],
+
+  "saturation_files": {
+    "CS1": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/250730_eTN10_Parsev3_mixediPSC_K562/splitpipe_out/WT/sub1/CS1/report/tscp_counts_subsampled.csv",
+    "DC1": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/250730_eTN10_Parsev3_mixediPSC_K562/splitpipe_out/WT/sub1/DC1/report/tscp_counts_subsampled.csv",
+    "Dual": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/250730_eTN10_Parsev3_mixediPSC_K562/splitpipe_out/WT/sub1/Dual/report/tscp_counts_subsampled.csv",
+    "no_guide": "/oak/stanford/groups/engreitz/Users/tri/Perturb-Seq/analysis/250730_eTN10_Parsev3_mixediPSC_K562/splitpipe_out/WT/sub1/no_guide/report/tscp_counts_subsampled.csv"
+  }
+}

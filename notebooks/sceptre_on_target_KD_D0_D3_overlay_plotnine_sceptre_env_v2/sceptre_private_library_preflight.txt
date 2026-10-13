@@ -1,0 +1,4 @@
+sceptre_version=0.10.3
+sceptre_path=/oak/stanford/groups/engreitz/Users/tri/envs/sceptre_env/lib/R/library/sceptre
+private_library=/oak/stanford/groups/engreitz/Users/tri/Rlibs/sceptre_0.10.3
+r_version=R version 4.5.1 (2025-06-13)

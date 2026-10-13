@@ -1,0 +1,17 @@
+gsm	condition	stimulation	treated	pair_id	contrast
+GSM1755137	siControl	baseline	0	baseline_rep1	BMPR2_siRNA_baseline
+GSM1755145	siBMPR2	baseline	1	baseline_rep1	BMPR2_siRNA_baseline
+GSM1755141	siControl_PMA	PMA	0	PMA_rep1	BMPR2_siRNA_PMA
+GSM1755149	siBMPR2_PMA	PMA	1	PMA_rep1	BMPR2_siRNA_PMA
+GSM1755138	siControl	baseline	0	baseline_rep2	BMPR2_siRNA_baseline
+GSM1755146	siBMPR2	baseline	1	baseline_rep2	BMPR2_siRNA_baseline
+GSM1755142	siControl_PMA	PMA	0	PMA_rep2	BMPR2_siRNA_PMA
+GSM1755150	siBMPR2_PMA	PMA	1	PMA_rep2	BMPR2_siRNA_PMA
+GSM1755139	siControl	baseline	0	baseline_rep3	BMPR2_siRNA_baseline
+GSM1755147	siBMPR2	baseline	1	baseline_rep3	BMPR2_siRNA_baseline
+GSM1755143	siControl_PMA	PMA	0	PMA_rep3	BMPR2_siRNA_PMA
+GSM1755151	siBMPR2_PMA	PMA	1	PMA_rep3	BMPR2_siRNA_PMA
+GSM1755140	siControl	baseline	0	baseline_rep4	BMPR2_siRNA_baseline
+GSM1755148	siBMPR2	baseline	1	baseline_rep4	BMPR2_siRNA_baseline
+GSM1755144	siControl_PMA	PMA	0	PMA_rep4	BMPR2_siRNA_PMA
+GSM1755152	siBMPR2_PMA	PMA	1	PMA_rep4	BMPR2_siRNA_PMA

@@ -1,0 +1,9 @@
+{
+  "post_QC_cells": 121616,
+  "average_transcriptome_UMIs_per_cell": 2472.0647921069735,
+  "average_transcriptome_reads_per_cell": null,
+  "average_guide_UMIs_per_assigned_guide_cell_pair": 41.4511070719212,
+  "mean_within_cell_guide_UMIs_per_assigned_guide": 44.95760642459217,
+  "average_total_guide_UMIs_per_cell": 187.75048513353505,
+  "average_assigned_guides_per_cell": 4.487600315747928
+}

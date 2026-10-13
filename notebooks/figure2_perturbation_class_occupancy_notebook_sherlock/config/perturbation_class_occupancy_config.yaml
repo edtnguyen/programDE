@@ -1,0 +1,25 @@
+query_h5ad: /oak/stanford/groups/engreitz/Users/opushkar/cc_perturb/2.preprocessing_tonys_pipeline/3.integrated_days/3.all_days_concat_pc30_all_genes_sceptre_guides.h5ad
+guide_metadata_tsv: templates/300genes_guide_metadata_v43.tsv
+legacy_state_map_tsv: templates/legacy_leiden_res_0.5_state_map.tsv
+class_membership_tsv: templates/class_membership_reviewed_screen_hits.tsv
+state_definitions_tsv: templates/state_definitions.tsv
+output_dir: occupancy_compact_export
+cluster_col: leiden_res_0.5
+day_col: day
+replicate_col: biological_sample
+guide_assignment_key: guide_assignment
+guide_names_key: guide_names
+covariates:
+  - pct_counts_mt
+  - biological_sample
+  - total_counts
+  - guides_per_cell
+  - guide_umi_counts
+  - n_genes_by_counts
+minimum_carrier_cells_per_day: 25
+minimum_state_cells_per_day: 25
+minimum_targets_per_class: 4
+fdr_threshold: 0.05
+fdr_family: within_day
+analysis_population: all_cells_marginal
+strict_control_sensitivity: true

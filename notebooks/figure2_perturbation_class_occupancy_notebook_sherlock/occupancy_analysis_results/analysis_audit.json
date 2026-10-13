@@ -1,0 +1,8 @@
+{
+  "n_cells": 121616,
+  "n_targets_with_assignments": 298,
+  "n_tests": 3874,
+  "n_classes_displayed": 10,
+  "soft_sensitivity_run": false,
+  "state_source": "existing author-defined Leiden mapping"
+}

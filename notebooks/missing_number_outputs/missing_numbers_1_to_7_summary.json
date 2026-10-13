@@ -1,0 +1,37 @@
+[
+  {
+    "placeholder_number": 1,
+    "metric": "optimized_protocol_aEC_efficiency_percent",
+    "value": 97.9,
+    "status": "supported_by_current_manuscript_methods",
+    "notes": "Recommended wording: up to 97.9% efficiency."
+  },
+  {
+    "placeholder_number": 1,
+    "metric": "genome_wide_screen_run_EC_efficiency_percent",
+    "value": 71.9,
+    "status": "supported_by_current_manuscript_methods",
+    "notes": "Use only for the genome-wide screen experiment."
+  },
+  {
+    "placeholder_number": 2,
+    "metric": "pearson_r_all_validation_targets",
+    "value": 0.753369060155505,
+    "status": "known_from_existing_final_notebook",
+    "notes": "n=297; source table should be supplied for independent reproduction and hit-only correlation."
+  },
+  {
+    "placeholder_number": 7,
+    "metric": "D1-3_HIPPOa_EC_purity_percent",
+    "value": 90.4,
+    "status": "supported_by_older_validated_text",
+    "notes": "Reported P=0.0357; recompute from replicate-level data before finalizing."
+  },
+  {
+    "placeholder_number": 7,
+    "metric": "D1-3_HIPPOa_pvalue",
+    "value": 0.0357,
+    "status": "supported_by_older_validated_text",
+    "notes": "Statistical test used in the older analysis is not documented in the current text."
+  }
+]

@@ -1,0 +1,2189 @@
+2026-08-11 04:54:16,697:iu_debug:	DRY RUN is enabled.
+2026-08-11 04:54:16,698:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 04:54:16,698:iu_debug:	submission=True: In submission mode.
+2026-08-11 04:54:18,026:iu_debug:	
+IN post().
+2026-08-11 04:54:18,026:iu_debug:	Validating the payload against the schema
+2026-08-11 04:54:18,041:iu_debug:	<<<<<< POST software record jesse-engreitz:software_CC-Perturb-seq To IGVF database with URL https://api.data.igvf.org/software and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_CC-Perturb-seq"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "CC-Perturb-seq preprocessing code used for the WTC11 300-gene CC-Perturb-seq dataset, including gene and guide counting, guide assignment, matrix generation, and QC.",
+  "lab": "/labs/jesse-engreitz/",
+  "name": "cc-perturb-seq-300genes-preprocessing",
+  "source_url": "https://github.com/EngreitzLab/CC-Perturb-seq_300genes_preprocessing",
+  "title": "CC-Perturb-seq 300-gene preprocessing"
+}
+
+
+2026-08-11 04:54:18,041:iu_debug:	DRY RUN is enabled.
+2026-08-11 04:54:18,654:iu_debug:	DRY RUN is enabled.
+2026-08-11 04:54:18,654:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 04:54:18,654:iu_debug:	submission=True: In submission mode.
+2026-08-11 04:54:19,973:iu_debug:	
+IN post().
+2026-08-11 04:54:19,973:iu_debug:	Validating the payload against the schema
+2026-08-11 04:54:19,988:iu_debug:	<<<<<< POST software record jesse-engreitz:software_PerturbNMF To IGVF database with URL https://api.data.igvf.org/software and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_PerturbNMF"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "PerturbNMF pipeline used for cNMF gene-program inference, program evaluation, perturbation calibration, and interpretation of single-cell perturbation data.",
+  "lab": "/labs/jesse-engreitz/",
+  "name": "perturbnmf",
+  "source_url": "https://github.com/EngreitzLab/PerturbNMF",
+  "title": "PerturbNMF"
+}
+
+
+2026-08-11 04:54:19,988:iu_debug:	DRY RUN is enabled.
+2026-08-11 04:56:26,446:iu_debug:	DRY RUN is enabled.
+2026-08-11 04:56:26,447:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 04:56:26,447:iu_debug:	submission=True: In submission mode.
+2026-08-11 04:56:27,833:iu_debug:	
+IN post().
+2026-08-11 04:56:27,833:iu_debug:	Validating the payload against the schema
+2026-08-11 04:56:27,848:iu_debug:	<<<<<< POST software record jesse-engreitz:software_CC-Perturb-seq To IGVF database with URL https://api.data.igvf.org/software and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_CC-Perturb-seq"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "CC-Perturb-seq preprocessing code used for the WTC11 300-gene CC-Perturb-seq dataset, including gene and guide counting, guide assignment, matrix generation, and QC.",
+  "lab": "/labs/jesse-engreitz/",
+  "name": "cc-perturb-seq-300genes-preprocessing",
+  "source_url": "https://github.com/EngreitzLab/CC-Perturb-seq_300genes_preprocessing",
+  "title": "CC-Perturb-seq 300-gene preprocessing"
+}
+
+
+2026-08-11 04:56:27,849:iu_debug:	DRY RUN is enabled.
+2026-08-11 04:56:28,499:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 04:56:28,499:iu_debug:	submission=True: In submission mode.
+2026-08-11 04:56:29,945:iu_debug:	
+IN post().
+2026-08-11 04:56:29,945:iu_debug:	Validating the payload against the schema
+2026-08-11 04:56:29,961:iu_debug:	<<<<<< POST software record jesse-engreitz:software_CC-Perturb-seq To IGVF database with URL https://api.data.igvf.org/software and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_CC-Perturb-seq"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "CC-Perturb-seq preprocessing code used for the WTC11 300-gene CC-Perturb-seq dataset, including gene and guide counting, guide assignment, matrix generation, and QC.",
+  "lab": "/labs/jesse-engreitz/",
+  "name": "cc-perturb-seq-300genes-preprocessing",
+  "source_url": "https://github.com/EngreitzLab/CC-Perturb-seq_300genes_preprocessing",
+  "title": "CC-Perturb-seq 300-gene preprocessing"
+}
+
+
+2026-08-11 04:56:30,435:iu_debug:	Success.
+2026-08-11 04:56:30,435:iu_debug:	Object posted with identifier: 451001d7-fb7d-4a47-8675-0deba126ed74
+2026-08-11 04:56:33,431:iu_debug:	DRY RUN is enabled.
+2026-08-11 04:56:33,431:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 04:56:33,431:iu_debug:	submission=True: In submission mode.
+2026-08-11 04:56:34,736:iu_debug:	
+IN post().
+2026-08-11 04:56:34,736:iu_debug:	Validating the payload against the schema
+2026-08-11 04:56:34,751:iu_debug:	<<<<<< POST software record jesse-engreitz:software_PerturbNMF To IGVF database with URL https://api.data.igvf.org/software and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_PerturbNMF"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "PerturbNMF pipeline used for cNMF gene-program inference, program evaluation, perturbation calibration, and interpretation of single-cell perturbation data.",
+  "lab": "/labs/jesse-engreitz/",
+  "name": "perturbnmf",
+  "source_url": "https://github.com/EngreitzLab/PerturbNMF",
+  "title": "PerturbNMF"
+}
+
+
+2026-08-11 04:56:34,751:iu_debug:	DRY RUN is enabled.
+2026-08-11 04:56:35,273:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 04:56:35,273:iu_debug:	submission=True: In submission mode.
+2026-08-11 04:56:36,526:iu_debug:	
+IN post().
+2026-08-11 04:56:36,527:iu_debug:	Validating the payload against the schema
+2026-08-11 04:56:36,542:iu_debug:	<<<<<< POST software record jesse-engreitz:software_PerturbNMF To IGVF database with URL https://api.data.igvf.org/software and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_PerturbNMF"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "PerturbNMF pipeline used for cNMF gene-program inference, program evaluation, perturbation calibration, and interpretation of single-cell perturbation data.",
+  "lab": "/labs/jesse-engreitz/",
+  "name": "perturbnmf",
+  "source_url": "https://github.com/EngreitzLab/PerturbNMF",
+  "title": "PerturbNMF"
+}
+
+
+2026-08-11 04:56:36,802:iu_debug:	{'@type': ['HTTPConflict', 'Error'], 'status': 'error', 'code': 409, 'title': 'Conflict', 'description': 'There was a conflict when trying to complete your request.', 'detail': "Keys conflict: [('software:name', 'perturbnmf')]"}
+2026-08-11 04:56:36,803:iu_debug:	>>>>>>GET jesse-engreitz:software_PerturbNMF From DACC with URL https://api.data.igvf.org/jesse-engreitz:software_PerturbNMF/?format=json&datastore=database
+2026-08-11 04:56:36,923:iu_debug:	NOT FOUND
+2026-08-11 05:18:46,584:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:18:46,602:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:18:46,602:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:18:47,925:iu_debug:	
+IN post().
+2026-08-11 05:18:47,925:iu_debug:	Validating the payload against the schema
+2026-08-11 05:18:47,939:iu_debug:	<<<<<< POST software_version record jesse-engreitz:software_version_CC-Perturb-seq_v0.1.0 To IGVF database with URL https://api.data.igvf.org/software_version and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_version_CC-Perturb-seq_v0.1.0"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "First-pass hard-coded semantic version v0.1.0 for the WTC11 300-gene preprocessing workflow. Repository URL is recorded; exact tag/commit was not resolved in this upload notebook.",
+  "lab": "/labs/jesse-engreitz/",
+  "software": "/software/cc-perturb-seq-300genes-preprocessing/",
+  "source_url": "https://github.com/EngreitzLab/CC-Perturb-seq_300genes_preprocessing",
+  "version": "v0.1.0"
+}
+
+
+2026-08-11 05:18:47,939:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:18:48,454:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:18:48,454:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:18:48,454:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:18:49,978:iu_debug:	
+IN post().
+2026-08-11 05:18:49,979:iu_debug:	Validating the payload against the schema
+2026-08-11 05:18:49,992:iu_debug:	<<<<<< POST software_version record jesse-engreitz:software_version_PerturbNMF_v0.1.0 To IGVF database with URL https://api.data.igvf.org/software_version and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_version_PerturbNMF_v0.1.0"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "First-pass hard-coded semantic version v0.1.0 for PerturbNMF. Repository URL is recorded; exact tag/commit was not resolved in this upload notebook.",
+  "lab": "/labs/jesse-engreitz/",
+  "software": "/software/perturbnmf/",
+  "source_url": "https://github.com/EngreitzLab/PerturbNMF",
+  "version": "v0.1.0"
+}
+
+
+2026-08-11 05:18:49,992:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:21:55,929:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:21:55,930:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:21:55,930:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:21:57,477:iu_debug:	
+IN post().
+2026-08-11 05:21:57,477:iu_debug:	Validating the payload against the schema
+2026-08-11 05:21:57,491:iu_debug:	<<<<<< POST software_version record jesse-engreitz:software_version_CC-Perturb-seq_v0.1.0 To IGVF database with URL https://api.data.igvf.org/software_version and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_version_CC-Perturb-seq_v0.1.0"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "First-pass hard-coded semantic version v0.1.0 for the WTC11 300-gene preprocessing workflow. Repository URL is recorded; exact tag/commit was not resolved in this upload notebook.",
+  "lab": "/labs/jesse-engreitz/",
+  "software": "/software/cc-perturb-seq-300genes-preprocessing/",
+  "source_url": "https://github.com/EngreitzLab/CC-Perturb-seq_300genes_preprocessing",
+  "version": "v0.1.0"
+}
+
+
+2026-08-11 05:21:57,491:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:21:58,017:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:21:58,017:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:21:59,544:iu_debug:	
+IN post().
+2026-08-11 05:21:59,545:iu_debug:	Validating the payload against the schema
+2026-08-11 05:21:59,558:iu_debug:	<<<<<< POST software_version record jesse-engreitz:software_version_CC-Perturb-seq_v0.1.0 To IGVF database with URL https://api.data.igvf.org/software_version and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_version_CC-Perturb-seq_v0.1.0"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "First-pass hard-coded semantic version v0.1.0 for the WTC11 300-gene preprocessing workflow. Repository URL is recorded; exact tag/commit was not resolved in this upload notebook.",
+  "lab": "/labs/jesse-engreitz/",
+  "software": "/software/cc-perturb-seq-300genes-preprocessing/",
+  "source_url": "https://github.com/EngreitzLab/CC-Perturb-seq_300genes_preprocessing",
+  "version": "v0.1.0"
+}
+
+
+2026-08-11 05:21:59,882:iu_debug:	Success.
+2026-08-11 05:21:59,882:iu_debug:	Object posted with identifier: a9e747d8-6611-4d41-a363-aaa3de0e3f54
+2026-08-11 05:22:22,173:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:22:22,173:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:22:22,173:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:22:23,527:iu_debug:	
+IN post().
+2026-08-11 05:22:23,528:iu_debug:	Validating the payload against the schema
+2026-08-11 05:22:23,542:iu_debug:	<<<<<< POST software_version record jesse-engreitz:software_version_PerturbNMF_v0.1.0 To IGVF database with URL https://api.data.igvf.org/software_version and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_version_PerturbNMF_v0.1.0"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "First-pass hard-coded semantic version v0.1.0 for PerturbNMF. Repository URL is recorded; exact tag/commit was not resolved in this upload notebook.",
+  "lab": "/labs/jesse-engreitz/",
+  "software": "/software/perturbnmf/",
+  "source_url": "https://github.com/EngreitzLab/PerturbNMF",
+  "version": "v0.1.0"
+}
+
+
+2026-08-11 05:22:23,542:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:22:24,060:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:22:24,060:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:22:25,569:iu_debug:	
+IN post().
+2026-08-11 05:22:25,569:iu_debug:	Validating the payload against the schema
+2026-08-11 05:22:25,583:iu_debug:	<<<<<< POST software_version record jesse-engreitz:software_version_PerturbNMF_v0.1.0 To IGVF database with URL https://api.data.igvf.org/software_version and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:software_version_PerturbNMF_v0.1.0"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "First-pass hard-coded semantic version v0.1.0 for PerturbNMF. Repository URL is recorded; exact tag/commit was not resolved in this upload notebook.",
+  "lab": "/labs/jesse-engreitz/",
+  "software": "/software/perturbnmf/",
+  "source_url": "https://github.com/EngreitzLab/PerturbNMF",
+  "version": "v0.1.0"
+}
+
+
+2026-08-11 05:22:25,945:iu_debug:	Success.
+2026-08-11 05:22:25,945:iu_debug:	Object posted with identifier: b2e6e34b-04f3-45be-8d09-954a61d9e753
+2026-08-11 05:22:33,119:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:22:33,119:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:22:33,119:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:22:34,338:iu_debug:	
+IN post().
+2026-08-11 05:22:34,338:iu_debug:	Validating the payload against the schema
+2026-08-11 05:22:34,364:iu_debug:	<<<<<< POST analysis_step record jesse-engreitz:analysis_step_WTC11-EC_300gene_CC-Perturbseq_preprocessing To IGVF database with URL https://api.data.igvf.org/analysis_step and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:analysis_step_WTC11-EC_300gene_CC-Perturbseq_preprocessing"
+  ],
+  "analysis_step_types": [
+    "barcode correction",
+    "cell to feature barcode mapping",
+    "filtering",
+    "matrix generation",
+    "quantification"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "Processes raw GEX and guide FASTQs and assay metadata to produce filtered annotated cell-by-gene-and-guide matrices, guide assignments, guide quantifications, and per-cell QC.",
+  "input_content_types": [
+    "reads"
+  ],
+  "lab": "/labs/jesse-engreitz/",
+  "output_content_types": [
+    "annotated cell by gene and guide matrix",
+    "guide quantifications",
+    "per-cell quality report"
+  ],
+  "step_label": "perturbseq-preprocessing-guide-assignment-matrix-step",
+  "title": "Perturb-seq preprocessing, guide assignment, and matrix generation step"
+}
+
+
+2026-08-11 05:22:34,364:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:22:34,840:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:22:34,840:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:22:36,142:iu_debug:	
+IN post().
+2026-08-11 05:22:36,142:iu_debug:	Validating the payload against the schema
+2026-08-11 05:22:36,168:iu_debug:	<<<<<< POST analysis_step record jesse-engreitz:analysis_step_WTC11-EC_300gene_CC-Perturbseq_preprocessing To IGVF database with URL https://api.data.igvf.org/analysis_step and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:analysis_step_WTC11-EC_300gene_CC-Perturbseq_preprocessing"
+  ],
+  "analysis_step_types": [
+    "barcode correction",
+    "cell to feature barcode mapping",
+    "filtering",
+    "matrix generation",
+    "quantification"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "Processes raw GEX and guide FASTQs and assay metadata to produce filtered annotated cell-by-gene-and-guide matrices, guide assignments, guide quantifications, and per-cell QC.",
+  "input_content_types": [
+    "reads"
+  ],
+  "lab": "/labs/jesse-engreitz/",
+  "output_content_types": [
+    "annotated cell by gene and guide matrix",
+    "guide quantifications",
+    "per-cell quality report"
+  ],
+  "step_label": "perturbseq-preprocessing-guide-assignment-matrix-step",
+  "title": "Perturb-seq preprocessing, guide assignment, and matrix generation step"
+}
+
+
+2026-08-11 05:22:36,509:iu_debug:	Success.
+2026-08-11 05:22:36,509:iu_debug:	Object posted with identifier: 6a398d5d-3263-4c42-b785-f8423f914d9a
+2026-08-11 05:22:44,538:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:22:44,538:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:22:44,538:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:22:45,791:iu_debug:	
+IN post().
+2026-08-11 05:22:45,791:iu_debug:	Validating the payload against the schema
+2026-08-11 05:22:45,818:iu_debug:	<<<<<< POST analysis_step record jesse-engreitz:analysis_step_WTC11-EC_300gene_PerturbNMF_gene_programs To IGVF database with URL https://api.data.igvf.org/analysis_step and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:analysis_step_WTC11-EC_300gene_PerturbNMF_gene_programs"
+  ],
+  "analysis_step_types": [
+    "counts normalization",
+    "matrix generation",
+    "quantification"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "Uses the processed single-cell matrix to infer cNMF gene programs and evaluate perturbation-program relationships, program quality, and program/regulator correlations.",
+  "input_content_types": [
+    "annotated cell by gene and guide matrix"
+  ],
+  "lab": "/labs/jesse-engreitz/",
+  "output_content_types": [
+    "cell by gene program matrix",
+    "gene programs",
+    "gene program regulators",
+    "gene universe",
+    "regulator-regulator correlation",
+    "program-program correlation"
+  ],
+  "parents": [
+    "/analysis-steps/6a398d5d-3263-4c42-b785-f8423f914d9a/"
+  ],
+  "step_label": "perturbnmf-gene-program-inference-step",
+  "title": "PerturbNMF cNMF gene program analysis and evaluation step"
+}
+
+
+2026-08-11 05:22:45,818:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:22:46,305:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:22:46,305:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:22:47,646:iu_debug:	
+IN post().
+2026-08-11 05:22:47,647:iu_debug:	Validating the payload against the schema
+2026-08-11 05:22:47,673:iu_debug:	<<<<<< POST analysis_step record jesse-engreitz:analysis_step_WTC11-EC_300gene_PerturbNMF_gene_programs To IGVF database with URL https://api.data.igvf.org/analysis_step and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:analysis_step_WTC11-EC_300gene_PerturbNMF_gene_programs"
+  ],
+  "analysis_step_types": [
+    "counts normalization",
+    "matrix generation",
+    "quantification"
+  ],
+  "award": "/awards/HG011972/",
+  "description": "Uses the processed single-cell matrix to infer cNMF gene programs and evaluate perturbation-program relationships, program quality, and program/regulator correlations.",
+  "input_content_types": [
+    "annotated cell by gene and guide matrix"
+  ],
+  "lab": "/labs/jesse-engreitz/",
+  "output_content_types": [
+    "cell by gene program matrix",
+    "gene programs",
+    "gene program regulators",
+    "gene universe",
+    "regulator-regulator correlation",
+    "program-program correlation"
+  ],
+  "parents": [
+    "/analysis-steps/6a398d5d-3263-4c42-b785-f8423f914d9a/"
+  ],
+  "step_label": "perturbnmf-gene-program-inference-step",
+  "title": "PerturbNMF cNMF gene program analysis and evaluation step"
+}
+
+
+2026-08-11 05:22:48,024:iu_debug:	Success.
+2026-08-11 05:22:48,025:iu_debug:	Object posted with identifier: ea66d81b-a153-46d9-bc7e-f5911c47be1b
+2026-08-11 05:22:56,713:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:22:56,713:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:22:56,713:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:22:58,064:iu_debug:	
+IN post().
+2026-08-11 05:22:58,064:iu_debug:	Validating the payload against the schema
+2026-08-11 05:22:58,078:iu_debug:	<<<<<< POST analysis_step_version record jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0 To IGVF database with URL https://api.data.igvf.org/analysis_step_version and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0"
+  ],
+  "analysis_step": "/analysis-steps/6a398d5d-3263-4c42-b785-f8423f914d9a/",
+  "award": "/awards/HG011972/",
+  "description": "First-pass preprocessing step using CC-Perturb-seq 300-gene preprocessing v0.1.0. Exact Git tag/commit was not resolved in this upload notebook.",
+  "lab": "/labs/jesse-engreitz/",
+  "software_versions": [
+    "/software-versions/cc-perturb-seq-300genes-preprocessing-v0.1.0/"
+  ]
+}
+
+
+2026-08-11 05:22:58,078:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:22:58,555:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:22:58,555:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:23:00,050:iu_debug:	
+IN post().
+2026-08-11 05:23:00,051:iu_debug:	Validating the payload against the schema
+2026-08-11 05:23:00,064:iu_debug:	<<<<<< POST analysis_step_version record jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0 To IGVF database with URL https://api.data.igvf.org/analysis_step_version and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0"
+  ],
+  "analysis_step": "/analysis-steps/6a398d5d-3263-4c42-b785-f8423f914d9a/",
+  "award": "/awards/HG011972/",
+  "description": "First-pass preprocessing step using CC-Perturb-seq 300-gene preprocessing v0.1.0. Exact Git tag/commit was not resolved in this upload notebook.",
+  "lab": "/labs/jesse-engreitz/",
+  "software_versions": [
+    "/software-versions/cc-perturb-seq-300genes-preprocessing-v0.1.0/"
+  ]
+}
+
+
+2026-08-11 05:23:00,255:iu_debug:	Success.
+2026-08-11 05:23:00,255:iu_debug:	Object posted with identifier: 48a4ed7c-0c90-43d9-8fda-141b745a08fe
+2026-08-11 05:23:09,264:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:23:09,264:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:23:09,264:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:23:10,784:iu_debug:	
+IN post().
+2026-08-11 05:23:10,785:iu_debug:	Validating the payload against the schema
+2026-08-11 05:23:10,798:iu_debug:	<<<<<< POST analysis_step_version record jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0 To IGVF database with URL https://api.data.igvf.org/analysis_step_version and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0"
+  ],
+  "analysis_step": "/analysis-steps/ea66d81b-a153-46d9-bc7e-f5911c47be1b/",
+  "award": "/awards/HG011972/",
+  "description": "First-pass PerturbNMF gene-program step using PerturbNMF v0.1.0. Exact Git tag/commit was not resolved in this upload notebook.",
+  "lab": "/labs/jesse-engreitz/",
+  "software_versions": [
+    "/software-versions/perturbnmf-v0.1.0/"
+  ]
+}
+
+
+2026-08-11 05:23:10,798:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:23:11,279:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:23:11,279:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:23:12,689:iu_debug:	
+IN post().
+2026-08-11 05:23:12,689:iu_debug:	Validating the payload against the schema
+2026-08-11 05:23:12,703:iu_debug:	<<<<<< POST analysis_step_version record jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0 To IGVF database with URL https://api.data.igvf.org/analysis_step_version and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0"
+  ],
+  "analysis_step": "/analysis-steps/ea66d81b-a153-46d9-bc7e-f5911c47be1b/",
+  "award": "/awards/HG011972/",
+  "description": "First-pass PerturbNMF gene-program step using PerturbNMF v0.1.0. Exact Git tag/commit was not resolved in this upload notebook.",
+  "lab": "/labs/jesse-engreitz/",
+  "software_versions": [
+    "/software-versions/perturbnmf-v0.1.0/"
+  ]
+}
+
+
+2026-08-11 05:23:12,996:iu_debug:	Success.
+2026-08-11 05:23:12,996:iu_debug:	Object posted with identifier: cc0e3154-163d-4584-9800-b359606bdf0e
+2026-08-11 05:23:39,873:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:23:39,873:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:23:39,873:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:23:41,013:iu_debug:	
+IN post().
+2026-08-11 05:23:41,013:iu_debug:	Validating the payload against the schema
+2026-08-11 05:23:41,067:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI0829JETG",
+    "IGVFFI0873SMHV",
+    "IGVFFI1612DYPE",
+    "IGVFFI8493FUGF",
+    "IGVFFI1685UGHT",
+    "IGVFFI4812NIJP",
+    "IGVFFI2803KCCY",
+    "IGVFFI8343RQJO",
+    "IGVFFI0770LMLA",
+    "IGVFFI9913JDMS",
+    "IGVFFI0292PKWS",
+    "IGVFFI3456DMRR",
+    "IGVFFI8551DLZI",
+    "IGVFFI9572IFKJ",
+    "IGVFFI0467PSNK",
+    "IGVFFI2082AZES",
+    "IGVFFI1509ELYW",
+    "IGVFFI4095EXNM",
+    "IGVFFI9495FYTZ",
+    "IGVFFI0841HSYI",
+    "IGVFFI5792YSTV",
+    "IGVFFI7768XINN",
+    "IGVFFI3227OROC",
+    "IGVFFI7228ZGTG"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D0.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS0463XTUH",
+  "file_size": 312724458,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "0d3fe724ad9eca6cb9e811b71e67b2d7",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/cc_perturbseq/CCPerturbSeq_D0_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:23:41,067:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:23:41,672:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:23:41,672:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:23:41,672:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:23:43,125:iu_debug:	
+IN post().
+2026-08-11 05:23:43,125:iu_debug:	Validating the payload against the schema
+2026-08-11 05:23:43,180:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI6695QNYC",
+    "IGVFFI9053NTKZ",
+    "IGVFFI5558MDRQ",
+    "IGVFFI8244CRTY",
+    "IGVFFI3189ORTZ",
+    "IGVFFI0206VVDK",
+    "IGVFFI0050MVZE",
+    "IGVFFI2411QTXC",
+    "IGVFFI8066JZTB",
+    "IGVFFI9818VWXH",
+    "IGVFFI4958SRSE",
+    "IGVFFI9062DNGV",
+    "IGVFFI3402IDBG",
+    "IGVFFI3106VMTS",
+    "IGVFFI3532ZCVD",
+    "IGVFFI9691ZIPG",
+    "IGVFFI7823OLFM",
+    "IGVFFI6204QQIO",
+    "IGVFFI9198TJDQ",
+    "IGVFFI6658QMWQ",
+    "IGVFFI2003RXVG",
+    "IGVFFI6693ASNH",
+    "IGVFFI7449DXPM",
+    "IGVFFI9750FRHU"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D1.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS0991DBQZ",
+  "file_size": 143568531,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "8ffe7570d640a4f72b2de1d6d68e0a01",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/cc_perturbseq/CCPerturbSeq_D1_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:23:43,180:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:23:43,768:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:23:43,768:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:23:43,768:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:23:45,100:iu_debug:	
+IN post().
+2026-08-11 05:23:45,100:iu_debug:	Validating the payload against the schema
+2026-08-11 05:23:45,155:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI3535RMGA",
+    "IGVFFI9133VCWO",
+    "IGVFFI9459ZZMQ",
+    "IGVFFI4270HSCI",
+    "IGVFFI0665JNTA",
+    "IGVFFI0999QMPT",
+    "IGVFFI2484ZZPZ",
+    "IGVFFI9124BSXO",
+    "IGVFFI6246BWHT",
+    "IGVFFI1862FOTZ",
+    "IGVFFI9466RZXY",
+    "IGVFFI2864XLLF",
+    "IGVFFI2247UTAX",
+    "IGVFFI5633MUBM",
+    "IGVFFI9145BQRD",
+    "IGVFFI2507CKOT",
+    "IGVFFI4016NGIZ",
+    "IGVFFI2998SBIB",
+    "IGVFFI8861UHPT",
+    "IGVFFI7405SFKA",
+    "IGVFFI5495IAYW",
+    "IGVFFI0411AIRZ",
+    "IGVFFI1203DQMX",
+    "IGVFFI9532XJBL"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D2.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS4402ZGWJ",
+  "file_size": 121143019,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "f2fe9f4af11a3eda18617ce4b7ec36f6",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/cc_perturbseq/CCPerturbSeq_D2_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:23:45,155:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:23:45,770:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:23:45,770:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:23:45,770:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:23:47,140:iu_debug:	
+IN post().
+2026-08-11 05:23:47,141:iu_debug:	Validating the payload against the schema
+2026-08-11 05:23:47,196:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI4758OTQB",
+    "IGVFFI6464CXQX",
+    "IGVFFI1136PBFN",
+    "IGVFFI3187HIDR",
+    "IGVFFI2965GQIJ",
+    "IGVFFI1664QYJP",
+    "IGVFFI9685TYQG",
+    "IGVFFI1590FZYI",
+    "IGVFFI7587JKFC",
+    "IGVFFI9686HBHI",
+    "IGVFFI7691VNOQ",
+    "IGVFFI6400NHMG",
+    "IGVFFI2633HLYP",
+    "IGVFFI8658UHCI",
+    "IGVFFI3766KXGG",
+    "IGVFFI9603VRZJ",
+    "IGVFFI7830VVBQ",
+    "IGVFFI8521CNTM",
+    "IGVFFI9284YBSZ",
+    "IGVFFI8667VZSA",
+    "IGVFFI8543DRYQ",
+    "IGVFFI7114OHFF",
+    "IGVFFI5552ZPHT",
+    "IGVFFI7298UQGU"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D3.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS2307REVJ",
+  "file_size": 229733444,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "e8c726fb0e634074384bc8b7cf5a4464",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/cc_perturbseq/CCPerturbSeq_D3_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:23:47,197:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:27:14,084:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:27:14,084:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:27:14,084:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:27:15,296:iu_debug:	
+IN post().
+2026-08-11 05:27:15,296:iu_debug:	Validating the payload against the schema
+2026-08-11 05:27:15,351:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI0829JETG",
+    "IGVFFI0873SMHV",
+    "IGVFFI1612DYPE",
+    "IGVFFI8493FUGF",
+    "IGVFFI1685UGHT",
+    "IGVFFI4812NIJP",
+    "IGVFFI2803KCCY",
+    "IGVFFI8343RQJO",
+    "IGVFFI0770LMLA",
+    "IGVFFI9913JDMS",
+    "IGVFFI0292PKWS",
+    "IGVFFI3456DMRR",
+    "IGVFFI8551DLZI",
+    "IGVFFI9572IFKJ",
+    "IGVFFI0467PSNK",
+    "IGVFFI2082AZES",
+    "IGVFFI1509ELYW",
+    "IGVFFI4095EXNM",
+    "IGVFFI9495FYTZ",
+    "IGVFFI0841HSYI",
+    "IGVFFI5792YSTV",
+    "IGVFFI7768XINN",
+    "IGVFFI3227OROC",
+    "IGVFFI7228ZGTG"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D0.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS0463XTUH",
+  "file_size": 312724458,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "0d3fe724ad9eca6cb9e811b71e67b2d7",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/cc_perturbseq/CCPerturbSeq_D0_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:27:15,351:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:27:15,939:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:27:15,939:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:27:15,939:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:27:17,453:iu_debug:	
+IN post().
+2026-08-11 05:27:17,454:iu_debug:	Validating the payload against the schema
+2026-08-11 05:27:17,509:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI6695QNYC",
+    "IGVFFI9053NTKZ",
+    "IGVFFI5558MDRQ",
+    "IGVFFI8244CRTY",
+    "IGVFFI3189ORTZ",
+    "IGVFFI0206VVDK",
+    "IGVFFI0050MVZE",
+    "IGVFFI2411QTXC",
+    "IGVFFI8066JZTB",
+    "IGVFFI9818VWXH",
+    "IGVFFI4958SRSE",
+    "IGVFFI9062DNGV",
+    "IGVFFI3402IDBG",
+    "IGVFFI3106VMTS",
+    "IGVFFI3532ZCVD",
+    "IGVFFI9691ZIPG",
+    "IGVFFI7823OLFM",
+    "IGVFFI6204QQIO",
+    "IGVFFI9198TJDQ",
+    "IGVFFI6658QMWQ",
+    "IGVFFI2003RXVG",
+    "IGVFFI6693ASNH",
+    "IGVFFI7449DXPM",
+    "IGVFFI9750FRHU"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D1.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS0991DBQZ",
+  "file_size": 143568531,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "8ffe7570d640a4f72b2de1d6d68e0a01",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/cc_perturbseq/CCPerturbSeq_D1_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:27:17,510:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:27:18,114:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:27:18,115:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:27:18,115:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:27:19,515:iu_debug:	
+IN post().
+2026-08-11 05:27:19,515:iu_debug:	Validating the payload against the schema
+2026-08-11 05:27:19,569:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI3535RMGA",
+    "IGVFFI9133VCWO",
+    "IGVFFI9459ZZMQ",
+    "IGVFFI4270HSCI",
+    "IGVFFI0665JNTA",
+    "IGVFFI0999QMPT",
+    "IGVFFI2484ZZPZ",
+    "IGVFFI9124BSXO",
+    "IGVFFI6246BWHT",
+    "IGVFFI1862FOTZ",
+    "IGVFFI9466RZXY",
+    "IGVFFI2864XLLF",
+    "IGVFFI2247UTAX",
+    "IGVFFI5633MUBM",
+    "IGVFFI9145BQRD",
+    "IGVFFI2507CKOT",
+    "IGVFFI4016NGIZ",
+    "IGVFFI2998SBIB",
+    "IGVFFI8861UHPT",
+    "IGVFFI7405SFKA",
+    "IGVFFI5495IAYW",
+    "IGVFFI0411AIRZ",
+    "IGVFFI1203DQMX",
+    "IGVFFI9532XJBL"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D2.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS4402ZGWJ",
+  "file_size": 121143019,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "f2fe9f4af11a3eda18617ce4b7ec36f6",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/cc_perturbseq/CCPerturbSeq_D2_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:27:19,569:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:27:20,170:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:27:20,170:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:27:20,170:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:27:21,554:iu_debug:	
+IN post().
+2026-08-11 05:27:21,554:iu_debug:	Validating the payload against the schema
+2026-08-11 05:27:21,609:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI4758OTQB",
+    "IGVFFI6464CXQX",
+    "IGVFFI1136PBFN",
+    "IGVFFI3187HIDR",
+    "IGVFFI2965GQIJ",
+    "IGVFFI1664QYJP",
+    "IGVFFI9685TYQG",
+    "IGVFFI1590FZYI",
+    "IGVFFI7587JKFC",
+    "IGVFFI9686HBHI",
+    "IGVFFI7691VNOQ",
+    "IGVFFI6400NHMG",
+    "IGVFFI2633HLYP",
+    "IGVFFI8658UHCI",
+    "IGVFFI3766KXGG",
+    "IGVFFI9603VRZJ",
+    "IGVFFI7830VVBQ",
+    "IGVFFI8521CNTM",
+    "IGVFFI9284YBSZ",
+    "IGVFFI8667VZSA",
+    "IGVFFI8543DRYQ",
+    "IGVFFI7114OHFF",
+    "IGVFFI5552ZPHT",
+    "IGVFFI7298UQGU"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D3.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS2307REVJ",
+  "file_size": 229733444,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "e8c726fb0e634074384bc8b7cf5a4464",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/cc_perturbseq/CCPerturbSeq_D3_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:27:21,609:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:27:22,223:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:27:22,223:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:27:23,610:iu_debug:	
+IN post().
+2026-08-11 05:27:23,611:iu_debug:	Validating the payload against the schema
+2026-08-11 05:27:23,665:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI0829JETG",
+    "IGVFFI0873SMHV",
+    "IGVFFI1612DYPE",
+    "IGVFFI8493FUGF",
+    "IGVFFI1685UGHT",
+    "IGVFFI4812NIJP",
+    "IGVFFI2803KCCY",
+    "IGVFFI8343RQJO",
+    "IGVFFI0770LMLA",
+    "IGVFFI9913JDMS",
+    "IGVFFI0292PKWS",
+    "IGVFFI3456DMRR",
+    "IGVFFI8551DLZI",
+    "IGVFFI9572IFKJ",
+    "IGVFFI0467PSNK",
+    "IGVFFI2082AZES",
+    "IGVFFI1509ELYW",
+    "IGVFFI4095EXNM",
+    "IGVFFI9495FYTZ",
+    "IGVFFI0841HSYI",
+    "IGVFFI5792YSTV",
+    "IGVFFI7768XINN",
+    "IGVFFI3227OROC",
+    "IGVFFI7228ZGTG"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D0.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS0463XTUH",
+  "file_size": 312724458,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "0d3fe724ad9eca6cb9e811b71e67b2d7",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/cc_perturbseq/CCPerturbSeq_D0_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:27:24,443:iu_debug:	Success.
+2026-08-11 05:27:24,443:iu_debug:	Object posted with identifier: IGVFFI7756RKHT
+2026-08-11 05:27:24,443:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:27:24,443:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:27:25,222:iu_debug:	Success: upload credentials for 'IGVFFI7756RKHT' regenerated.
+2026-08-11 05:27:25,222:iu_debug:	>>>>>>GET IGVFFI7756RKHT From DACC with URL https://api.data.igvf.org/IGVFFI7756RKHT/?format=json&datastore=database
+2026-08-11 05:27:29,241:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/cc_perturbseq/CCPerturbSeq_D0_annotated_cell_gene_guide.h5ad s3://igvf-files/2026/08/11/5bb9214d-c325-4376-9624-85407d9ed527/IGVFFI7756RKHT.h5ad'.
+2026-08-11 05:27:59,277:iu_debug:	AWS upload successful.
+2026-08-11 05:28:03,304:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:28:03,304:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:28:04,632:iu_debug:	
+IN post().
+2026-08-11 05:28:04,632:iu_debug:	Validating the payload against the schema
+2026-08-11 05:28:04,686:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI6695QNYC",
+    "IGVFFI9053NTKZ",
+    "IGVFFI5558MDRQ",
+    "IGVFFI8244CRTY",
+    "IGVFFI3189ORTZ",
+    "IGVFFI0206VVDK",
+    "IGVFFI0050MVZE",
+    "IGVFFI2411QTXC",
+    "IGVFFI8066JZTB",
+    "IGVFFI9818VWXH",
+    "IGVFFI4958SRSE",
+    "IGVFFI9062DNGV",
+    "IGVFFI3402IDBG",
+    "IGVFFI3106VMTS",
+    "IGVFFI3532ZCVD",
+    "IGVFFI9691ZIPG",
+    "IGVFFI7823OLFM",
+    "IGVFFI6204QQIO",
+    "IGVFFI9198TJDQ",
+    "IGVFFI6658QMWQ",
+    "IGVFFI2003RXVG",
+    "IGVFFI6693ASNH",
+    "IGVFFI7449DXPM",
+    "IGVFFI9750FRHU"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D1.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS0991DBQZ",
+  "file_size": 143568531,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "8ffe7570d640a4f72b2de1d6d68e0a01",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/cc_perturbseq/CCPerturbSeq_D1_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:28:05,559:iu_debug:	Success.
+2026-08-11 05:28:05,559:iu_debug:	Object posted with identifier: IGVFFI4783YGLZ
+2026-08-11 05:28:05,559:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:28:05,559:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:28:06,207:iu_debug:	Success: upload credentials for 'IGVFFI4783YGLZ' regenerated.
+2026-08-11 05:28:06,208:iu_debug:	>>>>>>GET IGVFFI4783YGLZ From DACC with URL https://api.data.igvf.org/IGVFFI4783YGLZ/?format=json&datastore=database
+2026-08-11 05:28:09,761:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/cc_perturbseq/CCPerturbSeq_D1_annotated_cell_gene_guide.h5ad s3://igvf-files/2026/08/11/1f3ed909-9ae9-43e1-9579-d0b5d2a892e2/IGVFFI4783YGLZ.h5ad'.
+2026-08-11 05:28:12,703:iu_debug:	AWS upload successful.
+2026-08-11 05:28:16,326:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:28:16,326:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:28:17,856:iu_debug:	
+IN post().
+2026-08-11 05:28:17,857:iu_debug:	Validating the payload against the schema
+2026-08-11 05:28:17,912:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI3535RMGA",
+    "IGVFFI9133VCWO",
+    "IGVFFI9459ZZMQ",
+    "IGVFFI4270HSCI",
+    "IGVFFI0665JNTA",
+    "IGVFFI0999QMPT",
+    "IGVFFI2484ZZPZ",
+    "IGVFFI9124BSXO",
+    "IGVFFI6246BWHT",
+    "IGVFFI1862FOTZ",
+    "IGVFFI9466RZXY",
+    "IGVFFI2864XLLF",
+    "IGVFFI2247UTAX",
+    "IGVFFI5633MUBM",
+    "IGVFFI9145BQRD",
+    "IGVFFI2507CKOT",
+    "IGVFFI4016NGIZ",
+    "IGVFFI2998SBIB",
+    "IGVFFI8861UHPT",
+    "IGVFFI7405SFKA",
+    "IGVFFI5495IAYW",
+    "IGVFFI0411AIRZ",
+    "IGVFFI1203DQMX",
+    "IGVFFI9532XJBL"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D2.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS4402ZGWJ",
+  "file_size": 121143019,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "f2fe9f4af11a3eda18617ce4b7ec36f6",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/cc_perturbseq/CCPerturbSeq_D2_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:28:18,887:iu_debug:	Success.
+2026-08-11 05:28:18,887:iu_debug:	Object posted with identifier: IGVFFI5165BSGC
+2026-08-11 05:28:18,887:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:28:18,887:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:28:19,600:iu_debug:	Success: upload credentials for 'IGVFFI5165BSGC' regenerated.
+2026-08-11 05:28:19,600:iu_debug:	>>>>>>GET IGVFFI5165BSGC From DACC with URL https://api.data.igvf.org/IGVFFI5165BSGC/?format=json&datastore=database
+2026-08-11 05:28:24,152:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/cc_perturbseq/CCPerturbSeq_D2_annotated_cell_gene_guide.h5ad s3://igvf-files/2026/08/11/8c03c394-b4c6-471f-a9bf-d429c726f988/IGVFFI5165BSGC.h5ad'.
+2026-08-11 05:28:27,264:iu_debug:	AWS upload successful.
+2026-08-11 05:28:30,875:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:28:30,875:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:28:32,111:iu_debug:	
+IN post().
+2026-08-11 05:28:32,111:iu_debug:	Validating the payload against the schema
+2026-08-11 05:28:32,165:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "annotated cell by gene and guide matrix",
+  "derived_from": [
+    "IGVFFI4758OTQB",
+    "IGVFFI6464CXQX",
+    "IGVFFI1136PBFN",
+    "IGVFFI3187HIDR",
+    "IGVFFI2965GQIJ",
+    "IGVFFI1664QYJP",
+    "IGVFFI9685TYQG",
+    "IGVFFI1590FZYI",
+    "IGVFFI7587JKFC",
+    "IGVFFI9686HBHI",
+    "IGVFFI7691VNOQ",
+    "IGVFFI6400NHMG",
+    "IGVFFI2633HLYP",
+    "IGVFFI8658UHCI",
+    "IGVFFI3766KXGG",
+    "IGVFFI9603VRZJ",
+    "IGVFFI7830VVBQ",
+    "IGVFFI8521CNTM",
+    "IGVFFI9284YBSZ",
+    "IGVFFI8667VZSA",
+    "IGVFFI8543DRYQ",
+    "IGVFFI7114OHFF",
+    "IGVFFI5552ZPHT",
+    "IGVFFI7298UQGU"
+  ],
+  "derived_manually": false,
+  "description": "Annotated cell-by-gene-and-guide AnnData matrix for WTC11-EC 300-gene CC-Perturb-seq at D3.",
+  "file_format": "h5ad",
+  "file_set": "IGVFDS2307REVJ",
+  "file_size": 229733444,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "e8c726fb0e634074384bc8b7cf5a4464",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/cc_perturbseq/CCPerturbSeq_D3_annotated_cell_gene_guide.h5ad",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:28:32,861:iu_debug:	Success.
+2026-08-11 05:28:32,861:iu_debug:	Object posted with identifier: IGVFFI9086SWZC
+2026-08-11 05:28:32,861:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:28:32,861:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:28:33,329:iu_debug:	Success: upload credentials for 'IGVFFI9086SWZC' regenerated.
+2026-08-11 05:28:33,330:iu_debug:	>>>>>>GET IGVFFI9086SWZC From DACC with URL https://api.data.igvf.org/IGVFFI9086SWZC/?format=json&datastore=database
+2026-08-11 05:28:37,062:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/cc_perturbseq/CCPerturbSeq_D3_annotated_cell_gene_guide.h5ad s3://igvf-files/2026/08/11/ab91e4f5-fd8c-47af-93e5-17010611eab4/IGVFFI9086SWZC.h5ad'.
+2026-08-11 05:28:40,607:iu_debug:	AWS upload successful.
+2026-08-11 05:28:58,269:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:28:58,269:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:28:58,269:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:28:59,593:iu_debug:	
+IN post().
+2026-08-11 05:28:59,593:iu_debug:	Validating the payload against the schema
+2026-08-11 05:28:59,647:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D0_h5mu To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D0_h5mu"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "cell by gene program matrix",
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "PerturbNMF cell-by-gene-program MuData output for WTC11-EC 300-gene CC-Perturb-seq at D0.",
+  "file_format": "h5mu",
+  "file_set": "IGVFDS0463XTUH",
+  "file_size": 593116718,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "eaa9b998f4a15fee771f2c0236c63c5a",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/perturbnmf/PerturbNMF_D0_cell_gene_program.h5mu",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:28:59,647:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:00,230:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:00,231:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:00,231:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:01,531:iu_debug:	
+IN post().
+2026-08-11 05:29:01,531:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:01,585:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D1_h5mu To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D1_h5mu"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "cell by gene program matrix",
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "PerturbNMF cell-by-gene-program MuData output for WTC11-EC 300-gene CC-Perturb-seq at D1.",
+  "file_format": "h5mu",
+  "file_set": "IGVFDS0991DBQZ",
+  "file_size": 267183838,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "cdc55d85a86b62355bbba8dd97669d11",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/perturbnmf/PerturbNMF_D1_cell_gene_program.h5mu",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:01,585:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:02,207:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:02,208:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:02,208:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:03,632:iu_debug:	
+IN post().
+2026-08-11 05:29:03,632:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:03,686:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D2_h5mu To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D2_h5mu"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "cell by gene program matrix",
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "PerturbNMF cell-by-gene-program MuData output for WTC11-EC 300-gene CC-Perturb-seq at D2.",
+  "file_format": "h5mu",
+  "file_set": "IGVFDS4402ZGWJ",
+  "file_size": 235830412,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "ea85d629fd57646848ba6d31a20cc3b3",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/perturbnmf/PerturbNMF_D2_cell_gene_program.h5mu",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:03,687:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:04,294:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:04,294:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:04,294:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:05,481:iu_debug:	
+IN post().
+2026-08-11 05:29:05,481:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:05,536:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D3_h5mu To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D3_h5mu"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "cell by gene program matrix",
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "PerturbNMF cell-by-gene-program MuData output for WTC11-EC 300-gene CC-Perturb-seq at D3.",
+  "file_format": "h5mu",
+  "file_set": "IGVFDS2307REVJ",
+  "file_size": 436510560,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "6920d6bdee235a327d955ff038c6ea82",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/perturbnmf/PerturbNMF_D3_cell_gene_program.h5mu",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:05,536:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:06,139:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:06,139:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:06,139:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:07,440:iu_debug:	
+IN post().
+2026-08-11 05:29:07,441:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:07,505:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_guide_quantifications To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_guide_quantifications"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "guide quantifications",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell guide assignment quantifications for the D0 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS0463XTUH",
+  "file_size": 1701892,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "e3192ea1c4d02ce875782cacbe1ba99b",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/cc_perturbseq/guide_quantifications.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:07,505:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:08,101:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:08,101:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:08,101:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:09,392:iu_debug:	
+IN post().
+2026-08-11 05:29:09,393:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:09,456:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_per_cell_quality_report To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_per_cell_quality_report"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "per-cell quality report",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell quality-control metrics for the D0 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS0463XTUH",
+  "file_size": 853217,
+  "filtered": false,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "ea3ca228602d7f433855184555d855b3",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/cc_perturbseq/per_cell_quality_report.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:09,456:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:10,048:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:10,049:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:10,049:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:11,465:iu_debug:	
+IN post().
+2026-08-11 05:29:11,466:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:11,528:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_guide_quantifications To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_guide_quantifications"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "guide quantifications",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell guide assignment quantifications for the D1 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS0991DBQZ",
+  "file_size": 854776,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "668a5bc7d6c42d294a8aedae485bf20d",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/cc_perturbseq/guide_quantifications.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:11,529:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:12,128:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:12,128:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:12,128:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:13,406:iu_debug:	
+IN post().
+2026-08-11 05:29:13,406:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:13,470:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_per_cell_quality_report To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_per_cell_quality_report"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "per-cell quality report",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell quality-control metrics for the D1 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS0991DBQZ",
+  "file_size": 370934,
+  "filtered": false,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "819db5d7e0e81959708efaf4c550fc1e",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/cc_perturbseq/per_cell_quality_report.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:13,470:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:14,060:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:14,060:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:14,060:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:15,359:iu_debug:	
+IN post().
+2026-08-11 05:29:15,359:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:15,423:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_guide_quantifications To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_guide_quantifications"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "guide quantifications",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell guide assignment quantifications for the D2 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS4402ZGWJ",
+  "file_size": 1096385,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "591144d0e9db49a972662e727ba9ac64",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/cc_perturbseq/guide_quantifications.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:15,423:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:16,015:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:16,015:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:16,015:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:17,338:iu_debug:	
+IN post().
+2026-08-11 05:29:17,338:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:17,402:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_per_cell_quality_report To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_per_cell_quality_report"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "per-cell quality report",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell quality-control metrics for the D2 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS4402ZGWJ",
+  "file_size": 478069,
+  "filtered": false,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "3f1fc50882a9b6cb469ece4914933f94",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/cc_perturbseq/per_cell_quality_report.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:17,402:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:18,018:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:18,018:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:18,018:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:19,400:iu_debug:	
+IN post().
+2026-08-11 05:29:19,400:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:19,462:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_guide_quantifications To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_guide_quantifications"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "guide quantifications",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell guide assignment quantifications for the D3 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS2307REVJ",
+  "file_size": 1656396,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "e0e4a84989f2179d80a91bbd5c45a8c2",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/cc_perturbseq/guide_quantifications.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:19,462:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:20,081:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:20,082:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:20,082:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:21,393:iu_debug:	
+IN post().
+2026-08-11 05:29:21,394:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:21,457:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_per_cell_quality_report To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_per_cell_quality_report"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "per-cell quality report",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell quality-control metrics for the D3 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS2307REVJ",
+  "file_size": 956777,
+  "filtered": false,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "ad55846b58d783c7394e6338a104ac2f",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/cc_perturbseq/per_cell_quality_report.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:21,457:iu_debug:	DRY RUN is enabled.
+2026-08-11 05:29:46,683:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:29:46,683:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:29:47,804:iu_debug:	
+IN post().
+2026-08-11 05:29:47,805:iu_debug:	Validating the payload against the schema
+2026-08-11 05:29:47,859:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D0_h5mu To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D0_h5mu"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "cell by gene program matrix",
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "PerturbNMF cell-by-gene-program MuData output for WTC11-EC 300-gene CC-Perturb-seq at D0.",
+  "file_format": "h5mu",
+  "file_set": "IGVFDS0463XTUH",
+  "file_size": 593116718,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "eaa9b998f4a15fee771f2c0236c63c5a",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/perturbnmf/PerturbNMF_D0_cell_gene_program.h5mu",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:29:48,577:iu_debug:	Success.
+2026-08-11 05:29:48,577:iu_debug:	Object posted with identifier: IGVFFI8722NAWN
+2026-08-11 05:29:48,577:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:29:48,577:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:29:49,199:iu_debug:	Success: upload credentials for 'IGVFFI8722NAWN' regenerated.
+2026-08-11 05:29:49,200:iu_debug:	>>>>>>GET IGVFFI8722NAWN From DACC with URL https://api.data.igvf.org/IGVFFI8722NAWN/?format=json&datastore=database
+2026-08-11 05:29:53,761:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/perturbnmf/PerturbNMF_D0_cell_gene_program.h5mu s3://igvf-files/2026/08/11/57b84386-e925-4197-a6ff-f4d3d4300de7/IGVFFI8722NAWN.h5mu'.
+2026-08-11 05:30:00,756:iu_debug:	AWS upload successful.
+2026-08-11 05:30:05,403:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:30:05,404:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:30:06,650:iu_debug:	
+IN post().
+2026-08-11 05:30:06,651:iu_debug:	Validating the payload against the schema
+2026-08-11 05:30:06,706:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D1_h5mu To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D1_h5mu"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "cell by gene program matrix",
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "PerturbNMF cell-by-gene-program MuData output for WTC11-EC 300-gene CC-Perturb-seq at D1.",
+  "file_format": "h5mu",
+  "file_set": "IGVFDS0991DBQZ",
+  "file_size": 267183838,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "cdc55d85a86b62355bbba8dd97669d11",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/perturbnmf/PerturbNMF_D1_cell_gene_program.h5mu",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:30:07,634:iu_debug:	Success.
+2026-08-11 05:30:07,634:iu_debug:	Object posted with identifier: IGVFFI6740UUOG
+2026-08-11 05:30:07,634:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:30:07,634:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:30:08,260:iu_debug:	Success: upload credentials for 'IGVFFI6740UUOG' regenerated.
+2026-08-11 05:30:08,261:iu_debug:	>>>>>>GET IGVFFI6740UUOG From DACC with URL https://api.data.igvf.org/IGVFFI6740UUOG/?format=json&datastore=database
+2026-08-11 05:30:12,393:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/perturbnmf/PerturbNMF_D1_cell_gene_program.h5mu s3://igvf-files/2026/08/11/c5ffb21d-8e40-4cb2-9d85-c011bb71e59e/IGVFFI6740UUOG.h5mu'.
+2026-08-11 05:30:16,081:iu_debug:	AWS upload successful.
+2026-08-11 05:30:19,569:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:30:19,569:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:30:20,943:iu_debug:	
+IN post().
+2026-08-11 05:30:20,944:iu_debug:	Validating the payload against the schema
+2026-08-11 05:30:20,998:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D2_h5mu To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D2_h5mu"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "cell by gene program matrix",
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "PerturbNMF cell-by-gene-program MuData output for WTC11-EC 300-gene CC-Perturb-seq at D2.",
+  "file_format": "h5mu",
+  "file_set": "IGVFDS4402ZGWJ",
+  "file_size": 235830412,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "ea85d629fd57646848ba6d31a20cc3b3",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/perturbnmf/PerturbNMF_D2_cell_gene_program.h5mu",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:30:21,807:iu_debug:	Success.
+2026-08-11 05:30:21,807:iu_debug:	Object posted with identifier: IGVFFI7155BENM
+2026-08-11 05:30:21,808:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:30:21,808:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:30:22,420:iu_debug:	Success: upload credentials for 'IGVFFI7155BENM' regenerated.
+2026-08-11 05:30:22,420:iu_debug:	>>>>>>GET IGVFFI7155BENM From DACC with URL https://api.data.igvf.org/IGVFFI7155BENM/?format=json&datastore=database
+2026-08-11 05:30:27,258:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/perturbnmf/PerturbNMF_D2_cell_gene_program.h5mu s3://igvf-files/2026/08/11/4955dfe1-dd6a-42f3-a01e-8cd78768dfa9/IGVFFI7155BENM.h5mu'.
+2026-08-11 05:30:30,679:iu_debug:	AWS upload successful.
+2026-08-11 05:30:34,347:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:30:34,347:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:30:35,822:iu_debug:	
+IN post().
+2026-08-11 05:30:35,822:iu_debug:	Validating the payload against the schema
+2026-08-11 05:30:35,877:iu_debug:	<<<<<< POST matrix_file record jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D3_h5mu To IGVF database with URL https://api.data.igvf.org/matrix_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_D3_h5mu"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "cell by gene program matrix",
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "PerturbNMF cell-by-gene-program MuData output for WTC11-EC 300-gene CC-Perturb-seq at D3.",
+  "file_format": "h5mu",
+  "file_set": "IGVFDS2307REVJ",
+  "file_size": 436510560,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "6920d6bdee235a327d955ff038c6ea82",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/perturbnmf/PerturbNMF_D3_cell_gene_program.h5mu",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:30:36,586:iu_debug:	Success.
+2026-08-11 05:30:36,586:iu_debug:	Object posted with identifier: IGVFFI2345GXDF
+2026-08-11 05:30:36,586:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:30:36,586:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:30:37,293:iu_debug:	Success: upload credentials for 'IGVFFI2345GXDF' regenerated.
+2026-08-11 05:30:37,293:iu_debug:	>>>>>>GET IGVFFI2345GXDF From DACC with URL https://api.data.igvf.org/IGVFFI2345GXDF/?format=json&datastore=database
+2026-08-11 05:30:42,264:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/perturbnmf/PerturbNMF_D3_cell_gene_program.h5mu s3://igvf-files/2026/08/11/f2e980c0-ca43-4d02-962d-d7d4ad9a5d2b/IGVFFI2345GXDF.h5mu'.
+2026-08-11 05:30:47,604:iu_debug:	AWS upload successful.
+2026-08-11 05:30:51,043:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:30:51,043:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:30:52,284:iu_debug:	
+IN post().
+2026-08-11 05:30:52,285:iu_debug:	Validating the payload against the schema
+2026-08-11 05:30:52,348:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_guide_quantifications To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_guide_quantifications"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "guide quantifications",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell guide assignment quantifications for the D0 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS0463XTUH",
+  "file_size": 1701892,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "e3192ea1c4d02ce875782cacbe1ba99b",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/cc_perturbseq/guide_quantifications.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:30:53,008:iu_debug:	Success.
+2026-08-11 05:30:53,008:iu_debug:	Object posted with identifier: IGVFFI1608GIRE
+2026-08-11 05:30:53,008:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:30:53,008:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:30:53,692:iu_debug:	Success: upload credentials for 'IGVFFI1608GIRE' regenerated.
+2026-08-11 05:30:53,693:iu_debug:	>>>>>>GET IGVFFI1608GIRE From DACC with URL https://api.data.igvf.org/IGVFFI1608GIRE/?format=json&datastore=database
+2026-08-11 05:30:58,281:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/cc_perturbseq/guide_quantifications.tsv.gz s3://igvf-files/2026/08/11/3c07896e-ee67-477d-a9f2-fc45e967f426/IGVFFI1608GIRE.tsv.gz'.
+2026-08-11 05:30:59,493:iu_debug:	AWS upload successful.
+2026-08-11 05:31:03,297:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:31:03,297:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:31:04,539:iu_debug:	
+IN post().
+2026-08-11 05:31:04,539:iu_debug:	Validating the payload against the schema
+2026-08-11 05:31:04,602:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_per_cell_quality_report To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_per_cell_quality_report"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "per-cell quality report",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D0_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell quality-control metrics for the D0 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS0463XTUH",
+  "file_size": 853217,
+  "filtered": false,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "ea3ca228602d7f433855184555d855b3",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/cc_perturbseq/per_cell_quality_report.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:31:05,361:iu_debug:	Success.
+2026-08-11 05:31:05,361:iu_debug:	Object posted with identifier: IGVFFI3905TBLN
+2026-08-11 05:31:05,361:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:31:05,361:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:31:05,850:iu_debug:	Success: upload credentials for 'IGVFFI3905TBLN' regenerated.
+2026-08-11 05:31:05,850:iu_debug:	>>>>>>GET IGVFFI3905TBLN From DACC with URL https://api.data.igvf.org/IGVFFI3905TBLN/?format=json&datastore=database
+2026-08-11 05:31:10,169:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D0/cc_perturbseq/per_cell_quality_report.tsv.gz s3://igvf-files/2026/08/11/ed7e958b-d5f8-436d-94d0-4f524bb6a763/IGVFFI3905TBLN.tsv.gz'.
+2026-08-11 05:31:11,335:iu_debug:	AWS upload successful.
+2026-08-11 05:31:14,865:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:31:14,865:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:31:16,210:iu_debug:	
+IN post().
+2026-08-11 05:31:16,211:iu_debug:	Validating the payload against the schema
+2026-08-11 05:31:16,276:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_guide_quantifications To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_guide_quantifications"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "guide quantifications",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell guide assignment quantifications for the D1 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS0991DBQZ",
+  "file_size": 854776,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "668a5bc7d6c42d294a8aedae485bf20d",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/cc_perturbseq/guide_quantifications.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:31:16,994:iu_debug:	Success.
+2026-08-11 05:31:16,994:iu_debug:	Object posted with identifier: IGVFFI6431OXJN
+2026-08-11 05:31:16,994:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:31:16,994:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:31:17,576:iu_debug:	Success: upload credentials for 'IGVFFI6431OXJN' regenerated.
+2026-08-11 05:31:17,576:iu_debug:	>>>>>>GET IGVFFI6431OXJN From DACC with URL https://api.data.igvf.org/IGVFFI6431OXJN/?format=json&datastore=database
+2026-08-11 05:31:23,435:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/cc_perturbseq/guide_quantifications.tsv.gz s3://igvf-files/2026/08/11/7cad9554-d7ed-4483-a666-683de3d8db5f/IGVFFI6431OXJN.tsv.gz'.
+2026-08-11 05:31:24,494:iu_debug:	AWS upload successful.
+2026-08-11 05:31:28,169:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:31:28,169:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:31:29,508:iu_debug:	
+IN post().
+2026-08-11 05:31:29,508:iu_debug:	Validating the payload against the schema
+2026-08-11 05:31:29,572:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_per_cell_quality_report To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_per_cell_quality_report"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "per-cell quality report",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D1_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell quality-control metrics for the D1 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS0991DBQZ",
+  "file_size": 370934,
+  "filtered": false,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "819db5d7e0e81959708efaf4c550fc1e",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/cc_perturbseq/per_cell_quality_report.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:31:30,618:iu_debug:	Success.
+2026-08-11 05:31:30,619:iu_debug:	Object posted with identifier: IGVFFI0627NEZT
+2026-08-11 05:31:30,619:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:31:30,619:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:31:31,326:iu_debug:	Success: upload credentials for 'IGVFFI0627NEZT' regenerated.
+2026-08-11 05:31:31,327:iu_debug:	>>>>>>GET IGVFFI0627NEZT From DACC with URL https://api.data.igvf.org/IGVFFI0627NEZT/?format=json&datastore=database
+2026-08-11 05:31:36,432:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D1/cc_perturbseq/per_cell_quality_report.tsv.gz s3://igvf-files/2026/08/11/885931fa-3cb5-4607-a356-2b17075c0e18/IGVFFI0627NEZT.tsv.gz'.
+2026-08-11 05:31:37,558:iu_debug:	AWS upload successful.
+2026-08-11 05:31:41,204:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:31:41,204:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:31:42,467:iu_debug:	
+IN post().
+2026-08-11 05:31:42,467:iu_debug:	Validating the payload against the schema
+2026-08-11 05:31:42,531:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_guide_quantifications To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_guide_quantifications"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "guide quantifications",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell guide assignment quantifications for the D2 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS4402ZGWJ",
+  "file_size": 1096385,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "591144d0e9db49a972662e727ba9ac64",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/cc_perturbseq/guide_quantifications.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:31:43,398:iu_debug:	Success.
+2026-08-11 05:31:43,398:iu_debug:	Object posted with identifier: IGVFFI1924OSEM
+2026-08-11 05:31:43,398:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:31:43,398:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:31:44,161:iu_debug:	Success: upload credentials for 'IGVFFI1924OSEM' regenerated.
+2026-08-11 05:31:44,161:iu_debug:	>>>>>>GET IGVFFI1924OSEM From DACC with URL https://api.data.igvf.org/IGVFFI1924OSEM/?format=json&datastore=database
+2026-08-11 05:31:48,534:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/cc_perturbseq/guide_quantifications.tsv.gz s3://igvf-files/2026/08/11/12dacef1-49b5-4e3b-8bb7-4bdc1fb2a33b/IGVFFI1924OSEM.tsv.gz'.
+2026-08-11 05:31:50,325:iu_debug:	AWS upload successful.
+2026-08-11 05:31:53,951:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:31:53,951:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:31:55,222:iu_debug:	
+IN post().
+2026-08-11 05:31:55,222:iu_debug:	Validating the payload against the schema
+2026-08-11 05:31:55,286:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_per_cell_quality_report To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_per_cell_quality_report"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "per-cell quality report",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D2_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell quality-control metrics for the D2 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS4402ZGWJ",
+  "file_size": 478069,
+  "filtered": false,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "3f1fc50882a9b6cb469ece4914933f94",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/cc_perturbseq/per_cell_quality_report.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:31:55,999:iu_debug:	Success.
+2026-08-11 05:31:56,000:iu_debug:	Object posted with identifier: IGVFFI1451CYGW
+2026-08-11 05:31:56,000:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:31:56,000:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:31:56,568:iu_debug:	Success: upload credentials for 'IGVFFI1451CYGW' regenerated.
+2026-08-11 05:31:56,568:iu_debug:	>>>>>>GET IGVFFI1451CYGW From DACC with URL https://api.data.igvf.org/IGVFFI1451CYGW/?format=json&datastore=database
+2026-08-11 05:32:01,183:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D2/cc_perturbseq/per_cell_quality_report.tsv.gz s3://igvf-files/2026/08/11/5b17cff4-71b1-46c8-965a-95404ef2fb60/IGVFFI1451CYGW.tsv.gz'.
+2026-08-11 05:32:02,285:iu_debug:	AWS upload successful.
+2026-08-11 05:32:06,121:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:32:06,121:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:32:07,442:iu_debug:	
+IN post().
+2026-08-11 05:32:07,442:iu_debug:	Validating the payload against the schema
+2026-08-11 05:32:07,504:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_guide_quantifications To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_guide_quantifications"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "guide quantifications",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell guide assignment quantifications for the D3 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS2307REVJ",
+  "file_size": 1656396,
+  "filtered": true,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "e0e4a84989f2179d80a91bbd5c45a8c2",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/cc_perturbseq/guide_quantifications.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:32:08,361:iu_debug:	Success.
+2026-08-11 05:32:08,361:iu_debug:	Object posted with identifier: IGVFFI7077LERW
+2026-08-11 05:32:08,361:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:32:08,361:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:32:09,314:iu_debug:	Success: upload credentials for 'IGVFFI7077LERW' regenerated.
+2026-08-11 05:32:09,314:iu_debug:	>>>>>>GET IGVFFI7077LERW From DACC with URL https://api.data.igvf.org/IGVFFI7077LERW/?format=json&datastore=database
+2026-08-11 05:32:13,216:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/cc_perturbseq/guide_quantifications.tsv.gz s3://igvf-files/2026/08/11/4a8fd311-b1fa-4e69-97ab-b51564070cd9/IGVFFI7077LERW.tsv.gz'.
+2026-08-11 05:32:14,419:iu_debug:	AWS upload successful.
+2026-08-11 05:32:18,203:iu_debug:	submission=False: In non-submission mode.
+2026-08-11 05:32:18,203:iu_debug:	submission=True: In submission mode.
+2026-08-11 05:32:19,411:iu_debug:	
+IN post().
+2026-08-11 05:32:19,411:iu_debug:	Validating the payload against the schema
+2026-08-11 05:32:19,474:iu_debug:	<<<<<< POST tabular_file record jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_per_cell_quality_report To IGVF database with URL https://api.data.igvf.org/tabular_file and this payload:
+
+{
+  "aliases": [
+    "jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_per_cell_quality_report"
+  ],
+  "analysis_step_version": "jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0",
+  "award": "/awards/HG011972/",
+  "content_type": "per-cell quality report",
+  "controlled_access": false,
+  "derived_from": [
+    "jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_D3_h5ad"
+  ],
+  "derived_manually": false,
+  "description": "Per-cell quality-control metrics for the D3 analysis.",
+  "file_format": "tsv",
+  "file_set": "IGVFDS2307REVJ",
+  "file_size": 956777,
+  "filtered": false,
+  "lab": "/labs/jesse-engreitz/",
+  "md5sum": "ad55846b58d783c7394e6338a104ac2f",
+  "reference_files": [
+    "/reference-files/IGVFFI7217ZMJZ/"
+  ],
+  "submitted_file_name": "/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/cc_perturbseq/per_cell_quality_report.tsv.gz",
+  "submitter_comment": "Generated as a day-specific, validated submission file by 01_make_igvf_upload_ready_files.ipynb; MD5 calculated from the exact final file."
+}
+
+
+2026-08-11 05:32:20,052:iu_debug:	Success.
+2026-08-11 05:32:20,052:iu_debug:	Object posted with identifier: IGVFFI8282ATZQ
+2026-08-11 05:32:20,052:iu_debug:	
+IN upload_file()
+
+2026-08-11 05:32:20,052:iu_debug:	Attempting to generate new file upload credentials
+2026-08-11 05:32:20,513:iu_debug:	Success: upload credentials for 'IGVFFI8282ATZQ' regenerated.
+2026-08-11 05:32:20,514:iu_debug:	>>>>>>GET IGVFFI8282ATZQ From DACC with URL https://api.data.igvf.org/IGVFFI8282ATZQ/?format=json&datastore=database
+2026-08-11 05:32:26,024:iu_debug:	Running command 'aws s3 cp /oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission/D3/cc_perturbseq/per_cell_quality_report.tsv.gz s3://igvf-files/2026/08/11/7021bda9-3ae3-4be1-a016-563350d81acf/IGVFFI8282ATZQ.tsv.gz'.
+2026-08-11 05:32:27,186:iu_debug:	AWS upload successful.

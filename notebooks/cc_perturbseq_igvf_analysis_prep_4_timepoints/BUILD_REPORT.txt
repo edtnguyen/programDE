@@ -1,0 +1,29 @@
+CC-Perturb-seq IGVF analysis notebook package — four-timepoint revision
+
+Authoritative AnalysisSet design:
+  D0 -> IGVFDS5257JGQO
+  D1 -> IGVFDS3530HHEU
+  D2 -> IGVFDS7380DUFB
+  D3 -> IGVFDS6826YKCZ
+
+Rules enforced:
+  - exactly four unique active AnalysisSets;
+  - every new MatrixFile/TabularFile is assigned from its D0-D3 day;
+  - no combined or example AnalysisSet can be used as a fifth active set;
+  - supplied prior-upload AnalysisSets remain read-only audit examples;
+  - no live POST, PATCH, or file upload is executed by the notebook.
+
+Expected workbook inventory:
+  8 MatrixFile rows
+  44 TabularFile rows
+  52 total planned analysis-file rows
+  13 rows per timepoint
+
+Remaining blockers:
+  - one combined D0-D3 h5mu versus four planned day-specific h5mu records;
+  - 16 differential-result source paths;
+  - cis/trans content-type confirmation;
+  - exact software versions and other DACC decisions.
+
+Tests:
+  Run: bash scripts/run_tests.sh

@@ -1,0 +1,10 @@
+assigned_state	state_label	state_order	definition_source	is_final_for_occupancy_panel
+artEC	Arterial EC	6	author-defined mapping from prior notebook; boundaries from existing all-cell Leiden clustering	True
+iPSC	hiPSC	0	author-defined mapping from prior notebook; boundaries from existing all-cell Leiden clustering	True
+Neuro-iPSC	Neuroectoderm-like iPSC	1	author-defined mapping from prior notebook; boundaries from existing all-cell Leiden clustering	True
+PrimStreak	Primitive streak	2	author-defined mapping from prior notebook; boundaries from existing all-cell Leiden clustering	True
+Lat-Meso	Lateral mesoderm	3	author-defined mapping from prior notebook; boundaries from existing all-cell Leiden clustering	True
+Fibro-Mesen	Fibro-mesenchymal alternative	7	author-defined mapping from prior notebook; boundaries from existing all-cell Leiden clustering	True
+Pre-EC	Pre-EC / vascular progenitor	4	author-defined mapping from prior notebook; boundaries from existing all-cell Leiden clustering	True
+Neu-Mesen	Neural-mesenchymal	5	author-defined mapping from prior notebook; boundaries from existing all-cell Leiden clustering	True
+Others	Other / unresolved	8	author-defined mapping from prior notebook; boundaries from existing all-cell Leiden clustering	True

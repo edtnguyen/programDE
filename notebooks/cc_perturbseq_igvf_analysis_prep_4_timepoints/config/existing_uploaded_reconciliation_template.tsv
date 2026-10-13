@@ -1,0 +1,21 @@
+day	expected_file_role	expected_alias	portal_example_analysis_set	existing_file_accession	existing_portal_url	reconciliation_status	notes
+D0	gene programs	jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_gene_programs	IGVFDS9440URJB			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D0	gene program regulators	jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_gene_program_regulators	IGVFDS0463XTUH			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D0	gene universe	jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_gene_universe	IGVFDS9440URJB			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D0	regulator-regulator correlation	jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_regulator_regulator_correlation	IGVFDS0463XTUH			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D0	program-program correlation	jesse-engreitz:tabular_file_WTC11-EC_300gene_D0_program_program_correlation	IGVFDS0463XTUH			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D1	gene programs	jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_gene_programs	IGVFDS9440URJB			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D1	gene program regulators	jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_gene_program_regulators	IGVFDS0991DBQZ			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D1	gene universe	jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_gene_universe	IGVFDS9440URJB			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D1	regulator-regulator correlation	jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_regulator_regulator_correlation	IGVFDS0991DBQZ			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D1	program-program correlation	jesse-engreitz:tabular_file_WTC11-EC_300gene_D1_program_program_correlation	IGVFDS0991DBQZ			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D2	gene programs	jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_gene_programs	IGVFDS9440URJB			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D2	gene program regulators	jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_gene_program_regulators	IGVFDS4402ZGWJ			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D2	gene universe	jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_gene_universe	IGVFDS9440URJB			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D2	regulator-regulator correlation	jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_regulator_regulator_correlation	IGVFDS4402ZGWJ			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D2	program-program correlation	jesse-engreitz:tabular_file_WTC11-EC_300gene_D2_program_program_correlation	IGVFDS4402ZGWJ			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D3	gene programs	jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_gene_programs	IGVFDS9440URJB			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D3	gene program regulators	jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_gene_program_regulators	IGVFDS2307REVJ			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D3	gene universe	jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_gene_universe	IGVFDS9440URJB			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D3	regulator-regulator correlation	jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_regulator_regulator_correlation	IGVFDS2307REVJ			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.
+D3	program-program correlation	jesse-engreitz:tabular_file_WTC11-EC_300gene_D3_program_program_correlation	IGVFDS2307REVJ			TO_QUERY	Do not re-upload until this row is reconciled against the Portal.

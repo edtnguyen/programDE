@@ -1,0 +1,77 @@
+{
+  "CONSENSUS_PATH": "/oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50/030526_100k_cells_100iter_allHVG_torch_halsvar_batch_e7_50.spectra.k_50.dt_0_2.consensus.txt",
+  "PROGRAM_ANNOT_PATH": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/per_day_umaps/data/Programs_annotations.xlsx",
+  "CNMF_WORKBOOK_PATH": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/per_day_umaps/data/cNMF_50_0_2_032526_6co.xlsx",
+  "ENHANCER_ENRICHMENT_PATH": "/oak/stanford/groups/engreitz/Users/opushkar/multiome_ipsc_ec/analysis/2.tf_enrichment_in_programs/enhancer_enrichment_results.tsv",
+  "CLUSTER_MAP_PATH": "/oak/stanford/groups/engreitz/Users/opushkar/multiome_ipsc_ec/analysis/0.0.motif_id_annotation/tables/cluster_to_tf_motif_id_mapping.tsv",
+  "MODISCO_H5_PATH": "/oak/stanford/groups/engreitz/Users/opushkar/multiome_ipsc_ec/results/compendium/modisco_compiled/modisco_compiled.h5",
+  "PROGRAM_OFFSET": "auto",
+  "consensus_offset_chosen": 1,
+  "N_TOP_REGULATORS": 3,
+  "N_TOP_MOTIFS": 5,
+  "DAYS_TO_PLOT": [
+    "D2",
+    "D3"
+  ],
+  "PROGRAMS_BY_DAY": {
+    "D2": [
+      15,
+      17
+    ],
+    "D3": [
+      2,
+      34
+    ]
+  },
+  "PROGRAM_LABEL_OVERRIDES": {
+    "D2|P15": "P15  Vascular mesoderm",
+    "D2|P17": "P17  YAP-dependent, lateral mesoderm",
+    "D3|P2": "P2  Arterial EC",
+    "D3|P34": "P34  YAP/TAZ mesenchyme"
+  },
+  "MARKER_OVERRIDES_BY_DAY_PROGRAM": {
+    "D2|P15": [
+      "ETV2",
+      "TAL1",
+      "FLI1"
+    ],
+    "D2|P17": [
+      "SLC8A1",
+      "KRT19",
+      "ANKRD1",
+      "HAND1"
+    ],
+    "D3|P2": [
+      "CDH5",
+      "NRP1",
+      "EFNB2"
+    ],
+    "D3|P34": [
+      "TAGLN",
+      "KRT8",
+      "ACTC1",
+      "ANKRD1"
+    ]
+  },
+  "FOCUSED_FIGURE_TITLE": "Program annotations: D2 P15/P17 and D3 P2/P34",
+  "REGULATOR_FDR_THRESHOLD": 0.05,
+  "MOTIF_QVAL_THRESHOLD": 0.05,
+  "MOTIF_COLOR_CLIP_PERCENTILE": 95.0,
+  "MOTIF_COLOR_FIXED_VMAX": null,
+  "VECTOR_LOGOS": true,
+  "ROTATE_MOTIF_LOGOS_DEGREES": 90,
+  "MAKE_PER_DAY_PANELS": true,
+  "MAKE_COMBINED_ALL_DAYS_FIGURE": true,
+  "shared_color_scales": {
+    "regulator_vmin": -5.784221937211233,
+    "regulator_vmax": 5.784221937211233,
+    "marker_vmin": 0.0,
+    "marker_vmax": 0.0036654263,
+    "motif_vmin": 0.0,
+    "motif_vmax": 42.609907641367634,
+    "motif_raw_vmax": 57.71760431894134,
+    "motif_clipping_applied": true,
+    "motif_clip_method": "percentile",
+    "motif_clip_percentile": 95.0
+  }
+}

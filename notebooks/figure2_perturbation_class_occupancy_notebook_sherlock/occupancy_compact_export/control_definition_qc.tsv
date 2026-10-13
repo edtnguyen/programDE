@@ -1,0 +1,9 @@
+day	biological_replicate	n_cells	n_pure_controls	n_mixed_control_target	n_any_targeting
+D0	d0_rep1	17488	75	3026	16263
+D0	d0_rep2	21121	127	3547	19322
+D1	d1_rep1	5856	27	1178	5505
+D1	d1_rep2	11069	48	2031	10382
+D2	d2_rep1	10895	41	2284	10295
+D2	d2_rep2	11085	52	1929	10182
+D3	d3_rep1	21377	185	3282	19018
+D3	d3_rep2	22725	193	3646	19641

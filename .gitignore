@@ -112,3 +112,67 @@ notebooks/tony_results/
 *.parquet
 *.pdf
 *.png
+
+# BEGIN programDE-safe-sync managed block
+# Python / notebooks
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# R / editors / OS
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+*~
+*.swp
+*.swo
+
+# Scheduler and transient logs
+slurm-*.out
+*.log
+*.err
+
+# Large scientific data and serialized matrices
+*.h5ad
+*.h5mu
+*.loom
+*.zarr/
+*.h5
+*.hdf5
+*.mtx
+*.mtx.gz
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.joblib
+*.parquet
+*.feather
+*.arrow
+*.rds
+*.Rds
+*.bam
+*.bai
+*.cram
+*.crai
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.bigWig
+*.bigwig
+*.bw
+*.bedGraph
+*.bedgraph
+
+# Archives
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+# END programDE-safe-sync managed block

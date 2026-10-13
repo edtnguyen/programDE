@@ -1,0 +1,8 @@
+{
+  "regulator_vmin": -5.441590145141315,
+  "regulator_vmax": 5.441590145141315,
+  "marker_vmin": 0.0,
+  "marker_vmax": 0.0027474042,
+  "motif_vmin": 0.0,
+  "motif_vmax": 20.18868113064896
+}

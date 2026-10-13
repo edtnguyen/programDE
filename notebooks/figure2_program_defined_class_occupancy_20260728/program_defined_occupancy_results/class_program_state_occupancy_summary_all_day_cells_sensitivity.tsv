@@ -1,0 +1,160 @@
+analysis_population	regulator_class	day	state	n_evaluable_targets	median_log_odds_ratio	fraction_significant_in_displayed_direction	n_significant_in_displayed_direction	displayed_direction
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D0	P22	19	-0.07576670408589724	0.0	0	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D0	P29	19	0.06444268769178758	0.0	0	enriched
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D0	P7	19	-0.07902530822418216	0.05263157894736842	1	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D1	P13	19	0.02084481137681763	0.0	0	enriched
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D1	P28	19	-0.07661619379568935	0.0	0	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D1	P30	19	-0.04757958488130627	0.0	0	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D1	P48	18	0.20087489666445468	0.0	0	enriched
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D2	P14	19	0.03621729741277206	0.0	0	enriched
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D2	P15	19	-0.07951384480243143	0.05263157894736842	1	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D2	P17	19	-0.026769615138231374	0.0	0	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D3	P11	19	-0.10317373273985281	0.05263157894736842	1	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D3	P2	19	-0.1784313431028817	0.3157894736842105	6	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D3	P3	19	-0.22029861799586065	0.42105263157894735	8	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D3	P33	19	-0.16849985065124987	0.15789473684210525	3	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D3	P34	19	-0.11952812392877696	0.05263157894736842	1	depleted
+all_day_cells_sensitivity	Apoptosis / cell cycle / stress	D3	P8	19	-0.05207803814489746	0.10526315789473684	2	depleted
+all_day_cells_sensitivity	Chromatin regulation	D0	P22	32	-0.07182048285872344	0.0	0	depleted
+all_day_cells_sensitivity	Chromatin regulation	D0	P29	31	-0.2302238460942236	0.0	0	depleted
+all_day_cells_sensitivity	Chromatin regulation	D0	P7	32	-0.02134906032170964	0.0625	2	depleted
+all_day_cells_sensitivity	Chromatin regulation	D1	P13	32	0.010850836129625884	0.0	0	enriched
+all_day_cells_sensitivity	Chromatin regulation	D1	P28	32	-0.02662315858795014	0.0	0	depleted
+all_day_cells_sensitivity	Chromatin regulation	D1	P30	31	-0.1635898414306194	0.0	0	depleted
+all_day_cells_sensitivity	Chromatin regulation	D1	P48	28	0.09458972895093032	0.0	0	enriched
+all_day_cells_sensitivity	Chromatin regulation	D2	P14	31	-0.030266528705964545	0.03225806451612903	1	depleted
+all_day_cells_sensitivity	Chromatin regulation	D2	P15	32	-0.18066624149612337	0.15625	5	depleted
+all_day_cells_sensitivity	Chromatin regulation	D2	P17	32	-0.0013806890218956277	0.03125	1	depleted
+all_day_cells_sensitivity	Chromatin regulation	D3	P11	31	-0.20493222574675132	0.03225806451612903	1	depleted
+all_day_cells_sensitivity	Chromatin regulation	D3	P2	32	-0.11314335848092402	0.15625	5	depleted
+all_day_cells_sensitivity	Chromatin regulation	D3	P3	32	-0.17595063025068158	0.125	4	depleted
+all_day_cells_sensitivity	Chromatin regulation	D3	P33	32	-0.2545902623237257	0.15625	5	depleted
+all_day_cells_sensitivity	Chromatin regulation	D3	P34	31	-0.0042455196867139	0.0	0	depleted
+all_day_cells_sensitivity	Chromatin regulation	D3	P8	31	-0.20025043831262118	0.0967741935483871	3	depleted
+all_day_cells_sensitivity	Hippo / YAP	D0	P22	6	0.013651902397746572	0.0	0	enriched
+all_day_cells_sensitivity	Hippo / YAP	D0	P29	6	-0.05247343379233899	0.0	0	depleted
+all_day_cells_sensitivity	Hippo / YAP	D0	P7	6	0.08044220001406774	0.0	0	enriched
+all_day_cells_sensitivity	Hippo / YAP	D1	P13	6	0.2200145324278165	0.0	0	enriched
+all_day_cells_sensitivity	Hippo / YAP	D1	P28	6	-0.05100040711462408	0.0	0	depleted
+all_day_cells_sensitivity	Hippo / YAP	D1	P30	6	-0.2357098196478531	0.0	0	depleted
+all_day_cells_sensitivity	Hippo / YAP	D1	P48	5	-0.0777488609985201	0.0	0	depleted
+all_day_cells_sensitivity	Hippo / YAP	D2	P14	6	-0.26358727446175695	0.0	0	depleted
+all_day_cells_sensitivity	Hippo / YAP	D2	P15	6	-0.48719440105098893	0.5	3	depleted
+all_day_cells_sensitivity	Hippo / YAP	D2	P17	6	0.42778353983119305	0.6666666666666666	4	enriched
+all_day_cells_sensitivity	Hippo / YAP	D3	P11	6	-0.11847176847010879	0.0	0	depleted
+all_day_cells_sensitivity	Hippo / YAP	D3	P2	6	-0.621909702979374	0.8333333333333334	5	depleted
+all_day_cells_sensitivity	Hippo / YAP	D3	P3	6	-0.375731575042793	0.6666666666666666	4	depleted
+all_day_cells_sensitivity	Hippo / YAP	D3	P33	6	-0.3191852672226162	0.16666666666666666	1	depleted
+all_day_cells_sensitivity	Hippo / YAP	D3	P34	6	1.0293382413890917	0.8333333333333334	5	enriched
+all_day_cells_sensitivity	Hippo / YAP	D3	P8	6	-0.5325578732375384	0.8333333333333334	5	depleted
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D0	P22	41	-0.06739944765120649	0.0	0	depleted
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D0	P29	41	-0.06165032458329311	0.0	0	depleted
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D0	P7	41	0.041980437470355104	0.0	0	enriched
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D1	P13	41	-0.07297499283683002	0.0	0	depleted
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D1	P28	41	-0.002473259646326773	0.0	0	depleted
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D1	P30	41	0.0037671460844675452	0.0	0	enriched
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D1	P48	35	0.21873965731920883	0.0	0	enriched
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D2	P14	41	0.033047801270935	0.0	0	enriched
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D2	P15	41	-0.12637515764924956	0.07317073170731707	3	depleted
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D2	P17	41	0.0008798707805668313	0.04878048780487805	2	enriched
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D3	P11	41	-0.041654244290499284	0.024390243902439025	1	depleted
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D3	P2	41	0.05044309173895524	0.024390243902439025	1	enriched
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D3	P3	41	-0.014585567843377771	0.07317073170731707	3	depleted
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D3	P33	41	-0.1029001290434554	0.0	0	depleted
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D3	P34	40	-0.05409910091564908	0.0	0	depleted
+all_day_cells_sensitivity	Metabolism / trafficking / adhesion	D3	P8	41	-0.06610374460252454	0.0	0	depleted
+all_day_cells_sensitivity	Other reviewed regulators	D0	P22	18	0.004274950439519693	0.0	0	enriched
+all_day_cells_sensitivity	Other reviewed regulators	D0	P29	18	-0.009698314631590071	0.0	0	depleted
+all_day_cells_sensitivity	Other reviewed regulators	D0	P7	18	0.017245517301529956	0.0	0	enriched
+all_day_cells_sensitivity	Other reviewed regulators	D1	P13	18	0.11602581805263906	0.0	0	enriched
+all_day_cells_sensitivity	Other reviewed regulators	D1	P28	18	-0.05969383747981347	0.0	0	depleted
+all_day_cells_sensitivity	Other reviewed regulators	D1	P30	18	0.006885908050747316	0.0	0	enriched
+all_day_cells_sensitivity	Other reviewed regulators	D1	P48	17	0.034156701518842064	0.0	0	enriched
+all_day_cells_sensitivity	Other reviewed regulators	D2	P14	18	0.019790644589007512	0.0	0	enriched
+all_day_cells_sensitivity	Other reviewed regulators	D2	P15	18	-0.22468032842101582	0.1111111111111111	2	depleted
+all_day_cells_sensitivity	Other reviewed regulators	D2	P17	18	0.061305420253351256	0.0	0	enriched
+all_day_cells_sensitivity	Other reviewed regulators	D3	P11	18	-0.07305889433964527	0.0	0	depleted
+all_day_cells_sensitivity	Other reviewed regulators	D3	P2	18	-0.08257270754436821	0.1111111111111111	2	depleted
+all_day_cells_sensitivity	Other reviewed regulators	D3	P3	18	-0.07578518363912068	0.16666666666666666	3	depleted
+all_day_cells_sensitivity	Other reviewed regulators	D3	P33	18	-0.0608606820663727	0.0	0	depleted
+all_day_cells_sensitivity	Other reviewed regulators	D3	P34	18	0.014604425757353288	0.05555555555555555	1	enriched
+all_day_cells_sensitivity	Other reviewed regulators	D3	P8	18	-0.08855361475515544	0.05555555555555555	1	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D0	P22	9	-0.09203837580917823	0.0	0	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D0	P29	9	-0.0940898942158365	0.0	0	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D0	P7	9	0.011964525775272359	0.0	0	enriched
+all_day_cells_sensitivity	TGF/BMP/Activin	D1	P13	9	-0.5453442150593685	0.4444444444444444	4	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D1	P28	9	0.0040954545617260365	0.0	0	enriched
+all_day_cells_sensitivity	TGF/BMP/Activin	D1	P30	9	-0.08073016412139224	0.0	0	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D1	P48	7	0.22172797597100263	0.0	0	enriched
+all_day_cells_sensitivity	TGF/BMP/Activin	D2	P14	9	-0.518067680862024	0.6666666666666666	6	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D2	P15	9	-0.531070640468184	0.5555555555555556	5	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D2	P17	9	-0.32582117587632775	0.4444444444444444	4	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D3	P11	9	-0.807438789443006	0.4444444444444444	4	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D3	P2	9	-0.688366631019013	0.7777777777777778	7	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D3	P3	9	-0.6226467402949408	0.6666666666666666	6	depleted
+all_day_cells_sensitivity	TGF/BMP/Activin	D3	P33	9	1.1991888439069966	0.5555555555555556	5	enriched
+all_day_cells_sensitivity	TGF/BMP/Activin	D3	P34	9	0.007435325101282374	0.1111111111111111	1	enriched
+all_day_cells_sensitivity	TGF/BMP/Activin	D3	P8	9	-0.3542876314660221	0.4444444444444444	4	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D0	P22	68	-0.030170444066627708	0.0	0	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D0	P29	68	-0.1822505329607203	0.0	0	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D0	P7	68	-0.02271807144935764	0.014705882352941176	1	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D1	P13	68	0.024823786455492138	0.014705882352941176	1	enriched
+all_day_cells_sensitivity	Transcription / RNA processing	D1	P28	68	-0.005712372763196636	0.0	0	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D1	P30	68	-0.08944701046171372	0.0	0	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D1	P48	61	0.038232470269103466	0.0	0	enriched
+all_day_cells_sensitivity	Transcription / RNA processing	D2	P14	68	0.052312309605293573	0.0	0	enriched
+all_day_cells_sensitivity	Transcription / RNA processing	D2	P15	68	-0.19627666881918782	0.10294117647058823	7	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D2	P17	68	0.03933255419727966	0.058823529411764705	4	enriched
+all_day_cells_sensitivity	Transcription / RNA processing	D3	P11	68	-0.1214986122007993	0.014705882352941176	1	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D3	P2	68	-0.11636415015299995	0.11764705882352941	8	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D3	P3	68	-0.10329388496039552	0.17647058823529413	12	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D3	P33	68	-0.09398528487819283	0.04411764705882353	3	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D3	P34	68	-0.0980072231368006	0.04411764705882353	3	depleted
+all_day_cells_sensitivity	Transcription / RNA processing	D3	P8	68	-0.0715938560552451	0.029411764705882353	2	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D0	P22	41	-0.06285296294045897	0.0	0	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D0	P29	41	0.0479025737570436	0.024390243902439025	1	enriched
+all_day_cells_sensitivity	Translation / proteostasis	D0	P7	41	-0.047431716621722374	0.04878048780487805	2	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D1	P13	41	0.02914865968173205	0.0	0	enriched
+all_day_cells_sensitivity	Translation / proteostasis	D1	P28	41	-0.06380509307626284	0.0	0	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D1	P30	41	-0.12526438834266093	0.0	0	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D1	P48	36	0.13357322975708827	0.0	0	enriched
+all_day_cells_sensitivity	Translation / proteostasis	D2	P14	41	-0.07276490495825222	0.024390243902439025	1	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D2	P15	41	-0.1950331373159703	0.07317073170731707	3	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D2	P17	41	0.07059936217309319	0.024390243902439025	1	enriched
+all_day_cells_sensitivity	Translation / proteostasis	D3	P11	40	-0.09727781186351524	0.05	2	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D3	P2	41	-0.061024187408185576	0.0975609756097561	4	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D3	P3	41	-0.09899043087413059	0.07317073170731707	3	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D3	P33	41	-0.14054896422526364	0.024390243902439025	1	depleted
+all_day_cells_sensitivity	Translation / proteostasis	D3	P34	41	0.028504545598100423	0.0975609756097561	4	enriched
+all_day_cells_sensitivity	Translation / proteostasis	D3	P8	41	-0.11170818022565104	0.14634146341463414	6	depleted
+all_day_cells_sensitivity	VEGF / EC specification	D0	P22	4	0.05580182077779447	0.0	0	enriched
+all_day_cells_sensitivity	VEGF / EC specification	D0	P29	4	-0.21346312261501782	0.0	0	depleted
+all_day_cells_sensitivity	VEGF / EC specification	D0	P7	4	0.03830238132666476	0.0	0	enriched
+all_day_cells_sensitivity	VEGF / EC specification	D1	P13	4	0.016331277870484367	0.25	1	enriched
+all_day_cells_sensitivity	VEGF / EC specification	D1	P28	4	0.006307452362976784	0.0	0	enriched
+all_day_cells_sensitivity	VEGF / EC specification	D1	P30	4	0.05535925108660742	0.0	0	enriched
+all_day_cells_sensitivity	VEGF / EC specification	D2	P14	4	0.08895640631360333	0.25	1	enriched
+all_day_cells_sensitivity	VEGF / EC specification	D2	P15	4	-1.3532545475180706	0.75	3	depleted
+all_day_cells_sensitivity	VEGF / EC specification	D2	P17	4	0.13383205860622777	0.25	1	enriched
+all_day_cells_sensitivity	VEGF / EC specification	D3	P11	4	-0.7071512850033496	0.25	1	depleted
+all_day_cells_sensitivity	VEGF / EC specification	D3	P2	4	-0.9682246661261377	0.75	3	depleted
+all_day_cells_sensitivity	VEGF / EC specification	D3	P3	4	-0.9842376306227225	0.75	3	depleted
+all_day_cells_sensitivity	VEGF / EC specification	D3	P33	4	0.035950838620447706	0.0	0	enriched
+all_day_cells_sensitivity	VEGF / EC specification	D3	P34	4	0.12223368182486344	0.0	0	enriched
+all_day_cells_sensitivity	VEGF / EC specification	D3	P8	4	-0.8488932639313012	0.75	3	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D0	P22	6	-0.009928698676347898	0.0	0	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D0	P29	6	-0.0664663859480514	0.0	0	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D0	P7	6	0.04385770993925458	0.0	0	enriched
+all_day_cells_sensitivity	WNT / mesoderm regulators	D1	P13	6	0.225861439088758	0.3333333333333333	2	enriched
+all_day_cells_sensitivity	WNT / mesoderm regulators	D1	P28	6	-0.31020031408541937	0.0	0	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D1	P30	6	-0.25697185681468915	0.16666666666666666	1	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D1	P48	5	-0.1943813507960676	0.0	0	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D2	P14	6	-0.19898472321937066	0.16666666666666666	1	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D2	P15	6	-0.483259135312087	0.5	3	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D2	P17	6	0.351540058129405	0.5	3	enriched
+all_day_cells_sensitivity	WNT / mesoderm regulators	D3	P11	6	-0.2925834613347815	0.16666666666666666	1	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D3	P2	6	-0.3670058026665704	0.5	3	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D3	P3	6	-0.2064642119889194	0.3333333333333333	2	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D3	P33	6	-0.026231896337488417	0.3333333333333333	2	depleted
+all_day_cells_sensitivity	WNT / mesoderm regulators	D3	P34	6	0.15393217383127028	0.16666666666666666	1	enriched
+all_day_cells_sensitivity	WNT / mesoderm regulators	D3	P8	6	-0.16161182118567285	0.16666666666666666	1	depleted

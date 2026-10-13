@@ -1,0 +1,130 @@
+{
+  "B": 10000,
+  "analysis": "iPSC-EC two-stage CLR floor sensitivity",
+  "combination_label": "initial_1x__internal_q1em03",
+  "config_fingerprint": "f10701d2910ba3348a32f9438b06ff09ce564cc7318b75713a0d43aa68aaf401",
+  "covariate_columns": [
+    "pct_counts_mt",
+    "log1p_total_counts",
+    "log1p_guides_per_cell",
+    "log1p_guide_umi_counts",
+    "log1p_n_genes_by_counts",
+    "biological_sample_d1_rep2"
+  ],
+  "covariate_model": "six-source-covariate full-day model",
+  "covariate_sources": {
+    "biological_sample_d1_rep2": {
+      "obs_key": "biological_sample",
+      "transform": "one_hot_drop_first"
+    },
+    "log1p_guide_umi_counts": {
+      "obs_key": "guide_umi_counts",
+      "transform": "log1p"
+    },
+    "log1p_guides_per_cell": {
+      "obs_key": "guides_per_cell",
+      "transform": "log1p"
+    },
+    "log1p_n_genes_by_counts": {
+      "obs_key": "n_genes_by_counts",
+      "transform": "log1p"
+    },
+    "log1p_total_counts": {
+      "obs_key": "total_counts",
+      "transform": "log1p"
+    },
+    "pct_counts_mt": {
+      "obs_key": "pct_counts_mt",
+      "transform": "identity"
+    }
+  },
+  "day": "d1",
+  "guide_long_csv": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/notebooks/d1_sceptre_transfer/d1_grna_assignments_long.csv",
+  "guide_metadata_tsv": "./300genes_guide_metadata_v43.tsv",
+  "h5mu_path": "/oak/stanford/groups/engreitz/Users/opushkar/cc_perturb/2.preprocessing_tonys_pipeline/2.normalized_data/normalized_data/d1_normalized_gex_and_guide.h5mu",
+  "initial_floor_factor": 1.0,
+  "initial_floor_label": "1x",
+  "internal_eps_quantile": 0.001,
+  "internal_quantile_label": "q1em03",
+  "is_reference": false,
+  "local_programde_default_eps_quantile": 0.0001,
+  "manual_vs_programde_max_abs_difference": 0.0,
+  "matched_usage_cells": 16925,
+  "n_cells": 16925,
+  "n_guides": 1926,
+  "n_jobs": 16,
+  "n_programs": 50,
+  "ntc_bins": 10,
+  "ntc_crt_seed": 23,
+  "ntc_ensembles": 10,
+  "ntc_group_seed": 7,
+  "ntc_group_size": 6,
+  "ntc_labels": [
+    "SAFE",
+    "non-targeting",
+    "NTC"
+  ],
+  "ntc_max_groups": null,
+  "output_dir": "results/ipsc_ec_clr_two_stage_floor_sensitivity_6cov/k_50.dt_0_2/crt_runs/initial_1x__internal_q1em03/d1",
+  "programde_git_commit": null,
+  "programde_prepare_crt_inputs_signature": "(adata: Any, usage_key: str = 'cnmf_usage', covar_key: str = 'covar', guide_assignment_key: str = 'guide_assignment', guide_names_key: str = 'guide_names', guide2gene_key: str = 'guide2gene', eps_quantile: float = 0.0001, add_intercept: bool = True, standardize: bool = True, numeric_as_category_threshold: Optional[int] = 20, batch_key: str = 'batch', clamp_threads: bool = True) -> src.sceptre.pipeline.CRTInputs",
+  "programde_prepare_crt_inputs_source": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE/src/sceptre/pipeline.py",
+  "programde_root": "/oak/stanford/groups/engreitz/Users/tri/CodeBase/programDE",
+  "real_crt_seed_parameter_used": "base_seed",
+  "real_crt_seed_requested": 123,
+  "reference_initial_floor_factor": 1.0,
+  "reference_internal_eps_quantile": 0.0001,
+  "resampling_method": "bernoulli_index",
+  "response_matrix_field": "Y",
+  "runtime_seconds": 537.07,
+  "skew_normal_calibration": false,
+  "stage1_floor_metadata": {
+    "applied_raw_zero_floor": 8.32581932e-06,
+    "base_raw_zero_floor": 8.32581932e-06,
+    "fraction_exact_zero_raw_entries": 0.5074635155096012,
+    "initial_floor_factor": 1.0,
+    "initial_floor_label": "1x",
+    "max_initial_pseudomass_fraction": 0.00035659469965287894,
+    "max_raw_zeros_per_cell": 44,
+    "median_initial_pseudomass_fraction": 0.00020944802839185643,
+    "median_raw_zeros_per_cell": 25.0,
+    "median_zero_derived_value_after_stage1": 8.255982706345909e-06,
+    "n_cells": 16925,
+    "n_exact_zero_raw_entries": 429441,
+    "n_positive_raw_entries": 416809,
+    "n_programs": 50,
+    "p05_zero_derived_value_after_stage1": 7.633774731314323e-06,
+    "p90_raw_zeros_per_cell": 32.0,
+    "p95_initial_pseudomass_fraction": 0.0002751817536531246,
+    "p95_raw_zeros_per_cell": 34.0,
+    "p95_zero_derived_value_after_stage1": 8.928165792904695e-06,
+    "pct_cells_with_any_raw_zero": 100.0,
+    "positive_raw_usage_q01": 8.32581932e-05
+  },
+  "stage2_floor_metadata": {
+    "effective_internal_floor": 6.5457834035781645e-06,
+    "internal_eps_quantile": 0.001,
+    "internal_floor_over_median_zero_derived_value": 0.7928533327167449,
+    "internal_quantile_label": "q1em03",
+    "max_stage2_pseudomass_fraction": 1.934537101753952e-05,
+    "median_stage2_pseudomass_fraction": 0.0,
+    "median_uplift_factor_for_modified_positive_entries": 1.9471149260909542,
+    "median_zero_derived_value_before_stage2": 8.255982706345909e-06,
+    "p95_stage2_pseudomass_fraction": 0.0,
+    "p95_uplift_factor_for_modified_positive_entries": 21.364693232160278,
+    "stage2_fraction_entries_modified": 0.0009807976366322008,
+    "stage2_fraction_originally_positive_entries_modified": 0.0008205197104669045,
+    "stage2_fraction_zero_derived_entries_modified": 0.0011363609902175153,
+    "stage2_median_entries_modified_per_cell": 0.0,
+    "stage2_median_positive_entries_modified_per_cell": 0.0,
+    "stage2_n_entries_modified": 830,
+    "stage2_n_originally_positive_entries_modified": 342,
+    "stage2_n_zero_derived_entries_modified": 488,
+    "stage2_p95_entries_modified_per_cell": 0.0,
+    "stage2_p95_positive_entries_modified_per_cell": 0.0,
+    "stage2_pct_cells_with_any_entry_modified": 2.0620384047267355,
+    "stage2_pct_cells_with_any_originally_positive_entry_modified": 1.9852289512555392
+  },
+  "stratified_resampling": false,
+  "usage_path": "/oak/stanford/groups/engreitz/Users/ymo/IGVF_ccperturbseq/Result/012726_100k_cells_20iter_allHVG_torch_halsvar_batch_e7/012726_100k_cells_20iter_allHVG_torch_halsvar_batch_e7_all/012726_100k_cells_20iter_allHVG_torch_halsvar_batch_e7_all.usages.k_50.dt_0_2.consensus.txt"
+}

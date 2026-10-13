@@ -1,0 +1,836 @@
+I need your help preparing and submitting the analysis files for the WTC11 iPSC-to-endothelial-cell 300-gene CC-Perturb-seq dataset to the IGVF DACC portal.
+
+This chat already contains some of our previous IGVF submission, validation, Slurm-array upload, monitoring, and recovery scripts. Please inspect and reuse those scripts where appropriate rather than starting from scratch.
+
+I am attaching this metadata workbook:
+
+IGVF_Metadata_Submitter_v0.3.8_300gene_CC-Perturb-seq_filled_draft.xlsx
+
+Treat the workbook as the current metadata draft and preserve its aliases, AnalysisSet assignments, content types, descriptions, workflow relationships, and AnalysisStepVersion relationships unless you find a clear inconsistency. Report any inconsistency before changing it.
+
+Do not make a live portal submission immediately. First perform the file audit, build the manifests, update the workbook, validate everything, and show me the proposed dry-run commands and results. Wait for my explicit approval before any live POST, PATCH, or file upload.
+
+============================================================
+1. CURRENT SUBMISSION STATUS
+============================================================
+
+The following raw-data-side objects are already submitted and validated:
+
+- Sample records
+- MeasurementSet records
+- Raw GEX/scRNA FASTQ SequenceFiles
+- Raw guide-library FASTQ SequenceFiles
+- Hash/multiplexing FASTQs, where applicable
+- RNA and guide seqspec/configuration files
+- The guide metadata file:
+  300genes_guide_metadata_v43.tsv
+
+Do not resubmit these records or files.
+
+Instead:
+
+1. Query the production portal or use the existing accession records from the prior submission.
+2. Confirm the raw MeasurementSet and SequenceFile accessions.
+3. Use those existing accessions in:
+   - AnalysisSet input_file_sets
+   - MatrixFile derived_from
+   - reference_files or other links where appropriate
+
+Portal and lab settings:
+
+- Portal mode: prod
+- API: https://api.data.igvf.org
+- Award: /awards/HG011972/
+- Lab: /labs/jesse-engreitz/
+
+Do not place API keys or secret keys in scripts, spreadsheets, Git commits, or logs. Read them only from environment variables.
+
+============================================================
+2. CURRENT ANALYSIS MODEL
+============================================================
+
+The current submission uses:
+
+1. CC-Perturb-seq for:
+   - FASTQ preprocessing
+   - RNA and guide counting
+   - barcode handling
+   - cell calling and filtering
+   - guide assignment
+   - annotated matrix generation
+   - QC
+   - current differential-expression analysis
+
+2. PerturbNMF for:
+   - cNMF gene-program analysis
+   - program evaluation
+   - program/regulator summaries
+   - correlation outputs
+   - final program interpretation tables
+
+The current workbook contains three AnalysisStep records:
+
+Step 1:
+CC-Perturb-seq preprocessing and matrix generation
+
+Step 2:
+CC-Perturb-seq differential-expression analysis
+
+Step 3:
+PerturbNMF gene-program analysis, including interpretation/reporting outputs
+
+Do not add a fourth reporting AnalysisStep unless the metadata workbook is intentionally revised after discussion with DACC.
+
+Do not state that the IGVF CRISPR_Pipeline made the current files. That pipeline is only a possible future rerun implementation and is not part of this current submission.
+
+Current workflow alias:
+
+jesse-engreitz:workflow_WTC11-EC_300gene_CC-Perturbseq_PerturbNMF
+
+Current AnalysisStepVersion aliases:
+
+1. jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0
+
+2. jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_differential_expression_v0.1.0
+
+3. jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0
+
+Current software source repositories:
+
+- CC-Perturb-seq:
+  https://github.com/edtnguyen/CC-Perturb-seq
+
+- PerturbNMF:
+  https://github.com/edtnguyen/PerturbNMF
+
+The workbook currently uses draft SoftwareVersion aliases:
+
+- jesse-engreitz:software_version_CC-Perturb-seq_v0.1.0
+- jesse-engreitz:software_version_PerturbNMF_v0.1.0
+
+It also refers to the existing cNMF portal SoftwareVersion:
+
+- /software-versions/cnmf-v1.10.3/
+
+Do not fabricate SoftwareVersion accessions. Determine the exact tags or commit SHAs used for CC-Perturb-seq and PerturbNMF. Query the portal to see whether Software and SoftwareVersion records already exist. If DACC must create or approve them, prepare the metadata/request but stop before submitting dependent AnalysisStepVersion records.
+
+============================================================
+3. EXISTING ANALYSIS SETS
+============================================================
+
+There is one AnalysisSet per timepoint. These records already have accessions in the workbook.
+
+Use this mapping:
+
+D0:
+- AnalysisSet accession: IGVFDS5257JGQO
+- Alias:
+  jesse-engreitz:analysis_set_WTC11-EC_300gene_CC-Perturb-seq_D0
+
+D1:
+- AnalysisSet accession: IGVFDS3530HHEU
+- Alias:
+  jesse-engreitz:analysis_set_WTC11-EC_300gene_CC-Perturb-seq_D1
+
+D2:
+- AnalysisSet accession: IGVFDS7380DUFB
+- Alias:
+  jesse-engreitz:analysis_set_WTC11-EC_300gene_CC-Perturb-seq_D2
+
+D3:
+- AnalysisSet accession: IGVFDS6826YKCZ
+- Alias:
+  jesse-engreitz:analysis_set_WTC11-EC_300gene_CC-Perturb-seq_D3
+
+Verify that these records exist in the production portal and that their current input_file_sets match the workbook.
+
+Do not POST duplicate AnalysisSet records.
+
+Only prepare a PATCH if an existing AnalysisSet genuinely requires an update. Show the exact proposed patch before applying it.
+
+============================================================
+4. EXPECTED ANALYSIS FILES
+============================================================
+
+The current workbook expects 13 analysis files per timepoint:
+
+- 2 MatrixFiles
+- 11 TabularFiles
+
+Across D0, D1, D2, and D3, the expected total is:
+
+- 8 MatrixFiles
+- 44 TabularFiles
+- 52 analysis files total
+
+Use this staging base directory unless actual project paths are already available:
+
+BASE=/oak/stanford/groups/engreitz/Projects/IGVF/CC-Perturb-seq/300gene/analysis_submission
+
+For each DAY in D0, D1, D2, D3, the expected files are:
+
+A. MATRIX FILES
+
+1. CC-Perturb-seq annotated matrix
+
+Path:
+${BASE}/${DAY}/cc_perturbseq/CCPerturbSeq_${DAY}_annotated_cell_gene_guide.h5ad
+
+File object:
+MatrixFile
+
+file_format:
+h5ad
+
+content_type:
+annotated cell by gene and guide matrix
+
+Alias:
+jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_${DAY}_h5ad
+
+AnalysisStepVersion:
+jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0
+
+derived_from:
+The exact raw GEX, guide, and relevant hash SequenceFile accessions used for that timepoint.
+
+reference_files:
+["/reference-files/IGVFFI7217ZMJZ/"]
+
+filtered:
+true
+
+2. PerturbNMF matrix
+
+Path:
+${BASE}/${DAY}/perturbnmf/PerturbNMF_${DAY}_cell_gene_program.h5mu
+
+File object:
+MatrixFile
+
+file_format:
+h5mu
+
+content_type:
+cell by gene program matrix
+
+Alias:
+jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_${DAY}_h5mu
+
+AnalysisStepVersion:
+jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0
+
+derived_from:
+jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_${DAY}_h5ad
+
+reference_files:
+["/reference-files/IGVFFI7217ZMJZ/"]
+
+filtered:
+true
+
+Important:
+The workbook currently assumes one h5mu per timepoint. Check the real PerturbNMF outputs. If PerturbNMF actually produced one combined D0–D3 h5mu, do not create four artificial copies. Stop and report the mismatch so the MatrixFile and AnalysisSet design can be corrected.
+
+B. STEP 1 TABULAR FILES
+
+3. Guide quantifications
+
+Path:
+${BASE}/${DAY}/cc_perturbseq/guide_quantifications.tsv.gz
+
+content_type:
+guide quantifications
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_guide_quantifications
+
+AnalysisStepVersion:
+jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0
+
+derived_from:
+jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_${DAY}_h5ad
+
+filtered:
+true
+
+controlled_access:
+false
+
+4. Per-cell quality report
+
+Path:
+${BASE}/${DAY}/cc_perturbseq/per_cell_quality_report.tsv.gz
+
+content_type:
+per-cell quality report
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_per_cell_quality_report
+
+AnalysisStepVersion:
+jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_preprocessing_v0.1.0
+
+derived_from:
+jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_${DAY}_h5ad
+
+filtered:
+false
+
+controlled_access:
+false
+
+C. STEP 2 DIFFERENTIAL-EXPRESSION FILES
+
+5. Local results per guide
+
+Path:
+${BASE}/${DAY}/differential/local_per_guide_output.tsv.gz
+
+Current draft content_type:
+cis differential expression quantifications per guide
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_local_per_guide
+
+6. Local results per element
+
+Path:
+${BASE}/${DAY}/differential/local_per_element_output.tsv.gz
+
+Current draft content_type:
+cis differential expression quantifications per element
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_local_per_element
+
+7. Global results per guide
+
+Path:
+${BASE}/${DAY}/differential/global_per_guide_output.tsv.gz
+
+Current draft content_type:
+trans differential expression quantifications per guide
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_global_per_guide
+
+8. Global results per element
+
+Path:
+${BASE}/${DAY}/differential/global_per_element_output.tsv.gz
+
+Current draft content_type:
+trans differential expression quantifications per element
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_global_per_element
+
+For all four differential files:
+
+File object:
+TabularFile
+
+file_format:
+tsv
+
+AnalysisStepVersion:
+jesse-engreitz:analysis_step_version_WTC11-EC_300gene_CC-Perturbseq_differential_expression_v0.1.0
+
+derived_from:
+jesse-engreitz:matrix_file_WTC11-EC_300gene_CC-Perturbseq_${DAY}_h5ad
+
+reference_files:
+["/reference-files/IGVFFI7217ZMJZ/"]
+
+filtered:
+true
+
+controlled_access:
+false
+
+Important content-type issue:
+The workbook currently maps “local” to cis and “global” to trans. Do not silently assume this mapping is valid. Check the actual statistical analysis and output definitions. Mark this issue as pending DACC confirmation before live submission.
+
+If the current outputs are not formally local/cis and global/trans analyses, retain the files but recommend generic differential guide/element content types instead.
+
+D. STEP 3 PERTURBNMF TABULAR FILES
+
+9. Gene programs
+
+Path:
+${BASE}/${DAY}/perturbnmf/gene_programs.tsv.gz
+
+content_type:
+gene programs
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_gene_programs
+
+derived_from:
+jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_${DAY}_h5mu
+
+10. Gene-program regulators
+
+Path:
+${BASE}/${DAY}/perturbnmf/gene_program_regulators.tsv.gz
+
+content_type:
+gene program regulators
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_gene_program_regulators
+
+derived_from:
+jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_${DAY}_h5mu
+
+11. Gene universe
+
+Path:
+${BASE}/${DAY}/perturbnmf/gene_universe.tsv.gz
+
+content_type:
+gene universe
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_gene_universe
+
+derived_from:
+jesse-engreitz:matrix_file_WTC11-EC_300gene_PerturbNMF_${DAY}_h5mu
+
+12. Regulator-regulator correlations
+
+Path:
+${BASE}/${DAY}/perturbnmf/regulator_regulator_correlation.tsv.gz
+
+content_type:
+regulator-regulator correlation
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_regulator_regulator_correlation
+
+derived_from:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_gene_program_regulators
+
+13. Program-program correlations
+
+Path:
+${BASE}/${DAY}/perturbnmf/program_program_correlation.tsv.gz
+
+content_type:
+program-program correlation
+
+Alias:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_program_program_correlation
+
+derived_from:
+jesse-engreitz:tabular_file_WTC11-EC_300gene_${DAY}_gene_programs
+
+For all five PerturbNMF tables:
+
+File object:
+TabularFile
+
+file_format:
+tsv
+
+AnalysisStepVersion:
+jesse-engreitz:analysis_step_version_WTC11-EC_300gene_PerturbNMF_gene_programs_v0.1.0
+
+reference_files:
+["/reference-files/IGVFFI7217ZMJZ/"]
+
+filtered:
+true
+
+controlled_access:
+false
+
+============================================================
+5. DAY-TO-FILE-SET MAPPING
+============================================================
+
+Assign every file to the correct AnalysisSet:
+
+D0 files:
+file_set = IGVFDS5257JGQO
+
+D1 files:
+file_set = IGVFDS3530HHEU
+
+D2 files:
+file_set = IGVFDS7380DUFB
+
+D3 files:
+file_set = IGVFDS6826YKCZ
+
+Do not mix timepoints between AnalysisSets.
+
+============================================================
+6. FILE DISCOVERY AND STAGING
+============================================================
+
+The paths in the workbook are planned Sherlock/OAK paths. Some real files may currently have different names or locations.
+
+Perform these steps:
+
+1. Search the Sherlock/OAK analysis directories and the CC-Perturb-seq/PerturbNMF output directories for candidate files.
+
+2. Produce a source-to-submission crosswalk with these columns:
+
+- day
+- expected_file_role
+- source_path
+- planned_submission_path
+- source_filename
+- submitted_filename
+- file_format
+- content_type
+- file_set
+- alias
+- analysis_step_version
+- derived_from
+- exists
+- requires_conversion
+- requires_renaming
+- requires_compression
+- size_bytes
+- md5sum
+- validation_status
+- notes
+
+3. Do not modify or rename the original analysis results in place.
+
+4. Create submission-ready copies, hard links, or symlinks under the staging BASE directory only after checking which method is safe for portal upload.
+
+5. For a missing file:
+   - retain the planned path in the draft manifest;
+   - mark exists=false;
+   - mark validation_status=missing;
+   - do not create synthetic file contents;
+   - do not fabricate a checksum;
+   - do not include the file in a live upload array.
+
+6. Report source files that do not map cleanly to any planned submission file.
+
+7. Report planned submission files that have no matching source file.
+
+============================================================
+7. VALIDATION
+============================================================
+
+Validate every actual file before preparing live upload commands.
+
+For h5ad files:
+
+- Confirm the file opens successfully.
+- Confirm cell IDs are unique.
+- Confirm gene IDs/names are unique or document why not.
+- Confirm the expected RNA and guide information is present.
+- Confirm the timepoint is correct.
+- Record matrix dimensions.
+- Record available obs, var, obsm, layers, and uns keys.
+- Confirm the file is filtered as stated in the metadata.
+- Check that the file is not truncated or corrupted.
+
+For h5mu files:
+
+- Confirm the file opens successfully.
+- List modalities.
+- Record matrix dimensions for each modality.
+- Confirm gene-program scores/loadings are present in the expected location.
+- Confirm the timepoint assignment.
+- Confirm identifiers match the upstream h5ad where expected.
+- Check that the file is not truncated or corrupted.
+
+For every .tsv.gz file:
+
+- Run gzip integrity validation.
+- Confirm it is actually gzip-compressed.
+- Confirm it is tab-delimited.
+- Confirm there is exactly one header row.
+- Check for duplicate column names.
+- Check for duplicate primary-key rows where inappropriate.
+- Record row count and column count.
+- Check for completely empty tables.
+- Check for malformed rows.
+- Check for unexpected binary or Excel content.
+- Record missing-value conventions.
+- Confirm gene, guide, element, program, or regulator identifiers are consistent with upstream files.
+- Confirm p-value, q-value, effect-size, loading, or correlation columns are within valid ranges where applicable.
+
+Calculate the MD5 checksum from the exact final file that will be uploaded, including the compressed .tsv.gz file rather than the uncompressed source.
+
+Do not reuse a checksum from an earlier version of a file.
+
+============================================================
+8. FILE-FORMAT SPECIFICATIONS
+============================================================
+
+The workbook currently leaves file_format_specifications blank.
+
+Inspect the tabular schemas and determine whether DACC requires:
+
+- one consolidated file-format specification covering all CC-Perturb-seq and PerturbNMF tables;
+- one specification per output group; or
+- an existing standard specification already present in the portal.
+
+At minimum, prepare a column dictionary containing:
+
+- table/file type
+- column_name
+- data_type
+- required
+- units_or_scale
+- allowed_values
+- missing_value
+- description
+- source_analysis_step
+
+Do not invent a portal Document accession. Prepare the specification locally and flag it for DACC review.
+
+Reports, plots, HTML pages, PDFs, and Excel summaries are not included in the current 52-file manifest. Do not add them to the live upload unless DACC explicitly asks for them.
+
+============================================================
+9. UPDATE THE METADATA WORKBOOK
+============================================================
+
+Update the attached metadata workbook without damaging its layout, formulas, comments, validation, or hidden helper content.
+
+For every MatrixFile and TabularFile row, fill or verify:
+
+- aliases
+- award
+- lab
+- md5sum
+- file_format
+- file_set
+- content_type
+- reference_files
+- filtered
+- controlled_access, where applicable
+- submitter_comment
+- description
+- analysis_step_version
+- derived_from
+- derived_manually
+- file_format_specifications, when available
+- submitted_file_name
+
+Do not manually fill server-returned fields for new objects:
+
+- #response
+- #response_time
+- accession
+- uuid
+
+Do not replace existing AnalysisSet accessions.
+
+Populate exact raw SequenceFile accessions in the h5ad derived_from fields. Do not leave those fields blank in a submission-ready version.
+
+For downstream files, use the immediate upstream file relationship listed above.
+
+Export portal-ready TSV metadata files for the necessary profiles using the existing workbook/submission tooling.
+
+============================================================
+10. PARENT OBJECT CHECKS
+============================================================
+
+Before creating file records, check the portal for all parent objects by accession and alias.
+
+Verify or prepare:
+
+1. Existing AnalysisSets
+2. CC-Perturb-seq Software
+3. PerturbNMF Software
+4. Exact CC-Perturb-seq SoftwareVersion
+5. Exact PerturbNMF SoftwareVersion
+6. Three AnalysisStep records
+7. Three AnalysisStepVersion records
+8. One Workflow record
+
+Query before POSTing so duplicate records are not created.
+
+The current workflow source URL in the workbook is:
+
+https://github.com/EngreitzLab/igvf-data-submission-stanford-fcc/tree/main/submissions/cc-perturb-seq-300gene
+
+The component workflow repositories are:
+
+- https://github.com/edtnguyen/CC-Perturb-seq
+- https://github.com/edtnguyen/PerturbNMF
+
+Confirm whether the current source URL and v0.1.0 workflow version are acceptable or whether a tagged workflow repository is required.
+
+============================================================
+11. SUBMISSION ORDER
+============================================================
+
+Use parent-first submission order.
+
+Recommended order:
+
+1. Confirm existing AnalysisSet records.
+2. Confirm or create Software records.
+3. Confirm or create SoftwareVersion records.
+4. Submit AnalysisStep records.
+5. Submit AnalysisStepVersion records.
+6. Submit the Workflow record.
+7. Submit the four CC-Perturb-seq h5ad MatrixFile records.
+8. Upload the four h5ad files.
+9. Submit the four PerturbNMF h5mu MatrixFile records.
+10. Upload the four h5mu files.
+11. Submit and upload Step 1 guide-quantification and QC tables.
+12. Submit and upload Step 2 differential tables.
+13. Submit and upload PerturbNMF gene-program, regulator, and gene-universe tables.
+14. Submit and upload regulator-regulator and program-program correlation tables.
+15. Check portal validation/checkfiles status.
+16. Retry only failed records/files.
+17. Record returned accessions and update the local accession manifest.
+
+Respect derived_from dependencies. Do not submit a child file record before its upstream file record exists in the portal.
+
+============================================================
+12. SCRIPT REQUIREMENTS
+============================================================
+
+Reuse the existing IGVF submission scripts already present in this chat where possible.
+
+Adapt them for analysis files rather than raw FASTQs.
+
+Create or update scripts for:
+
+1. File discovery and crosswalk generation
+2. File staging
+3. MD5 and size calculation
+4. h5ad/h5mu validation
+5. TSV/gzip validation
+6. Metadata TSV generation
+7. Portal dry-run validation
+8. Parent-record submission
+9. MatrixFile and TabularFile metadata submission
+10. Physical file upload
+11. Slurm-array submission for the file uploads
+12. Progress monitoring
+13. Failed-index recovery
+14. Accession/result collection
+15. Portal/checkfiles status checks
+
+The Slurm-array upload script should read from a manifest rather than contain 52 manually hard-coded upload commands.
+
+The manifest should include one row per real uploadable file and should exclude missing placeholder files.
+
+Create:
+
+- analysis_file_manifest.tsv
+- source_to_submission_crosswalk.tsv
+- validation_report.tsv
+- metadata_submission_results.csv
+- file_upload_results.csv
+- failed_metadata_indices.txt
+- failed_upload_indices.txt
+- submit_parents.sh
+- dry_run_files.sh
+- upload_analysis_files.slurm
+- retry_failed_uploads.slurm
+- collect_accessions.py or equivalent
+- README_submission_run.md
+
+Each results table should contain:
+
+- index
+- alias
+- submitted_file_name
+- object profile
+- day
+- status
+- returned accession
+- returned portal path
+- error message
+- md5sum
+- size
+- attempt number
+- timestamp
+
+Make the scripts resumable and idempotent where possible. Query the portal before retrying a record so a previous successful POST is not duplicated.
+
+============================================================
+13. DRY RUN AND APPROVAL GATE
+============================================================
+
+Before any live submission:
+
+1. Show me the complete inventory:
+   - expected files
+   - found files
+   - missing files
+   - extra files
+   - files requiring conversion
+   - files requiring DACC decisions
+
+2. Show the exact parent-object status:
+   - exists
+   - missing
+   - needs PATCH
+   - blocked by missing SoftwareVersion
+
+3. Show all dry-run commands.
+
+4. Run the dry-run validation.
+
+5. Summarize every dry-run error and warning.
+
+6. Show a table of the files that would actually be uploaded.
+
+7. Stop and wait for my explicit approval.
+
+Do not interpret a successful dry run as proof that the live upload will succeed. Preserve logs from both dry-run and live operations.
+
+============================================================
+14. KNOWN DECISIONS THAT MUST NOT BE MADE SILENTLY
+============================================================
+
+Stop and report these issues rather than guessing:
+
+1. Whether PerturbNMF should be represented by one h5mu per timepoint or one combined h5mu.
+
+2. Whether local results qualify for cis content types.
+
+3. Whether global results qualify for trans content types.
+
+4. Whether CC-Perturb-seq and PerturbNMF SoftwareVersion records already exist or must be created by DACC.
+
+5. Whether an exact commit SHA is acceptable or a tagged release/archive is required.
+
+6. Whether custom file-format specification Documents are required.
+
+7. Whether cell-program score tables are represented correctly as “cell by gene program matrix.”
+
+8. Whether any planned table should be combined across timepoints rather than duplicated per day.
+
+9. Whether reference file /reference-files/IGVFFI7217ZMJZ/ is correct for every file type.
+
+10. Whether reporting files should remain folded into the PerturbNMF AnalysisStep.
+
+============================================================
+15. FINAL DELIVERABLES
+============================================================
+
+Return the following before asking me to approve live submission:
+
+1. A concise audit summary.
+2. The completed source-to-submission crosswalk.
+3. The exact list of 52 planned files, with exists/missing status.
+4. The list of real files eligible for upload.
+5. The updated metadata workbook.
+6. Exported metadata TSVs.
+7. File-format specification draft or column dictionaries.
+8. File validation report.
+9. Parent-object portal-status report.
+10. Dry-run commands and logs.
+11. Proposed live-submission commands.
+12. Slurm upload and retry scripts.
+13. A list of unresolved DACC questions.
+14. A record of every assumption made.
+
+Start by inspecting the attached workbook and the existing scripts in this chat. Then show me the planned work and the file inventory before writing or running any live submission commands.

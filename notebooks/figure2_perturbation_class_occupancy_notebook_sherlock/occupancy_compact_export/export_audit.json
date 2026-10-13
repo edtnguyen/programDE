@@ -1,0 +1,15 @@
+{
+  "query_h5ad": "/oak/stanford/groups/engreitz/Users/opushkar/cc_perturb/2.preprocessing_tonys_pipeline/3.integrated_days/3.all_days_concat_pc30_all_genes_sceptre_guides.h5ad",
+  "n_cells": 121616,
+  "n_genes": 17538,
+  "n_guides_h5ad": 1922,
+  "n_guides_mapped": 1922,
+  "n_targeting_guides_mapped": 1802,
+  "n_control_guides_mapped": 120,
+  "n_unique_targets_exported": 298,
+  "n_cell_target_assignments": 613495,
+  "n_pure_control_cells": 748,
+  "n_mixed_control_target_cells": 20923,
+  "state_source": "existing leiden_res_0.5 mapped with prior author-defined labels",
+  "soft_state_probabilities_available": false
+}

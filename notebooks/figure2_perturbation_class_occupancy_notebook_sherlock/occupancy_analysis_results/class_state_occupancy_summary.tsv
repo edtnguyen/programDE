@@ -1,0 +1,131 @@
+regulator_class	day	state	n_evaluable_targets	median_log_odds_ratio	fraction_significant_in_displayed_direction	n_significant_in_displayed_direction	displayed_direction
+Apoptosis / cell cycle / stress	D0	Neuro-iPSC	19	0.10682427038455942	0.05263157894736842	1	enriched
+Apoptosis / cell cycle / stress	D0	Others	19	-14.747833462388694	0.0	0	depleted
+Apoptosis / cell cycle / stress	D0	iPSC	19	-0.09813068338124924	0.05263157894736842	1	depleted
+Apoptosis / cell cycle / stress	D1	PrimStreak	19	18.386938829333214	0.0	0	enriched
+Apoptosis / cell cycle / stress	D2	Fibro-Mesen	19	0.42375931023462154	0.0	0	enriched
+Apoptosis / cell cycle / stress	D2	Lat-Meso	19	0.0161992552939018	0.05263157894736842	1	enriched
+Apoptosis / cell cycle / stress	D2	Neu-Mesen	19	-0.04474247214794019	0.0	0	depleted
+Apoptosis / cell cycle / stress	D2	Pre-EC	19	-0.00915399136092528	0.05263157894736842	1	depleted
+Apoptosis / cell cycle / stress	D3	Fibro-Mesen	19	0.22091673341587265	0.5263157894736842	10	enriched
+Apoptosis / cell cycle / stress	D3	Lat-Meso	19	-0.8126379281434083	0.0	0	depleted
+Apoptosis / cell cycle / stress	D3	Neu-Mesen	19	-0.20755127369937587	0.15789473684210525	3	depleted
+Apoptosis / cell cycle / stress	D3	Pre-EC	19	-0.6750351241094551	0.0	0	depleted
+Apoptosis / cell cycle / stress	D3	artEC	19	-0.1844275046566115	0.42105263157894735	8	depleted
+Chromatin regulation	D0	Neuro-iPSC	32	0.06393124104347711	0.03125	1	enriched
+Chromatin regulation	D0	Others	32	-14.181128709859665	0.0	0	depleted
+Chromatin regulation	D0	iPSC	32	-0.06963790554397645	0.03125	1	depleted
+Chromatin regulation	D1	PrimStreak	32	19.252075580649333	0.0	0	enriched
+Chromatin regulation	D2	Fibro-Mesen	32	-19.85038299177716	0.0	0	depleted
+Chromatin regulation	D2	Lat-Meso	32	0.17319137536541873	0.125	4	enriched
+Chromatin regulation	D2	Neu-Mesen	32	-19.8324918020307	0.0	0	depleted
+Chromatin regulation	D2	Pre-EC	32	-0.19853789310064468	0.125	4	depleted
+Chromatin regulation	D3	Fibro-Mesen	32	0.24494173819369758	0.5625	18	enriched
+Chromatin regulation	D3	Lat-Meso	32	-0.055835863740293985	0.0	0	depleted
+Chromatin regulation	D3	Neu-Mesen	32	-0.19506484120111162	0.25	8	depleted
+Chromatin regulation	D3	Pre-EC	32	-0.3130200135036813	0.0	0	depleted
+Chromatin regulation	D3	artEC	32	-0.20008363283878083	0.46875	15	depleted
+Hippo / YAP	D0	Neuro-iPSC	6	0.0293318517476481	0.0	0	enriched
+Hippo / YAP	D0	Others	6	-15.489759055760016	0.0	0	depleted
+Hippo / YAP	D0	iPSC	6	-0.028714910973799034	0.0	0	depleted
+Hippo / YAP	D1	PrimStreak	6	9.16978677397808	0.0	0	enriched
+Hippo / YAP	D2	Fibro-Mesen	6	-9.97499996149234	0.0	0	depleted
+Hippo / YAP	D2	Lat-Meso	6	0.41806668324639007	0.6666666666666666	4	enriched
+Hippo / YAP	D2	Neu-Mesen	6	0.17317292047772276	0.0	0	enriched
+Hippo / YAP	D2	Pre-EC	6	-0.47082692056143893	0.6666666666666666	4	depleted
+Hippo / YAP	D3	Fibro-Mesen	6	0.6664853382462768	1.0	6	enriched
+Hippo / YAP	D3	Lat-Meso	6	-0.31482806645718453	0.0	0	depleted
+Hippo / YAP	D3	Neu-Mesen	6	-0.2303301366881212	0.16666666666666666	1	depleted
+Hippo / YAP	D3	Pre-EC	6	-0.19861935258182462	0.0	0	depleted
+Hippo / YAP	D3	artEC	6	-0.6284239809337913	0.8333333333333334	5	depleted
+Metabolism / trafficking / adhesion	D0	Neuro-iPSC	41	0.042300297670631044	0.024390243902439025	1	enriched
+Metabolism / trafficking / adhesion	D0	Others	41	-14.075940406545234	0.0	0	depleted
+Metabolism / trafficking / adhesion	D0	iPSC	41	-0.036173229832392025	0.024390243902439025	1	depleted
+Metabolism / trafficking / adhesion	D1	PrimStreak	41	18.37460227100338	0.0	0	enriched
+Metabolism / trafficking / adhesion	D2	Fibro-Mesen	41	-19.843018265136795	0.0	0	depleted
+Metabolism / trafficking / adhesion	D2	Lat-Meso	41	0.04317548102236774	0.07317073170731707	3	enriched
+Metabolism / trafficking / adhesion	D2	Neu-Mesen	41	-0.058877000642520216	0.0	0	depleted
+Metabolism / trafficking / adhesion	D2	Pre-EC	41	-0.05408154123098096	0.07317073170731707	3	depleted
+Metabolism / trafficking / adhesion	D3	Fibro-Mesen	41	-0.017469589123990114	0.07317073170731707	3	depleted
+Metabolism / trafficking / adhesion	D3	Lat-Meso	41	-0.38901980371783274	0.0	0	depleted
+Metabolism / trafficking / adhesion	D3	Neu-Mesen	41	-0.10095177352924907	0.024390243902439025	1	depleted
+Metabolism / trafficking / adhesion	D3	Pre-EC	41	-0.24444795987361992	0.0	0	depleted
+Metabolism / trafficking / adhesion	D3	artEC	41	0.047559302532115974	0.07317073170731707	3	enriched
+Other reviewed regulators	D0	Neuro-iPSC	18	0.10425794825792653	0.1111111111111111	2	enriched
+Other reviewed regulators	D0	Others	18	-14.849610917522547	0.0	0	depleted
+Other reviewed regulators	D0	iPSC	18	-0.09963748319949967	0.1111111111111111	2	depleted
+Other reviewed regulators	D1	PrimStreak	18	18.45664452151854	0.0	0	enriched
+Other reviewed regulators	D2	Fibro-Mesen	18	-19.851095633233147	0.0	0	depleted
+Other reviewed regulators	D2	Lat-Meso	18	0.1330651956153558	0.0	0	enriched
+Other reviewed regulators	D2	Neu-Mesen	18	-0.015723172522333826	0.0	0	depleted
+Other reviewed regulators	D2	Pre-EC	18	-0.12093688101024518	0.0	0	depleted
+Other reviewed regulators	D3	Fibro-Mesen	18	0.036179539473166406	0.3333333333333333	6	enriched
+Other reviewed regulators	D3	Lat-Meso	18	-0.3787615110191781	0.0	0	depleted
+Other reviewed regulators	D3	Neu-Mesen	18	-0.08262296427678918	0.0	0	depleted
+Other reviewed regulators	D3	Pre-EC	18	-19.93249807437649	0.0	0	depleted
+Other reviewed regulators	D3	artEC	18	-0.019108139447930245	0.3333333333333333	6	depleted
+TGF/BMP/Activin	D0	Neuro-iPSC	9	0.041767551570115524	0.0	0	enriched
+TGF/BMP/Activin	D0	Others	9	-14.903805330849822	0.0	0	depleted
+TGF/BMP/Activin	D0	iPSC	9	-0.05709725654353129	0.0	0	depleted
+TGF/BMP/Activin	D1	PrimStreak	9	-0.3763243052330355	0.0	0	depleted
+TGF/BMP/Activin	D2	Fibro-Mesen	9	-19.838475561579198	0.0	0	depleted
+TGF/BMP/Activin	D2	Lat-Meso	9	0.39898572598851456	0.4444444444444444	4	enriched
+TGF/BMP/Activin	D2	Neu-Mesen	9	0.804538464749021	0.3333333333333333	3	enriched
+TGF/BMP/Activin	D2	Pre-EC	9	-0.6185720169336171	0.6666666666666666	6	depleted
+TGF/BMP/Activin	D3	Fibro-Mesen	9	-0.13452031793302843	0.4444444444444444	4	depleted
+TGF/BMP/Activin	D3	Lat-Meso	9	0.37279286083082847	0.3333333333333333	3	enriched
+TGF/BMP/Activin	D3	Neu-Mesen	9	1.355627119807352	0.5555555555555556	5	enriched
+TGF/BMP/Activin	D3	Pre-EC	9	0.6541401825831207	0.1111111111111111	1	enriched
+TGF/BMP/Activin	D3	artEC	9	-0.82369630875211	1.0	9	depleted
+Transcription / RNA processing	D0	Neuro-iPSC	68	0.044602844342696846	0.058823529411764705	4	enriched
+Transcription / RNA processing	D0	Others	68	-14.038790633016637	0.0	0	depleted
+Transcription / RNA processing	D0	iPSC	68	-0.04663712406324172	0.058823529411764705	4	depleted
+Transcription / RNA processing	D1	PrimStreak	68	18.5873139307435	0.0	0	enriched
+Transcription / RNA processing	D2	Fibro-Mesen	68	-18.922425316629706	0.0	0	depleted
+Transcription / RNA processing	D2	Lat-Meso	68	0.10163776042295977	0.08823529411764706	6	enriched
+Transcription / RNA processing	D2	Neu-Mesen	68	-9.706875061747645	0.0	0	depleted
+Transcription / RNA processing	D2	Pre-EC	68	-0.11317179404369103	0.10294117647058823	7	depleted
+Transcription / RNA processing	D3	Fibro-Mesen	68	0.11115292675888089	0.25	17	enriched
+Transcription / RNA processing	D3	Lat-Meso	68	-0.011540363043698855	0.0	0	depleted
+Transcription / RNA processing	D3	Neu-Mesen	68	-0.07703959502551469	0.058823529411764705	4	depleted
+Transcription / RNA processing	D3	Pre-EC	68	-0.09316643137031486	0.0	0	depleted
+Transcription / RNA processing	D3	artEC	68	-0.10152329798555204	0.27941176470588236	19	depleted
+Translation / proteostasis	D0	Neuro-iPSC	41	0.13612575033817542	0.14634146341463414	6	enriched
+Translation / proteostasis	D0	Others	41	-14.2960769052832	0.0	0	depleted
+Translation / proteostasis	D0	iPSC	41	-0.1342162115305945	0.14634146341463414	6	depleted
+Translation / proteostasis	D1	PrimStreak	41	-0.3694969473373632	0.0	0	depleted
+Translation / proteostasis	D2	Fibro-Mesen	41	-18.94588216295351	0.0	0	depleted
+Translation / proteostasis	D2	Lat-Meso	41	0.12502698562324716	0.07317073170731707	3	enriched
+Translation / proteostasis	D2	Neu-Mesen	41	-0.048076627821002624	0.0	0	depleted
+Translation / proteostasis	D2	Pre-EC	41	-0.13931036577309486	0.07317073170731707	3	depleted
+Translation / proteostasis	D3	Fibro-Mesen	41	0.1223882368705043	0.17073170731707318	7	enriched
+Translation / proteostasis	D3	Lat-Meso	41	-0.10439555188801619	0.0	0	depleted
+Translation / proteostasis	D3	Neu-Mesen	41	-0.08657220948126793	0.04878048780487805	2	depleted
+Translation / proteostasis	D3	Pre-EC	41	-19.926396856692502	0.0	0	depleted
+Translation / proteostasis	D3	artEC	41	-0.09038606699954918	0.17073170731707318	7	depleted
+VEGF / EC specification	D0	Neuro-iPSC	4	-0.010908658753256119	0.0	0	depleted
+VEGF / EC specification	D0	Others	4	-14.366517976502738	0.0	0	depleted
+VEGF / EC specification	D0	iPSC	4	0.00771106760212998	0.0	0	enriched
+VEGF / EC specification	D1	PrimStreak	4	9.679195687334232	0.0	0	enriched
+VEGF / EC specification	D2	Fibro-Mesen	4	-19.996723226590202	0.0	0	depleted
+VEGF / EC specification	D2	Lat-Meso	4	0.7142365045365451	0.75	3	enriched
+VEGF / EC specification	D2	Neu-Mesen	4	-10.212610427862147	0.0	0	depleted
+VEGF / EC specification	D2	Pre-EC	4	-0.7362771710865106	0.75	3	depleted
+VEGF / EC specification	D3	Fibro-Mesen	4	1.098407842629066	0.75	3	enriched
+VEGF / EC specification	D3	Lat-Meso	4	0.2587979530361606	0.0	0	enriched
+VEGF / EC specification	D3	Neu-Mesen	4	0.06955427715310132	0.0	0	enriched
+VEGF / EC specification	D3	Pre-EC	4	-19.939517250760453	0.0	0	depleted
+VEGF / EC specification	D3	artEC	4	-1.3689881052784818	0.75	3	depleted
+WNT / mesoderm regulators	D0	Neuro-iPSC	6	0.05703438494038969	0.0	0	enriched
+WNT / mesoderm regulators	D0	Others	6	-8.073674600841379	0.0	0	depleted
+WNT / mesoderm regulators	D0	iPSC	6	-0.06689194204554003	0.0	0	depleted
+WNT / mesoderm regulators	D1	PrimStreak	6	19.41931841685915	0.0	0	enriched
+WNT / mesoderm regulators	D2	Fibro-Mesen	6	-19.847462936448323	0.0	0	depleted
+WNT / mesoderm regulators	D2	Lat-Meso	6	0.33856245592440204	0.5	3	enriched
+WNT / mesoderm regulators	D2	Neu-Mesen	6	0.2200925443752707	0.0	0	enriched
+WNT / mesoderm regulators	D2	Pre-EC	6	-0.34506350901777993	0.3333333333333333	2	depleted
+WNT / mesoderm regulators	D3	Fibro-Mesen	6	0.3577656025562784	0.5	3	enriched
+WNT / mesoderm regulators	D3	Lat-Meso	6	0.4800430730627603	0.0	0	enriched
+WNT / mesoderm regulators	D3	Neu-Mesen	6	-0.07585610804940458	0.3333333333333333	2	depleted
+WNT / mesoderm regulators	D3	Pre-EC	6	-19.95340435979599	0.0	0	depleted
+WNT / mesoderm regulators	D3	artEC	6	-0.3676329439272478	0.5	3	depleted
